@@ -160,3 +160,14 @@ frontend
     ├── index.tsx   # entrypoint
     └── App.tsx     # handles routing
 ```
+
+## Clerk Authentication
+
+The project integrates [Clerk](https://clerk.com/) for user management. Configure the following environment variables in your backend to enable authentication:
+
+```
+CLERK_API_KEY=<your_clerk_api_key>
+CLERK_SECRET_KEY=<your_clerk_secret_key>
+```
+
+The frontend expects the `CLERK_FRONTEND_API` value to be available and wraps the app with `ClerkProvider`.
