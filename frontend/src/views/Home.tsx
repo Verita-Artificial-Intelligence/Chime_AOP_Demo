@@ -41,9 +41,6 @@ export const Home: FC = () => {
           Error: <code>{error}</code>
         </p>
       )}
-      <a className={classes.link} href="/admin">
-        Admin Dashboard
-      </a>
       <a className={classes.link} href="/protected">
         Protected Route
       </a>

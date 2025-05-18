@@ -4,7 +4,6 @@ import { useHistory } from 'react-router';
 import { makeStyles } from '@material-ui/core/styles';
 
 import { Home, Login, SignUp, Protected, PrivateRoute } from './views';
-import { Admin } from './admin';
 import { logout } from './utils/auth';
 
 const useStyles = makeStyles((theme) => ({
@@ -29,10 +28,6 @@ export const Routes: FC = () => {
 
   return (
     <Switch>
-      <Route path="/admin">
-        <Admin />
-      </Route>
-
       <div className={classes.app}>
         <header className={classes.header}>
           <Route path="/login" component={Login} />
