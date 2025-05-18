@@ -160,3 +160,9 @@ frontend
     ├── index.tsx   # entrypoint
     └── App.tsx     # handles routing
 ```
+
+## Clerk setup
+
+Environment variables are automatically loaded from a `.env` file when the
+backend starts. Place your Clerk credentials and other settings in this file so
+they are available without extra configuration.
