@@ -1,7 +1,7 @@
 import React, { FC, useState } from 'react';
 
 import { getMessage } from '../utils/api';
-import { isAuthenticated } from '../utils/auth';
+import { SignedIn, SignedOut, SignOutButton } from '@clerk/clerk-react';
 
 export const Home: FC = () => {
   const [message, setMessage] = useState<string>('');
@@ -36,11 +36,10 @@ export const Home: FC = () => {
       <a className="link" href="/protected">
         Protected Route
       </a>
-      {isAuthenticated() ? (
-        <a className="link" href="/logout">
-          Logout
-        </a>
-      ) : (
+      <SignedIn>
+        <SignOutButton>Logout</SignOutButton>
+      </SignedIn>
+      <SignedOut>
         <>
           <a className="link" href="/login">
             Login
@@ -49,7 +48,7 @@ export const Home: FC = () => {
             Sign Up
           </a>
         </>
-      )}
+      </SignedOut>
     </>
   );
 };

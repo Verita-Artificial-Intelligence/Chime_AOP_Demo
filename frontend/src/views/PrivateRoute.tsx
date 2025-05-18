@@ -1,7 +1,6 @@
 import React, { FC } from 'react';
-import { Route, Redirect } from 'react-router-dom';
-
-import { isAuthenticated } from '../utils/auth';
+import { Route } from 'react-router-dom';
+import { RedirectToSignIn, useUser } from '@clerk/clerk-react';
 
 type PrivateRouteType = {
   component: React.ComponentType<any>;
@@ -9,17 +8,16 @@ type PrivateRouteType = {
 };
 
 export const PrivateRoute: FC<PrivateRouteType> = ({
-  component,
+  component: Component,
   ...rest
-}: any) => (
-  <Route
-    {...rest}
-    render={(props: any) =>
-      isAuthenticated() === true ? (
-        React.createElement(component, props)
-      ) : (
-        <Redirect to="/login" />
-      )
-    }
-  />
-);
+}: any) => {
+  const { isSignedIn } = useUser();
+  return (
+    <Route
+      {...rest}
+      render={(props: any) =>
+        isSignedIn ? <Component {...props} /> : <RedirectToSignIn />
+      }
+    />
+  );
+};

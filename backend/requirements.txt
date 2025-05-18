@@ -20,3 +20,5 @@ pyjwt==1.7.1
 openai==1.30.5
 PyYAML==6.0.1
 pgvector==0.2.5
+python-dotenv==1.0.0
+websockets==12.0

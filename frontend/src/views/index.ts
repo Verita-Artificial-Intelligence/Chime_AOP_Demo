@@ -1,5 +1,5 @@
 export * from './Home';
 export * from './Login';
-export * from './SignUp';
+export { SignUpView } from './SignUp';
 export * from './Protected';
 export * from './PrivateRoute';

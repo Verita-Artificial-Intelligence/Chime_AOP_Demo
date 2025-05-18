@@ -183,3 +183,33 @@ Query the database semantically with `search_integrations.py`:
 ```bash
 python search_integrations.py
 ```
+
+## Clerk Authentication
+
+The project integrates [Clerk](https://clerk.com/) for user management. Configure the following environment variables in your backend to enable authentication:
+
+```
+CLERK_SECRET_KEY=<your_clerk_secret_key>
+```
+The frontend expects the `REACT_APP_CLERK_PUBLISHABLE_KEY` value to be available and wraps the app with `ClerkProvider`.
+
+Environment variables are automatically loaded from a `.env` file when the
+backend starts. Place your Clerk credentials and other settings in this file so
+they are available without extra configuration.
+
+
+## Client Generation
+
+The repository includes a helper script to create a Python client from an OpenAPI
+specification. The generated client uses `httpx` and also understands optional
+`x-streaming` and `x-websocket` extensions for streaming or WebSocket routes.
+
+1. Export your API spec to `openapi.json` using FastAPI's `app.openapi()`.
+2. Run the generator:
+
+```bash
+python scripts/generate_client.py openapi.json client.py
+```
+
+This produces `client.py` with an `APIClient` class for interacting with the
+backend asynchronously.
