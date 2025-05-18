@@ -1,6 +1,9 @@
 from fastapi import FastAPI, Depends
 from starlette.requests import Request
 import uvicorn
+from dotenv import load_dotenv
+
+load_dotenv()
 
 from app.api.api_v1.routers.users import users_router
 from app.api.api_v1.routers.auth import auth_router
