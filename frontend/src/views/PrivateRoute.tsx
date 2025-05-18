@@ -1,23 +1,14 @@
-import React, { FC } from 'react';
-import { Route } from 'react-router-dom';
+import React from 'react';
 import { RedirectToSignIn, useUser } from '@clerk/clerk-react';
 
-type PrivateRouteType = {
-  component: React.ComponentType<any>;
-  path?: string | string[];
+type PrivateRouteProps = {
+  children: React.ReactNode;
 };
 
-export const PrivateRoute: FC<PrivateRouteType> = ({
-  component: Component,
-  ...rest
-}: any) => {
+export const PrivateRoute = ({ children }: PrivateRouteProps) => {
   const { isSignedIn } = useUser();
-  return (
-    <Route
-      {...rest}
-      render={(props: any) =>
-        isSignedIn ? <Component {...props} /> : <RedirectToSignIn />
-      }
-    />
-  );
+  if (!isSignedIn) {
+    return <RedirectToSignIn />;
+  }
+  return <>{children}</>;
 };

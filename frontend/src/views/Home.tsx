@@ -1,9 +1,9 @@
-import React, { FC, useState } from 'react';
+import React, { useState } from 'react';
 
 import { getMessage } from '../utils/api';
 import { SignedIn, SignedOut, SignOutButton } from '@clerk/clerk-react';
 
-export const Home: FC = () => {
+export const Home = () => {
   const [message, setMessage] = useState<string>('');
   const [error, setError] = useState<string>('');
 

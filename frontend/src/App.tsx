@@ -1,6 +1,8 @@
-import React, { FC } from 'react';
-import { Routes } from './Routes';
+import React from 'react';
+import { Routes } from './Routes'; // Uncommented to bring back routing
 
-const App: FC = () => <Routes />;
+function App() {
+  return <Routes />;
+}
 
 export default App;
