@@ -1,19 +1,19 @@
-import React, { FC } from 'react';
-import { Switch, Route } from 'react-router-dom';
+import React from 'react';
+import { Routes as RouterRoutes, Route } from 'react-router-dom';
 
 import { Home, Login, SignUpView, Protected, PrivateRoute } from './views';
 
-export const Routes: FC = () => {
+export const Routes = () => {
   return (
-    <Switch>
-      <div className="text-center">
-        <header className="bg-primary min-h-screen flex flex-col items-center justify-center text-white text-base">
-          <Route path="/login" component={Login} />
-          <Route path="/signup" component={SignUpView} />
-          <PrivateRoute path="/protected" component={Protected} />
-          <Route exact path="/" component={Home} />
-        </header>
-      </div>
-    </Switch>
+    <div className="text-center">
+      <header className="bg-primary min-h-screen flex flex-col items-center justify-center text-white text-base">
+        <RouterRoutes>
+          <Route path="/login" element={<Login />} />
+          <Route path="/signup" element={<SignUpView />} />
+          <Route path="/protected" element={<PrivateRoute><Protected /></PrivateRoute>} />
+          <Route path="/" element={<Home />} />
+        </RouterRoutes>
+      </header>
+    </div>
   );
 };
