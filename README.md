@@ -160,3 +160,26 @@ frontend
     ├── index.tsx   # entrypoint
     └── App.tsx     # handles routing
 ```
+
+### Vector Database for Integrations
+
+Embeddings for integration actions can be stored in Postgres using the
+`pgvector` extension. Run the Alembic migrations to create the table and
+extension:
+
+```bash
+docker-compose run --rm backend alembic upgrade head
+```
+
+Use `index_integrations.py` to load all YAML files from `./integrations`,
+generate OpenAI embeddings and populate the database:
+
+```bash
+python index_integrations.py
+```
+
+Query the database semantically with `search_integrations.py`:
+
+```bash
+python search_integrations.py
+```
