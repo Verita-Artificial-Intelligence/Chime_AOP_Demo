@@ -25,6 +25,9 @@ Starting the project with hot-reloading enabled
 docker-compose up -d
 ```
 
+The backend runs with `uvicorn --reload` and the frontend
+uses `CHOKIDAR_USEPOLLING=true` for reliable hot reloading inside Docker.
+
 To run the alembic migrations (for the users table):
 
 ```bash
