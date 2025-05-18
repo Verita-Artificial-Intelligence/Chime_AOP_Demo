@@ -10,7 +10,9 @@
     "react-truncate": "^2.4.0",
     "standard": "^14.3.3",
     "jwt-decode": "^3.0.0",
-    "@material-ui/lab": "^4.0.0-alpha.54"
+    "tailwindcss": "^3.3.5",
+    "postcss": "^8.4.31",
+    "autoprefixer": "^10.4.14"
   },
   "scripts": {
     "start": "react-scripts start",
