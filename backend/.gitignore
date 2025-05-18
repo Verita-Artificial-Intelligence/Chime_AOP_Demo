@@ -1,0 +1,42 @@
+# Python compiled files
+*.pyc
+__pycache__/
+*.pyo
+
+# Environment
+env/
+venv/
+ENV/
+.venv/
+
+# Local config
+*.sqlite3
+*.db
+instance/
+*.log
+
+# Test, build, coverage output
+dist/
+build/
+coverage/
+htmlcov/
+.tox/
+.mypy_cache/
+.pytest_cache/
+.pyre/
+.coverage
+*.egg-info/
+.eggs/
+.cache/
+
+# Alembic
+alembic/versions/*.pyc
+
+# Secrets
+.env
+.env.*
+
+# Ignore pip tools
+pip-log.txt
+pip-delete-this-directory.txt
+
