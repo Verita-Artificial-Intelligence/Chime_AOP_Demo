@@ -174,3 +174,19 @@ Environment variables are automatically loaded from a `.env` file when the
 backend starts. Place your Clerk credentials and other settings in this file so
 they are available without extra configuration.
 
+
+## Client Generation
+
+The repository includes a helper script to create a Python client from an OpenAPI
+specification. The generated client uses `httpx` and also understands optional
+`x-streaming` and `x-websocket` extensions for streaming or WebSocket routes.
+
+1. Export your API spec to `openapi.json` using FastAPI's `app.openapi()`.
+2. Run the generator:
+
+```bash
+python scripts/generate_client.py openapi.json client.py
+```
+
+This produces `client.py` with an `APIClient` class for interacting with the
+backend asynchronously.
