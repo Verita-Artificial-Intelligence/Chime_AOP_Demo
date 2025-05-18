@@ -29,8 +29,6 @@ async def users_list(
     Get all users
     """
     users = get_users(db)
-    # This is necessary for react-admin to work
-    response.headers["Content-Range"] = f"0-9/{len(users)}"
     return users
 
 
