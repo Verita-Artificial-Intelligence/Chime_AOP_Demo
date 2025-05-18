@@ -169,9 +169,8 @@ The project integrates [Clerk](https://clerk.com/) for user management. Configur
 CLERK_SECRET_KEY=<your_clerk_secret_key>
 ```
 
-The frontend expects the `REACT_APP_PUBLISHABLE_KEY` value to be available and wraps the app with `ClerkProvider`.
+The frontend expects the `REACT_APP_CLERK_PUBLISHABLE_KEY` value to be available and wraps the app with `ClerkProvider`.
 
 Environment variables are automatically loaded from a `.env` file when the
 backend starts. Place your Clerk credentials and other settings in this file so
 they are available without extra configuration.
-
