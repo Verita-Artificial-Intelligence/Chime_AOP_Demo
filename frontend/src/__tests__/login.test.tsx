@@ -5,7 +5,7 @@ import { Login } from '../views';
 
 it('Login renders correctly', () => {
   const login = render(<Login />);
-  expect(login.getByText('Email')).toBeInTheDocument();
-  expect(login.getByText('Password')).toBeInTheDocument();
+  expect(login.getByPlaceholderText('Email')).toBeInTheDocument();
+  expect(login.getByPlaceholderText('Password')).toBeInTheDocument();
   expect(login.getByText('Login')).toBeInTheDocument();
 });
