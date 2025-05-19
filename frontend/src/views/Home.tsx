@@ -1,9 +1,14 @@
 import React, { useState } from 'react';
 
 import { getMessage } from '../utils/api';
-import { SignedIn, SignedOut, SignOutButton } from '@clerk/clerk-react';
+import {
+  SignOutButton,
+  RedirectToSignIn,
+  useUser,
+} from '@clerk/clerk-react';
 
 export const Home = () => {
+  const { isSignedIn } = useUser();
   const [message, setMessage] = useState<string>('');
   const [error, setError] = useState<string>('');
 
@@ -15,6 +20,10 @@ export const Home = () => {
       setError(String(err));
     }
   };
+
+  if (!isSignedIn) {
+    return <RedirectToSignIn />;
+  }
 
   return (
     <>
@@ -36,19 +45,7 @@ export const Home = () => {
       <a className="link" href="/protected">
         Protected Route
       </a>
-      <SignedIn>
-        <SignOutButton>Logout</SignOutButton>
-      </SignedIn>
-      <SignedOut>
-        <>
-          <a className="link" href="/login">
-            Login
-          </a>
-          <a className="link" href="/signup">
-            Sign Up
-          </a>
-        </>
-      </SignedOut>
+      <SignOutButton>Logout</SignOutButton>
     </>
   );
 };
