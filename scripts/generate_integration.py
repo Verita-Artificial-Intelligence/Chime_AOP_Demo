@@ -16,10 +16,6 @@ Workflow
 6.  Assemble a dict with keys: platform, instructions, actions.
 7.  Dump as YAML.
 
-You will need:
-    pip install pyyaml openai
-    export OPENAI_API_KEY="..."
-
 Example:
     python generate_integration.py pardot_collection.json \
            --platform marketing_cloud_account_engagement \
@@ -32,9 +28,11 @@ import sys
 from pathlib import Path
 from typing import Any, Dict, List
 from urllib.parse import urlparse
-
+from dotenv import load_dotenv
 from openai import OpenAI
 import yaml
+
+load_dotenv()
 
 # Initialize OpenAI client
 client = OpenAI()
