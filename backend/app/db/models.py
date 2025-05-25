@@ -25,4 +25,4 @@ class Integration(Base):
     description = Column(Text, nullable=False)
     action_type = Column(Text, nullable=False)
     embedding = Column(Vector(1536), nullable=False)
-    metadata = Column(JSON, nullable=False)
+    action_metadata = Column(JSON, nullable=False)

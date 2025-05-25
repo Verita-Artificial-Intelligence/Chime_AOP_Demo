@@ -33,6 +33,7 @@ services:
     command: /app/.venv/bin/celery --app app.tasks worker --loglevel=DEBUG -Q main-queue -c 1
     volumes:
       - ./backend:/app/:cached
+      - /app/.venv
     environment:
       PYTHONPATH: .
       DATABASE_URL: 'postgresql://postgres:password@postgres:5432/postgres'
@@ -60,6 +61,7 @@ services:
     volumes:
       - ./backend:/app/:cached
       - ./.docker/.ipython:/root/.ipython:cached
+      - /app/.venv
     environment:
       PYTHONPATH: .
       DATABASE_URL: 'postgresql://postgres:password@postgres:5432/postgres'
