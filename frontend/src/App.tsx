@@ -5,15 +5,7 @@ import './App.css';
 import {Layout} from './components/Layout';
 import { HomeIcon, TableCellsIcon, CogIcon, UserGroupIcon, DocumentChartBarIcon, BuildingOfficeIcon, ArrowTrendingUpIcon, PresentationChartLineIcon, CircleStackIcon, BoltIcon, CpuChipIcon } from '@heroicons/react/24/outline';
 import { ChevronDownIcon } from '@heroicons/react/20/solid';
-
-// Mock data for sub-navigation items
-import mockData from './data/mockData.json';
-
 // Page Components
-import { AccountsPayablePage } from './pages/AccountsPayablePage';
-import { AccountsReceivablePage } from './pages/AccountsReceivablePage';
-import { PayrollPage } from './pages/PayrollPage';
-import { EntitlementsPage } from './pages/EntitlementsPage';
 import { IntegrationsPage } from './pages/IntegrationsPage';
 import ManageIntegrationsPage from './pages/ManageIntegrationsPage';
 import ManageConnectionsPage from './pages/ManageConnectionsPage';
@@ -50,10 +42,6 @@ export function App() {
   
       <Routes>
         <Route path="/" element={<HomePage />} />
-        <Route path="/accounts-payable" element={<AccountsPayablePage mockData={mockData} />} />
-        <Route path="/accounts-receivable" element={<AccountsReceivablePage mockData={mockData} />} />
-        <Route path="/payroll" element={<PayrollPage mockData={mockData} />} />
-        <Route path="/entitlements" element={<EntitlementsPage mockData={mockData} />} />
         <Route path="/integrations" element={<IntegrationsPage />} />
         <Route path="/integrations/manage" element={<ManageIntegrationsPage />} />
         <Route path="/connections/manage" element={<ManageConnectionsPage />} />

@@ -28,12 +28,6 @@ const quickAccessItems = [
     icon: CpuChipIcon, 
   },
   {
-    name: 'Financial Operations',
-    href: '/accounts-payable', // Or a general finance dashboard if you create one
-    description: 'Access tools for accounts payable, receivable, and payroll.',
-    icon: TableCellsIcon,
-  },
-  {
     name: 'Explore Integrations',
     href: '/integrations',
     description: 'Browse and manage connections to various data sources and services.',

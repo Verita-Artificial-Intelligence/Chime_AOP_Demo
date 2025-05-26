@@ -45,16 +45,6 @@ const navItems: NavItem[] = [
       { name: 'PowerBI Dashboards', href: '/data-sources/powerbi-dashboards' },
     ],
   },
-  {
-    name: 'Financial Operations',
-    icon: TableCellsIcon,
-    subItems: [
-      { name: 'Accounts Payable', href: '/accounts-payable' },
-      { name: 'Accounts Receivable', href: '/accounts-receivable' },
-      { name: 'Payroll', href: '/payroll' },
-      { name: 'Entitlements', href: '/entitlements' },
-    ],
-  },
   // Example of a top-level settings link if needed, otherwise keep it under a sub-menu
   // { name: 'Platform Settings', href: '/settings', icon: CogIcon }, 
 ];
