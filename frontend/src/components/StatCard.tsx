@@ -8,11 +8,11 @@ interface StatCardProps {
 }
 
 const StatCard: React.FC<StatCardProps> = ({ label, value, icon, className = '' }) => (
-  <div className={`bg-gray-900 border border-gray-700 rounded-lg p-4 flex items-center gap-4 ${className}`}>
-    {icon && <div className="text-2xl text-brand">{icon}</div>}
+  <div className={`bg-brand-card border border-brand-border rounded-lg p-4 flex items-center gap-4 shadow-card ${className}`}>
+    {icon && <div className="text-2xl text-brand-primary">{icon}</div>}
     <div>
-      <div className="text-sm text-gray-400">{label}</div>
-      <div className="font-bold text-xl text-white">{value}</div>
+      <div className="text-sm text-brand-muted opacity-70">{label}</div>
+      <div className="font-bold text-xl text-brand-heading">{value}</div>
     </div>
   </div>
 );

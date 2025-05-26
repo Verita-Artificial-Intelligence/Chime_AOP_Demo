@@ -11,21 +11,26 @@ export default {
       },
       colors: {
         brand: {
-          DEFAULT: '#FF3008',     // DoorDash Red :contentReference[oaicite:0]{index=0}
-          primary: '#FF3008',     // same as DEFAULT :contentReference[oaicite:1]{index=1}
-          success: '#00b88b',     // retained from your original setup
-          danger: '#ff4d4f',      // retained from your original setup
-          background: '#FFFFFF',  // white :contentReference[oaicite:2]{index=2}
-          card: '#FFFFFF',        // white :contentReference[oaicite:3]{index=3}
-          border: '#F2F2F2',      // light gray for subtle dividers
-          heading: '#191919',     // “Cod Gray” :contentReference[oaicite:4]{index=4}
-          muted: '#767676',       // moderate gray for less prominent text
-          sidebar: '#FFFFFF',     // white background
-          sidebarBorder: '#F2F2F2', // matching border
-          sidebarActive: '#EB1700', // Scarlet accent :contentReference[oaicite:5]{index=5}
-          light: '#A3B9A7',       // retained from your original setup
-          dark: '#191919',        // matching heading color :contentReference[oaicite:6]{index=6}
+          DEFAULT: '#1EC677',     // Mountain Meadow - Primary
+          primary: '#1EC677',     // Mountain Meadow - Core brand green
+          success: '#1EC677',     // Using primary for success states
+          danger: '#ff4d4f',      // Keeping existing danger color
+          background: '#ECF9EE',  // Ottoman - Light tint for app backgrounds
+          card: '#FFFFFF',        // White - Surface color for cards
+          border: '#ECF9EE',      // Ottoman - Subtle borders
+          heading: '#0D4029',     // Bottle Green - Dark accent for headlines
+          muted: '#0D4029',       // Bottle Green with opacity for muted text
+          sidebar: '#FFFFFF',     // White background for sidebar
+          sidebarBorder: '#ECF9EE', // Ottoman for sidebar borders
+          sidebarActive: '#1EC677', // Mountain Meadow for active states
+          light: '#ECF9EE',       // Ottoman - Light tint
+          dark: '#0D4029',        // Bottle Green - Dark accent
         },
+        // Adding semantic color names for easier reference
+        'mountain-meadow': '#1EC677',
+        'bottle-green': '#0D4029',
+        'ottoman': '#ECF9EE',
+        'neutral-white': '#FFFFFF',
       },
       fontSize: {
         'heading-1': ['2.25rem', { lineHeight: '2.5rem', fontWeight: '700' }],
@@ -50,15 +55,15 @@ export default {
       },
       boxShadow: {
         none: 'none',
-        xs: '0 1px 2px 0 rgba(16,30,54,0.03)',
-        card: '0 1px 2px 0 rgba(16,30,54,0.03)',
-        btn: '0 2px 8px 0 rgba(29, 78, 216, 0.15)',
+        xs: '0 1px 2px 0 rgba(13,64,41,0.03)',
+        card: '0 1px 2px 0 rgba(13,64,41,0.03)',
+        btn: '0 2px 8px 0 rgba(30,198,119,0.15)',
       },
       transitionProperty: {
         'colors': 'color, background-color, border-color, text-decoration-color, fill, stroke',
       },
       backgroundImage: {
-        'gradient-brand': 'linear-gradient(90deg, #FF3008, #D32F2F, #EA5A4D)',
+        'gradient-brand': 'linear-gradient(90deg, #1EC677, #0D4029, #ECF9EE)',
       },
     },
   },

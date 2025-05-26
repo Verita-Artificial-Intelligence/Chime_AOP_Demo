@@ -47,22 +47,22 @@ export function IntegrationModal({ open, onClose, type }: IntegrationModalProps)
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-60">
-      <div className="bg-white rounded-xl shadow-lg p-6 w-full max-w-md relative">
-        <button onClick={onClose} className="absolute top-3 right-3 text-gray-400 hover:text-gray-700 text-2xl">×</button>
-        <h2 className="text-2xl font-bold mb-2 text-gray-900">{data.name}</h2>
-        <div className="mb-2 text-sm text-gray-500">{data.description}</div>
+      <div className="bg-brand-card rounded-xl shadow-lg p-6 w-full max-w-md relative">
+        <button onClick={onClose} className="absolute top-3 right-3 text-brand-muted hover:text-brand-heading text-2xl">×</button>
+        <h2 className="text-2xl font-bold mb-2 text-brand-heading">{data.name}</h2>
+        <div className="mb-2 text-sm text-brand-muted opacity-70">{data.description}</div>
         <div className="mb-4 flex items-center gap-4">
           <span className="font-semibold">Status:</span>
-          <span className="text-red-600 font-bold">{data.status}</span>
-          <span className="ml-auto text-xs text-gray-400">Last Sync: {data.lastSync}</span>
+          <span className="text-brand-primary font-bold">{data.status}</span>
+          <span className="ml-auto text-xs text-brand-muted opacity-70">Last Sync: {data.lastSync}</span>
         </div>
         <div className="mb-4">
-          <div className="font-semibold mb-1 text-gray-700">Sample Data</div>
+          <div className="font-semibold mb-1 text-brand-heading">Sample Data</div>
           <div className="w-full h-32 flex items-end gap-2">
             {data.chart.map((d) => (
               <div key={d.label} className="flex flex-col items-center w-1/4">
                 <div style={{ height: `${d.value}px` }} className="w-6 bg-blue-500 rounded-t"></div>
-                <span className="text-xs mt-1 text-gray-600">{d.label}</span>
+                <span className="text-xs mt-1 text-brand-muted opacity-70">{d.label}</span>
               </div>
             ))}
           </div>

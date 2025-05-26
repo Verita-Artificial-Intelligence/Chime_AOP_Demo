@@ -76,14 +76,14 @@ export default function AOPRunHistoryPage() { // Renamed component
     <div className="max-w-7xl mx-auto p-4 md:p-6">
       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-6">
         <div>
-          <h1 className="text-3xl font-bold text-gray-800">AOP Run History</h1>
-          <p className="text-gray-600 mt-1">
+                <h1 className="text-3xl font-bold text-brand-heading">AOP Run History</h1>
+      <p className="text-brand-muted opacity-70 mt-1">
             View the execution history of your Automated Operation Procedures.
           </p>
         </div>
         {/* Button to navigate to AOP builder page */}
         <button
-          className="mt-4 sm:mt-0 px-6 py-2.5 bg-red-600 text-white rounded-md text-sm font-semibold hover:bg-red-700 transition shadow-sm whitespace-nowrap"
+          className="mt-4 sm:mt-0 px-6 py-2.5 bg-brand-primary text-white rounded-md text-sm font-semibold hover:bg-brand-dark transition shadow-sm whitespace-nowrap"
           onClick={() => navigate('/aop')} // Navigate to the AOP manual builder or chat builder
         >
           Build New AOP
@@ -98,12 +98,12 @@ export default function AOPRunHistoryPage() { // Renamed component
       )}
 
       {runHistory.length === 0 && (
-        <div className="col-span-full text-center text-gray-500 py-10">
-          <svg className="mx-auto h-12 w-12 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
+        <div className="col-span-full text-center text-brand-muted py-10">
+          <svg className="mx-auto h-12 w-12 text-brand-muted opacity-70" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
             <path vectorEffect="non-scaling-stroke" strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 13h6m-3-3v6m-9 1V7a2 2 0 012-2h6l2 2h6a2 2 0 012 2v8a2 2 0 01-2 2H5a2 2 0 01-2-2zm3-5a1 1 0 000 2h.01a1 1 0 100-2H7zm5 0a1 1 0 000 2h.01a1 1 0 100-2H12z" />
           </svg>
-          <h3 className="mt-2 text-lg font-medium text-gray-900">No Run History Found</h3>
-          <p className="mt-1 text-sm text-gray-500">Get started by building and running an AOP.</p>
+          <h3 className="mt-2 text-lg font-medium text-brand-heading">No Run History Found</h3>
+          <p className="mt-1 text-sm text-brand-muted opacity-70">Get started by building and running an AOP.</p>
         </div>
       )}
 
@@ -111,12 +111,12 @@ export default function AOPRunHistoryPage() { // Renamed component
         {runHistory.map(run => (
           <div
             key={run.id}
-            className="bg-white border border-gray-200 rounded-lg shadow-sm p-6 hover:shadow-md transition-shadow duration-150"
+            className="bg-brand-card border border-brand-border rounded-lg shadow-sm p-6 hover:shadow-md transition-shadow duration-150"
           >
             <div className="flex flex-col sm:flex-row justify-between items-start mb-3">
               <div>
-                <h2 className="text-xl font-semibold text-gray-800 hover:text-red-600 cursor-pointer" onClick={() => navigate(`/aop/run/${run.id}`)}>{run.name}</h2>
-                <p className="text-sm text-gray-500">ID: {run.id} {run.category && `| Category: ${run.category}`}</p>
+                <h2 className="text-xl font-semibold text-brand-heading hover:text-brand-primary cursor-pointer" onClick={() => navigate(`/aop/run/${run.id}`)}>{run.name}</h2>
+                <p className="text-sm text-brand-muted opacity-70">ID: {run.id} {run.category && `| Category: ${run.category}`}</p>
               </div>
               <div className="mt-2 sm:mt-0 sm:ml-4 flex-shrink-0">
                 <span
@@ -131,23 +131,23 @@ export default function AOPRunHistoryPage() { // Renamed component
               </div>
             </div>
             
-            <p className="text-sm text-gray-600 mb-3">{run.description || 'No description provided.'}</p>
+            <p className="text-sm text-brand-muted opacity-70 mb-3">{run.description || 'No description provided.'}</p>
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-x-4 gap-y-2 text-sm mb-4">
-                <div><span className="font-medium text-gray-700">Last Run:</span> {new Date(run.lastRun).toLocaleString()}</div>
+                <div><span className="font-medium text-brand-heading">Last Run:</span> {new Date(run.lastRun).toLocaleString()}</div>
                 {run.metrics && Object.entries(run.metrics).map(([key, value]) => (
-                    <div key={key}><span className="font-medium text-gray-700">{key.replace(/([A-Z])/g, ' $1').replace(/^./, str => str.toUpperCase())}:</span> {value}</div>
+                    <div key={key}><span className="font-medium text-brand-heading">{key.replace(/([A-Z])/g, ' $1').replace(/^./, str => str.toUpperCase())}:</span> {value}</div>
                 ))}
             </div>
 
             {run.runHistory && run.runHistory.length > 0 && (
               <div className="mt-4">
-                <h4 className="text-sm font-semibold text-gray-700 mb-2">Recent Activity:</h4>
-                <ul className="space-y-2 max-h-32 overflow-y-auto border rounded-md p-3 bg-gray-50">
+                <h4 className="text-sm font-semibold text-brand-heading mb-2">Recent Activity:</h4>
+                <ul className="space-y-2 max-h-32 overflow-y-auto border rounded-md p-3 bg-brand-light">
                   {run.runHistory.slice(0, 5).map((historyItem, index) => ( // Show latest 5 for brevity
-                    <li key={index} className="text-xs text-gray-600 border-b border-gray-200 pb-1 last:border-b-0 last:pb-0">
+                    <li key={index} className="text-xs text-brand-muted border-b border-brand-border pb-1 last:border-b-0 last:pb-0">
                       <span className={`font-medium ${historyItem.status.toLowerCase() === 'success' ? 'text-green-600' : historyItem.status.toLowerCase() === 'failed' ? 'text-red-600' : 'text-yellow-600'}`}>{historyItem.status}:</span> {historyItem.details} 
-                      <span className="text-gray-400">({new Date(historyItem.timestamp).toLocaleTimeString()})</span>
+                      <span className="text-brand-muted opacity-50">({new Date(historyItem.timestamp).toLocaleTimeString()})</span>
                     </li>
                   ))}
                 </ul>
@@ -162,7 +162,7 @@ export default function AOPRunHistoryPage() { // Renamed component
                 Delete Run
                 </button>
                 <button
-                    className="px-4 py-1.5 bg-gray-600 text-white rounded-md text-xs font-semibold hover:bg-gray-700 transition shadow-sm"
+                    className="px-4 py-1.5 bg-brand-heading text-white rounded-md text-xs font-semibold hover:bg-brand-dark transition shadow-sm"
                     onClick={() => navigate(`/aop/run/${run.id}`)} // Navigate to the specific run simulation/details page
                 >
                     View Details / Rerun

@@ -57,11 +57,11 @@ export const Layout: React.FC<LayoutProps> = ({ children }) => {
   const location = useLocation();
 
   return (
-    <div className="flex h-screen bg-gray-100">
-      <aside className="w-64 bg-white shadow-md flex flex-col">
-        <div className="p-4 border-b border-gray-200">
+    <div className="flex h-screen bg-brand-background">
+      <aside className="w-64 bg-brand-sidebar shadow-md flex flex-col">
+        <div className="p-4 border-b border-brand-sidebarBorder">
           <Link to="/">
-            <h1 className="text-2xl font-bold text-red-600 hover:text-red-700 transition-colors">Chime AOPS</h1> 
+            <h1 className="text-2xl font-bold text-brand-primary hover:text-brand-dark transition-colors">Chime AOPS</h1> 
           </Link>
         </div>
         <nav className="mt-4 flex-grow overflow-y-auto">
@@ -73,8 +73,8 @@ export const Layout: React.FC<LayoutProps> = ({ children }) => {
                   open={item.subItems.some(sub => location.pathname === sub.href || location.pathname.startsWith(sub.href + '/')) || item.subItems.some(sub => sub.href && location.pathname.includes(sub.href))}
                 >
                   <summary 
-                    className={`flex items-center justify-between px-4 py-2.5 text-sm font-medium text-gray-700 rounded-md cursor-pointer hover:bg-gray-100 transition-colors ${
-                      item.subItems.some(sub => location.pathname === sub.href || location.pathname.startsWith(sub.href + '/')) ? 'bg-gray-100 text-red-600' : ''
+                    className={`flex items-center justify-between px-4 py-2.5 text-sm font-medium text-brand-heading rounded-md cursor-pointer hover:bg-brand-light transition-colors ${
+                      item.subItems.some(sub => location.pathname === sub.href || location.pathname.startsWith(sub.href + '/')) ? 'bg-brand-light text-brand-primary' : ''
                     }`}
                   >
                     <div className="flex items-center">
@@ -88,8 +88,8 @@ export const Layout: React.FC<LayoutProps> = ({ children }) => {
                       <li key={subItem.name}>
                         <Link
                           to={subItem.href}
-                          className={`block px-4 py-2 text-sm rounded-md transition-colors hover:bg-red-50 hover:text-red-600 ${
-                            location.pathname === subItem.href ? 'font-semibold text-red-600 bg-red-50' : 'text-gray-600'
+                          className={`block px-4 py-2 text-sm rounded-md transition-colors hover:bg-brand-light hover:text-brand-primary ${
+                            location.pathname === subItem.href ? 'font-semibold text-brand-primary bg-brand-light' : 'text-brand-muted'
                           }`}
                         >
                           {subItem.name}
@@ -101,8 +101,8 @@ export const Layout: React.FC<LayoutProps> = ({ children }) => {
               ) : (
                 <Link
                   to={item.href!}
-                  className={`flex items-center px-4 py-2.5 text-sm font-medium rounded-md transition-colors hover:bg-gray-100 ${
-                    location.pathname === item.href ? 'text-red-600 bg-gray-100 font-semibold' : 'text-gray-700'
+                  className={`flex items-center px-4 py-2.5 text-sm font-medium rounded-md transition-colors hover:bg-brand-light ${
+                    location.pathname === item.href ? 'text-brand-primary bg-brand-light font-semibold' : 'text-brand-heading'
                   }`}
                 >
                   <item.icon className="w-5 h-5 mr-3 flex-shrink-0" />
@@ -112,11 +112,11 @@ export const Layout: React.FC<LayoutProps> = ({ children }) => {
             </div>
           ))}
         </nav>
-        <div className="p-4 border-t border-gray-200">
-            <p className="text-xs text-gray-500">© 2025 Chime AOPS</p>
+        <div className="p-4 border-t border-brand-sidebarBorder">
+            <p className="text-xs text-brand-muted opacity-70">© 2025 Chime AOPS</p>
         </div>
       </aside>
-      <main className="flex-1 overflow-x-hidden overflow-y-auto bg-white p-6 md:p-8">
+      <main className="flex-1 overflow-x-hidden overflow-y-auto bg-brand-card p-6 md:p-8">
         {children}
       </main>
     </div>

@@ -229,18 +229,18 @@ export function AOPBuilderPage() {
   };
 
   return (
-    <div className="container mx-auto max-w-3xl p-4 flex flex-col h-[calc(100vh-100px)] bg-white">
-      <h1 className="text-3xl font-bold text-red-500 mb-6 text-center">AOP Builder Agent</h1>
+    <div className="container mx-auto max-w-3xl p-4 flex flex-col h-[calc(100vh-100px)] bg-brand-card">
+              <h1 className="text-3xl font-bold text-brand-primary mb-6 text-center">AOP Builder Agent</h1>
       
-      <div className="flex-grow bg-white p-6 rounded-lg overflow-y-auto mb-4">
+      <div className="flex-grow bg-brand-card p-6 rounded-lg overflow-y-auto mb-4">
         {messages.map((msg) => (
           <div key={msg.id} className={`mb-3 flex ${msg.sender === 'user' ? 'justify-end' : 'justify-start'}`}>
-            <div className={`p-3 rounded-lg max-w-md ${msg.sender === 'user' ? 'bg-red-500 text-white' : msg.sender === 'agent' ? 'bg-white text-gray-800' : 'bg-green-100 text-green-700 text-sm italic w-full text-center'}`}>
+            <div className={`p-3 rounded-lg max-w-md ${msg.sender === 'user' ? 'bg-brand-primary text-white' : msg.sender === 'agent' ? 'bg-brand-card text-brand-heading' : 'bg-brand-light text-brand-primary text-sm italic w-full text-center'}`}>
               {msg.text}
               {msg.id === 'save-button' && msg.config && (
                 <button
                   onClick={() => saveAgent(msg.config as AgentConfig)}
-                  className="mt-2 px-4 py-2 bg-red-600 text-white rounded-md hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-opacity-50 w-full"
+                  className="mt-2 px-4 py-2 bg-brand-primary text-white rounded-md hover:bg-brand-dark focus:outline-none focus:ring-2 focus:ring-brand-primary focus:ring-opacity-50 w-full"
                 >
                   Save & Run This AOP
                 </button>
@@ -260,10 +260,10 @@ export function AOPBuilderPage() {
                     key={prompt.id}
                     onClick={() => handlePromptSelect(prompt)}
                     disabled={isBuilding}
-                    className="p-4 border rounded-lg text-left bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-opacity-50 disabled:opacity-60 transition-all duration-150 ease-in-out"
-                >
-                    <h3 className="text-md font-semibold text-red-600">{prompt.title}</h3>
-                    <p className="text-sm text-gray-600 mt-1">{prompt.description}</p>
+                                  className="p-4 border rounded-lg text-left bg-brand-card hover:bg-brand-light focus:outline-none focus:ring-2 focus:ring-brand-primary focus:ring-opacity-50 disabled:opacity-60 transition-all duration-150 ease-in-out"
+            >
+              <h3 className="text-md font-semibold text-brand-primary">{prompt.title}</h3>
+              <p className="text-sm text-brand-muted opacity-70 mt-1">{prompt.description}</p>
                 </button>
                 ))}
             </div>
@@ -278,19 +278,19 @@ export function AOPBuilderPage() {
                   setMessages([]); 
                   setIsBuilding(false); 
                 }}
-                className="px-6 py-2 text-gray-700 bg-white rounded-md hover:bg-gray-300 focus:outline-none focus:ring-2 focus:ring-gray-400"
+                className="px-6 py-2 text-brand-heading bg-brand-card rounded-md hover:bg-brand-light focus:outline-none focus:ring-2 focus:ring-brand-primary"
             >
                 Start Over
             </button>
         </div>
       )}
 
-      <div className="mt-auto p-4 bg-white border-t border-gray-200 rounded-b-lg">
+      <div className="mt-auto p-4 bg-brand-card border-t border-brand-border rounded-b-lg">
         <input
           type="text"
           placeholder="Chat disabled in demo mode (select a prompt above to begin building your AOP)..."
           disabled
-          className="w-full p-3 border border-gray-300 rounded-md bg-gray-100 cursor-not-allowed"
+          className="w-full p-3 border border-brand-border rounded-md bg-brand-light cursor-not-allowed"
         />
       </div>
     </div>

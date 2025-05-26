@@ -3,20 +3,20 @@
   width: 6px;
 }
 .chat-container::-webkit-scrollbar-track {
-  background: #1f2937;
+  background: #ECF9EE;
   border-radius: 10px;
 }
 .chat-container::-webkit-scrollbar-thumb {
-  background: #4b5563;
+  background: #1EC677;
   border-radius: 10px;
 }
 .chat-container::-webkit-scrollbar-thumb:hover {
-  background: #6b7280;
+  background: #0D4029;
 }
 
-/* Gradient text styling similar to Devin */
+/* Gradient text styling with new color scheme */
 .text-gradient {
-  background: linear-gradient(90deg, #184A45, #3A6351, #A3B9A7);
+  background: linear-gradient(90deg, #1EC677, #0D4029, #ECF9EE);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
