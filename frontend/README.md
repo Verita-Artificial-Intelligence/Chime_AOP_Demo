@@ -1,111 +1,100 @@
-# Vite + React 18 Frontend
+# Partner Assistant Workflows Demo
 
-This project uses [Vite](https://vitejs.dev/) for the React 18 frontend with React Router v6 and Vitest for testing.
+An interactive demonstration of Partner Assistant (PA) workflows focused on co-selling scenarios.
 
-## Requirements
+## Overview
 
-- Node.js 18 or higher (Node 20+ recommended)
-- npm 7 or higher
+This web application demonstrates the various workflows that the Partner Assistant can handle, focusing on streamlining partner-related processes for different user personas. The demo showcases how PA can help with AWS co-selling, GSI/Service partner collaborations, and other partner-related tasks.
+
+## Features
+
+- **Persona-based Navigation**: Select from different user personas including Partner Manager, Partner Leader, Account Manager, and Sales Leadership
+- **Workflow Catalog**: Browse workflows organized by use case categories
+- **Interactive Workflow Execution**: Step-by-step visualization of how PA processes each request
+- **Chat Simulation**: See how users would interact with PA through natural language
+- **Realistic Visualizations**: View partner mapping grids, opportunity lists, and other data representations
+
+## Workflows Demonstrated
+
+### AWS Co-Selling
+- Identifying & Tagging AWS Opportunities
+- Partner Manager ACE Deal Registrations
+- Account Manager ACE Deal Registration
+- Monitor Movement of Partner Related Deals
+- Keep AWS ACE Filings in Sync
+
+### GSI/Service Partner Co-Selling
+- Partner Help for Customer Retention
+- Co-Marketing Opportunities
+- Quick Wins for New Partnerships
+
+## Technical Details
+
+This demo is built using:
+- React + TypeScript
+- Vite for fast development
+- Tailwind CSS for styling
+- Headless UI components
 
 ## Getting Started
 
-1. Install dependencies:
+```bash
+# Install dependencies
+npm install
 
-   ```bash
-   npm install
-   ```
-
-2. Start the development server:
-
-   ```bash
-   npm start
-   ```
-
-3. Build for production:
-
-   ```bash
-   npm run build
-   ```
-
-4. Run tests:
-
-   ```bash
-   npm test
-   ```
-
-## Environment Variables
-
-All environment variables must be prefixed with `VITE_` to be accessible in the frontend. For example:
-
-```
-VITE_API_URL=https://api.example.com
+# Start the development server
+npm run dev
 ```
 
-Update any previous `REACT_APP_` variables to use the `VITE_` prefix.
+## Screenshots
 
-## Available Scripts
+The demo includes several screens:
 
-In the project directory, you can run:
+1. Persona Selection - Choose which role you want to simulate
+2. Workflow Selection - Browse available workflows based on your persona
+3. Workflow Execution - Interactive step-by-step execution with visualizations
+4. Results Display - See the output of each workflow with realistic data
 
-### `npm start`
+## Use Cases
 
-Runs the app in the development mode.<br />
-Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
+This demo is designed to illustrate how PA can help with:
 
-The page will reload if you make edits.<br />
-You will also see any lint errors in the console.
+- Automating the identification and tagging of AWS opportunities
+- Facilitating deal registrations in partner systems
+- Monitoring partner-related deals
+- Identifying partners for customer retention
+- Finding co-marketing opportunities
+- Discovering quick wins for new partnerships
 
-### `npm test`
+The demonstration highlights the capabilities of the Partner Assistant in improving efficiency, data accuracy, and collaboration in partner-related activities.
 
-Launches the test runner in the interactive watch mode.<br />
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+# Project Task Checklist
 
-### `npm run build`
+## 1. Populate All Charts with Realistic Fake Data
+- [X] Identify all chart and data visualization areas in `App.tsx` (Budget, Forecast, etc.)
+- [X] Replace placeholder or static values with realistic fake data from `src/data/mockData.ts` or similar
+- [X] Add/replace chart components (e.g., bar, line, pie) for Budget, Forecast, and other analytics
+- [X] Ensure all summary cards and tables use mock data
 
-Builds the app for production to the `build` folder.<br />
-It correctly bundles React in production mode and optimizes the build for the best performance.
+## 2. Make PowerBI and Orbit Integration Buttons Functional (with Mock Data)
+- [X] Add click handlers to PowerBI and Orbit Analytics integration buttons
+- [X] On click, show a modal or side panel with mock integration data (e.g., sample charts, connection status, last sync)
+- [X] Use mock data to simulate integration status and data fetch
+- [X] Ensure UI feedback for successful/failed (mock) integration
 
-The build is minified and the filenames include the hashes.<br />
-Your app is ready to be deployed!
+## 3. Build an AI Agent Section for Back Office Workflows
+- [ ] Add a new section/component for "Build an AI Agent" in the main UI
+- [ ] Implement a stepper or wizard for the following workflow:
+    1. [ ] Click "Create AI Agent"
+    2. [ ] Choose a predefined workflow (Accounts Payable, Receivable, Payroll, Entitlements)
+    3. [ ] Choose data sources to connect (show mock options)
+    4. [ ] Choose actions/results (e.g., "Send payment reminder", "Run payroll report")
+    5. [ ] Choose the LLM (show Perplexity or other model options with a short use-case description)
+    6. [ ] Start the agent and show a mock execution summary/results
+- [ ] Use only fake/mock data for all steps and results
+- [ ] Ensure the UI is clear, modern, and user-friendly
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
-
-### `npm run eject`
-
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
-
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
-
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
-
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
-
-## Learn More
-
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
-
-To learn React, check out the [React documentation](https://reactjs.org/).
-
-### Code Splitting
-
-This section has moved here: https://facebook.github.io/create-react-app/docs/code-splitting
-
-### Analyzing the Bundle Size
-
-This section has moved here: https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size
-
-### Making a Progressive Web App
-
-This section has moved here: https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app
-
-### Advanced Configuration
-
-This section has moved here: https://facebook.github.io/create-react-app/docs/advanced-configuration
-
-### Deployment
-
-This section has moved here: https://facebook.github.io/create-react-app/docs/deployment
-
-### `npm run build` fails to minify
-
-This section has moved here: https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify
+## 4. General
+- [ ] Add/adjust mock data in `src/data/` as needed for new features
+- [ ] Test all new UI flows for usability and completeness
+- [ ] Update documentation/screenshots as needed

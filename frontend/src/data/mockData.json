@@ -1,0 +1,656 @@
+{
+  "opportunities": [
+    {
+      "id": "OPP-1001",
+      "name": "Acme Cloud Migration",
+      "description": "Enterprise-wide cloud migration to AWS and implementation of new data storage architecture",
+      "customer": "Acme Corp",
+      "value": 450000,
+      "stage": "Discovery",
+      "closeDate": "2025-08-15",
+      "owner": "Sarah Johnson",
+      "notes": "Customer is interested in AWS S3 integration for their data storage needs. May need to involve AWS Partner Network for specialized guidance.",
+      "calls": [
+        {
+          "date": "2025-04-15",
+          "participants": ["Sarah Johnson", "John Smith (Acme Corp CTO)"],
+          "summary": "Discussed AWS infrastructure requirements and S3 storage options for large datasets"
+        }
+      ],
+      "emails": [
+        {
+          "date": "2025-04-18",
+          "sender": "john.smith@acmecorp.com",
+          "subject": "AWS Migration Questions",
+          "content": "Following our call, I have some questions about how your solution would integrate with our existing AWS Lambda functions..."
+        }
+      ],
+      "tags": []
+    },
+    {
+      "id": "OPP-1002",
+      "name": "TechCorp Platform Upgrade",
+      "description": "Upgrading existing platform with enhanced security features and cloud integrations",
+      "customer": "TechCorp",
+      "value": 275000,
+      "stage": "Proposal",
+      "closeDate": "2025-07-30",
+      "owner": "Michael Williams",
+      "notes": "Customer requires AWS integration for their existing applications. We should highlight our AWS competencies.",
+      "calls": [
+        {
+          "date": "2025-04-10",
+          "participants": ["Michael Williams", "Lisa Tang (TechCorp CIO)"],
+          "summary": "Discussed AWS integration points and how we can leverage AWS Identity for SSO capabilities"
+        }
+      ],
+      "emails": [
+        {
+          "date": "2025-04-12",
+          "sender": "michael.williams@company.com",
+          "subject": "AWS Lambda details",
+          "content": "Here are the AWS Lambda architecture diagrams we discussed in our meeting. These show how we can integrate..."
+        }
+      ],
+      "tags": []
+    },
+    {
+      "id": "OPP-1003",
+      "name": "GlobalRetail Data Solution",
+      "description": "Implementation of real-time data analytics platform for retail operations",
+      "customer": "GlobalRetail",
+      "value": 520000,
+      "stage": "Negotiation",
+      "closeDate": "2025-06-30",
+      "owner": "Jessica Lee",
+      "notes": "Solution will require AWS integration for their data pipeline. GlobalRetail prefers AWS for all cloud services.",
+      "calls": [
+        {
+          "date": "2025-03-28",
+          "participants": ["Jessica Lee", "Robert Chen (GlobalRetail CTO)"],
+          "summary": "Reviewed AWS infrastructure requirements and discussed AWS Kinesis for real-time data processing"
+        }
+      ],
+      "emails": [
+        {
+          "date": "2025-04-02",
+          "sender": "robert.chen@globalretail.com",
+          "subject": "AWS Integration Proposal",
+          "content": "Thanks for the detailed proposal. We like your approach to AWS integration, especially the use of AWS Glue for ETL processes..."
+        }
+      ],
+      "tags": []
+    },
+    {
+      "id": "OPP-1004",
+      "name": "FinTech Security Upgrade",
+      "description": "Implementation of enhanced security protocols and compliance monitoring",
+      "customer": "AlphaBank",
+      "value": 380000,
+      "stage": "Discovery",
+      "closeDate": "2025-09-15",
+      "owner": "David Rodriguez",
+      "notes": "AlphaBank is considering cloud migration to AWS for their security infrastructure.",
+      "calls": [
+        {
+          "date": "2025-04-20",
+          "participants": ["David Rodriguez", "Maria Lopez (AlphaBank CISO)"],
+          "summary": "Discussed AWS Security Hub and how it can provide centralized visibility into their security posture"
+        }
+      ],
+      "emails": [
+        {
+          "date": "2025-04-22",
+          "sender": "maria.lopez@alphabank.com",
+          "subject": "AWS Compliance Requirements",
+          "content": "Following our discussion about AWS security services, I need more information about how your solution addresses GDPR compliance in AWS..."
+        }
+      ],
+      "tags": []
+    },
+    {
+      "id": "OPP-1005",
+      "name": "MediCorp Patient Platform",
+      "description": "Patient engagement platform with telehealth capabilities",
+      "customer": "MediCorp",
+      "value": 620000,
+      "stage": "Discovery",
+      "closeDate": "2025-10-30",
+      "owner": "Thomas Wilson",
+      "notes": "MediCorp is committed to AWS as their cloud provider and requires deep integration with AWS services.",
+      "calls": [
+        {
+          "date": "2025-04-25",
+          "participants": ["Thomas Wilson", "Dr. Sarah Carter (MediCorp CIO)"],
+          "summary": "Reviewed AWS healthcare compliance requirements and discussed AWS HealthLake integration options"
+        }
+      ],
+      "emails": [
+        {
+          "date": "2025-04-27",
+          "sender": "thomas.wilson@company.com",
+          "subject": "AWS Health Services Architecture",
+          "content": "Attached is the architecture diagram showing how our solution leverages AWS Health services while maintaining HIPAA compliance..."
+        }
+      ],
+      "tags": []
+    }
+  ],
+  "budgetAllocations": [
+    { "department": "Investment", "amount": 250000, "percent": 25 },
+    { "department": "Technology", "amount": 180000, "percent": 18 }
+  ],
+  "budgetForecastData": [
+    { "month": "Jun 2023", "planned": 100000, "actual": 98000 },
+    { "month": "Jul 2023", "planned": 105000, "actual": 102000 },
+    { "month": "Aug 2023", "planned": 110000, "actual": 108000 },
+    { "month": "Sep 2023", "planned": 115000, "actual": 112000 },
+    { "month": "Oct 2023", "planned": 115000, "actual": 116000 },
+    { "month": "Nov 2023", "planned": 120000, "actual": 118000 },
+    { "month": "Dec 2023", "planned": 125000, "actual": 127000 },
+    { "month": "Jan 2024", "planned": 130000, "actual": 128000 },
+    { "month": "Feb 2024", "planned": 135000, "actual": 134000 },
+    { "month": "Mar 2024", "planned": 140000, "actual": 138000 },
+    { "month": "Apr 2024", "planned": 145000, "actual": 142000 },
+    { "month": "May 2024", "planned": 150000, "actual": 148000 }
+  ],
+  "entitlementsTableData": [
+    { "employee": "John Smith", "type": "Annual Leave", "balance": 15, "lastUpdated": "2024-05-01" },
+    { "employee": "Sarah Johnson", "type": "Sick Leave", "balance": 10, "lastUpdated": "2024-05-01" },
+    { "employee": "Michael Brown", "type": "Annual Leave", "balance": 20, "lastUpdated": "2024-05-01" },
+    { "employee": "Emily Davis", "type": "Parental Leave", "balance": 90, "lastUpdated": "2024-05-01" },
+    { "employee": "David Wilson", "type": "Annual Leave", "balance": 12, "lastUpdated": "2024-05-01" },
+    { "employee": "Lisa Anderson", "type": "Sick Leave", "balance": 8, "lastUpdated": "2024-05-01" },
+    { "employee": "James Taylor", "type": "Annual Leave", "balance": 18, "lastUpdated": "2024-05-01" },
+    { "employee": "Jessica Lee", "type": "Long Service Leave", "balance": 65, "lastUpdated": "2024-05-01" }
+  ],
+  "entitlementsByType": [
+    { "type": "Annual Leave", "total": 65 },
+    { "type": "Sick Leave", "total": 18 },
+    { "type": "Parental Leave", "total": 90 },
+    { "type": "Long Service Leave", "total": 65 }
+  ],
+  "payrollRuns": [
+    { "id": "PR-2024-05", "date": "2024-05-01", "employees": 125, "amount": 450000, "status": "Completed" },
+    { "id": "PR-2024-04B", "date": "2024-04-15", "employees": 122, "amount": 445000, "status": "Completed" },
+    { "id": "PR-2024-04A", "date": "2024-04-01", "employees": 120, "amount": 440000, "status": "Completed" },
+    { "id": "PR-2024-03B", "date": "2024-03-15", "employees": 118, "amount": 435000, "status": "Completed" },
+    { "id": "PR-2024-03A", "date": "2024-03-01", "employees": 115, "amount": 430000, "status": "Completed" },
+    { "id": "PR-2024-02B", "date": "2024-02-15", "employees": 115, "amount": 428000, "status": "Completed" }
+  ],
+  "payrollByMonth": [
+    { "month": "Jun 2023", "amount": 820000 },
+    { "month": "Jul 2023", "amount": 825000 },
+    { "month": "Aug 2023", "amount": 830000 },
+    { "month": "Sep 2023", "amount": 835000 },
+    { "month": "Oct 2023", "amount": 840000 },
+    { "month": "Nov 2023", "amount": 842000 },
+    { "month": "Dec 2023", "amount": 845000 },
+    { "month": "Jan 2024", "amount": 850000 },
+    { "month": "Feb 2024", "amount": 856000 },
+    { "month": "Mar 2024", "amount": 865000 },
+    { "month": "Apr 2024", "amount": 885000 },
+    { "month": "May 2024", "amount": 890000 }
+  ],
+  "receivablesTableData": [
+    { "customer": "Acme Corp", "invoice": "INV-2024-001", "amount": 45000, "dueDate": "2024-05-15", "status": "Due Soon" },
+    { "customer": "TechCorp", "invoice": "INV-2024-002", "amount": 28500, "dueDate": "2024-05-20", "status": "Due Soon" },
+    { "customer": "GlobalRetail", "invoice": "INV-2024-003", "amount": 52000, "dueDate": "2024-04-30", "status": "Overdue" },
+    { "customer": "AlphaBank", "invoice": "INV-2024-004", "amount": 38000, "dueDate": "2024-06-01", "status": "Pending" },
+    { "customer": "MediCorp", "invoice": "INV-2024-005", "amount": 62000, "dueDate": "2024-05-10", "status": "Due Soon" },
+    { "customer": "Beta Systems", "invoice": "INV-2024-006", "amount": 33500, "dueDate": "2024-04-25", "status": "Overdue" },
+    { "customer": "Delta Industries", "invoice": "INV-2024-007", "amount": 41000, "dueDate": "2024-06-05", "status": "Pending" },
+    { "customer": "Omega Solutions", "invoice": "INV-2024-008", "amount": 29500, "dueDate": "2024-05-18", "status": "Due Soon" }
+  ],
+  "receivablesByMonth": [
+    { "month": "Jun 2023", "amount": 265000 },
+    { "month": "Jul 2023", "amount": 270000 },
+    { "month": "Aug 2023", "amount": 275000 },
+    { "month": "Sep 2023", "amount": 278000 },
+    { "month": "Oct 2023", "amount": 282000 },
+    { "month": "Nov 2023", "amount": 285000 },
+    { "month": "Dec 2023", "amount": 275000 },
+    { "month": "Jan 2024", "amount": 280000 },
+    { "month": "Feb 2024", "amount": 310000 },
+    { "month": "Mar 2024", "amount": 295000 },
+    { "month": "Apr 2024", "amount": 320000 },
+    { "month": "May 2024", "amount": 329500 }
+  ],
+  "payablesTableData": [
+    { "vendor": "AWS Cloud Services", "invoice": "AWS-2024-125", "amount": 85000, "dueDate": "2024-05-15", "status": "Due Soon" },
+    { "vendor": "Office Solutions Inc", "invoice": "OSI-2024-089", "amount": 12500, "dueDate": "2024-05-20", "status": "Due Soon" },
+    { "vendor": "Tech Hardware Ltd", "invoice": "THL-2024-234", "amount": 45000, "dueDate": "2024-04-30", "status": "Overdue" },
+    { "vendor": "Marketing Pro", "invoice": "MP-2024-067", "amount": 28000, "dueDate": "2024-06-01", "status": "Pending" },
+    { "vendor": "Software Licenses Co", "invoice": "SLC-2024-156", "amount": 56000, "dueDate": "2024-05-10", "status": "Due Soon" },
+    { "vendor": "IT Support Services", "invoice": "ITS-2024-078", "amount": 22500, "dueDate": "2024-04-25", "status": "Overdue" },
+    { "vendor": "Data Center Corp", "invoice": "DCC-2024-112", "amount": 67000, "dueDate": "2024-06-05", "status": "Pending" },
+    { "vendor": "Security Systems", "invoice": "SS-2024-045", "amount": 34000, "dueDate": "2024-05-18", "status": "Due Soon" }
+  ],
+  "payablesByMonth": [
+    { "month": "Jun 2023", "amount": 305000 },
+    { "month": "Jul 2023", "amount": 308000 },
+    { "month": "Aug 2023", "amount": 310000 },
+    { "month": "Sep 2023", "amount": 312000 },
+    { "month": "Oct 2023", "amount": 315000 },
+    { "month": "Nov 2023", "amount": 318000 },
+    { "month": "Dec 2023", "amount": 315000 },
+    { "month": "Jan 2024", "amount": 320000 },
+    { "month": "Feb 2024", "amount": 335000 },
+    { "month": "Mar 2024", "amount": 345000 },
+    { "month": "Apr 2024", "amount": 350000 },
+    { "month": "May 2024", "amount": 350000 }
+  ],
+  "webApiData": [
+    {
+      "endpoint": "/api/investments",
+      "method": "GET",
+      "response": [
+        { "investmentId": "INV-001", "type": "Stock", "amount": 100000, "status": "Active" },
+        { "investmentId": "INV-002", "type": "Bond", "amount": 50000, "status": "Matured" },
+        { "investmentId": "INV-003", "type": "ETF", "amount": 75000, "status": "Active" },
+        { "investmentId": "INV-004", "type": "Real Estate", "amount": 200000, "status": "Active" },
+        { "investmentId": "INV-005", "type": "Mutual Fund", "amount": 30000, "status": "Pending" },
+        { "investmentId": "INV-006", "type": "Stock", "amount": 120000, "status": "Active" },
+        { "investmentId": "INV-007", "type": "Bond", "amount": 40000, "status": "Matured" }
+      ]
+    }
+  ],
+  "powerAppsData": [
+    {
+      "visualId": "custom-investment-query",
+      "query": "SELECT * FROM Investments WHERE status = 'Active'",
+      "results": [
+        { "investmentId": "INV-001", "type": "Stock", "amount": 100000, "owner": "Sarah Johnson" },
+        { "investmentId": "INV-003", "type": "ETF", "amount": 75000, "owner": "Michael Williams" },
+        { "investmentId": "INV-004", "type": "Real Estate", "amount": 200000, "owner": "Jessica Lee" },
+        { "investmentId": "INV-006", "type": "Stock", "amount": 120000, "owner": "David Rodriguez" }
+      ]
+    },
+    {
+      "visualId": "investment-summary",
+      "query": "SELECT type, SUM(amount) as total FROM Investments GROUP BY type",
+      "results": [
+        { "type": "Stock", "total": 220000 },
+        { "type": "Bond", "total": 90000 },
+        { "type": "ETF", "total": 75000 },
+        { "type": "Real Estate", "total": 200000 },
+        { "type": "Mutual Fund", "total": 30000 }
+      ]
+    }
+  ],
+  "excelData": [
+    {
+      "sheetName": "Investments",
+      "rows": [
+        { "investmentId": "INV-001", "type": "Stock", "amount": 100000 },
+        { "investmentId": "INV-002", "type": "Bond", "amount": 50000 },
+        { "investmentId": "INV-003", "type": "ETF", "amount": 75000 },
+        { "investmentId": "INV-004", "type": "Real Estate", "amount": 200000 },
+        { "investmentId": "INV-005", "type": "Mutual Fund", "amount": 30000 },
+        { "investmentId": "INV-006", "type": "Stock", "amount": 120000 },
+        { "investmentId": "INV-007", "type": "Bond", "amount": 40000 }
+      ]
+    }
+  ],
+  "actionResults": [
+    {
+      "action": "Verify legal documents",
+      "results": [
+        { "documentName": "Business License - Restaurant X", "status": "Verified", "verifiedBy": "Automated System", "date": "2024-07-19" },
+        { "documentName": "Food Handler Permit - Chef A", "status": "Verified", "verifiedBy": "Automated System", "date": "2024-07-19" },
+        { "documentName": "Insurance Policy", "status": "Awaiting Upload", "assignedTo": "Onboarding Team", "notes": "Initial check complete, policy doc pending."}
+      ]
+    },
+    {
+      "action": "Create merchant account",
+      "results": [
+        { "accountID": "DD-MERCHANT-78901", "restaurantName": "The Noodle House", "status": "Active", "creationDate": "2024-07-19" },
+        { "paymentGatewayLink": "Stripe Connect - Provisional", "nextStep": "Link Bank Account" }
+      ]
+    },
+    {
+      "action": "Configure menu in Doordash system",
+      "results": [
+        { "menuImportStatus": "Success", "itemsImported": 55, "categoriesCreated": 8 },
+        { "pendingReview": "Price validation for 3 items", "manualCheckRequired": "Image quality for 'Special Dish'" }
+      ]
+    },
+    {
+      "action": "Schedule photoshoot",
+      "results": [
+        { "restaurantID": "DD-MERCHANT-78901", "photographerAssigned": "Jane Doe Photography", "scheduledDate": "2024-07-25T14:00:00Z" },
+        { "confirmationSentToRestaurant": "Yes", "contactPerson": "Mr. Lee" }
+      ]
+    },
+    {
+      "action": "Send welcome kit",
+      "results": [
+        { "kitTrackingNumber": "UPS1Z9A00000000000", "status": "Shipped", "estimatedDelivery": "2024-07-22" },
+        { "contents": "Tablet, Doordash Stickers, Quick Start Guide", "addressVerified": "Yes" }
+      ]
+    },
+    {
+      "action": "Analyze real-time order volume",
+      "results": [
+        { "timePeriod": "Last 15 mins", "incomingOrders": 120, "averageOrderValue": 25.50, "trendingCuisine": "Pizza" },
+        { "zone": "Downtown", "currentDemand": "High", "availableDashers": 15 }
+      ]
+    },
+    {
+      "action": "Predict demand hotspots using ML model",
+      "results": [
+        { "hotspotID": "HS-DT-001", "location": "Main St & 5th Ave", "predictedOrdersNextHour": 45, "confidence": "85%" },
+        { "hotspotID": "HS-UNI-003", "location": "University Campus Area", "predictedOrdersNextHour": 60, "confidence": "92%" }
+      ]
+    },
+    {
+      "action": "Calculate optimal driver-to-order ratio",
+      "results": [
+        { "currentRatio": "1 Dasher : 2.5 Orders", "targetRatio": "1 Dasher : 1.8 Orders", "adjustmentNeeded": "Increase Dasher density by 15% in Zone A" }
+      ]
+    },
+    {
+      "action": "Send dispatch notifications to available Dashers",
+      "results": [
+        { "batchID": "DISPATCH-BATCH-101", "notificationsSent": 50, "acceptedByDashers": 35, "avgAcceptanceTimeSec": 15 },
+        { "peakPayBonusActive": "+$3.00 per delivery", "zones": ["Downtown", "Westside"] }
+      ]
+    },
+    {
+      "action": "Monitor delivery ETAs and adjust routes dynamically",
+      "results": [
+        { "orderID": "ORD-12345", "initialETA": "25 mins", "currentETA": "22 mins", "rerouted": "Yes", "reason": "Traffic congestion detected" },
+        { "orderID": "ORD-12346", "initialETA": "30 mins", "currentETA": "30 mins", "rerouted": "No", "status": "On Track" }
+      ]
+    },
+    {
+      "action": "Receive refund request via API/Webhook",
+      "results": [
+        { "requestID": "REF-9876", "source": "Customer App API", "timestamp": "2024-07-19T10:05:00Z", "status": "Processing" }
+      ]
+    },
+    {
+      "action": "Verify order details against order history",
+      "results": [
+        { "orderID": "ORD-54321", "customerID": "CUST-001", "items": "1x Large Pizza, 1x Coke", "orderTotal": 28.00, "verificationStatus": "Match Found" }
+      ]
+    },
+    {
+      "action": "Check against refund policy rules engine",
+      "results": [
+        { "policyRuleID": "POLICY-LATE-DELIVERY", "matched": "No" },
+        { "policyRuleID": "POLICY-MISSING-ITEMS", "matched": "Yes", "details": "Customer reported missing Coke" },
+        { "refundDecision": "Partial Refund Approved", "amount": 3.00 }
+      ]
+    },
+    {
+      "action": "If approved, issue refund via Payment Gateway",
+      "results": [
+        { "transactionID": "PAY-REFUND-ABCDE123", "amount": 3.00, "status": "Success", "gatewayResponse": "Refund processed successfully" }
+      ]
+    },
+    {
+      "action": "Notify customer of refund status",
+      "results": [
+        { "notificationType": "In-App Message", "customerID": "CUST-001", "message": "Your refund of $3.00 has been processed.", "status": "Sent" },
+        { "notificationType": "Email", "emailAddress": "customer@example.com", "status": "Sent" }
+      ]
+    },
+    {
+      "action": "Flag suspicious requests for manual review",
+      "results": [
+        { "requestID": "REF-9880", "reasonFlagged": "High refund frequency for customer", "assignedTo": "Fraud Prevention Team", "status": "Pending Review" }
+      ]
+    },
+    {
+      "action": "Receive menu change request from restaurant portal",
+      "results": [
+        { "requestID": "MENU-CHG-005", "restaurantID": "DD-MERCHANT-123", "changeType": "Price Update", "itemsAffected": 10, "status": "Received" }
+      ]
+    },
+    {
+      "action": "Validate changes (e.g., price format, item availability)",
+      "results": [
+        { "validationRule": "Price Format Check", "status": "Passed" },
+        { "validationRule": "Item Availability Cross-Reference", "status": "Passed" },
+        { "overallValidation": "Success" }
+      ]
+    },
+    {
+      "action": "Update menu in central database",
+      "results": [
+        { "databaseTable": "RestaurantMenus", "rowsUpdated": 10, "timestamp": "2024-07-19T11:00:00Z", "status": "Success" }
+      ]
+    },
+    {
+      "action": "Push updates to customer-facing apps",
+      "results": [
+        { "platform": "iOS App", "updateStatus": "Pushed", "version": "4.5.1" },
+        { "platform": "Android App", "updateStatus": "Pushed", "version": "4.5.0" },
+        { "platform": "Web App", "updateStatus": "Pushed", "cacheClearScheduled": "Yes" }
+      ]
+    },
+    {
+      "action": "Notify Dashers of significant changes (e.g., new items)",
+      "results": [
+        { "notificationType": "Dasher App Alert", "message": "Alert: 'The Burger Place' has added a new 'Mega Burger'. Check menu for details.", "dashersNotified": 500, "region": "City Center" }
+      ]
+    }
+  ],
+  "aopsInstances": [
+    {
+      "id": "AOP-NOT-FOUND-MOCK",
+      "name": "Missing AOP Run (Mock Data)",
+      "description": "This is a placeholder record. The AOP run you were looking for could not be found. It might have been deleted or the ID was incorrect.",
+      "category": "System Information",
+      "status": "Not Found",
+      "lastRun": "2024-01-01T00:00:00Z",
+      "runHistory": [
+        {"timestamp": "2024-01-01T00:00:00Z", "status": "Info", "details": "Original AOP run data not found. Displaying this mock record instead."}
+      ],
+      "metrics": {
+        "dataRetrievalStatus": "Failed",
+        "reason": "Record missing or ID invalid"
+      }
+    },
+    {
+      "id": "AOP-DD-001",
+      "name": "New Restaurant Onboarding",
+      "description": "Automated process for onboarding new restaurant partners to the Doordash platform.",
+      "category": "Restaurant Operations",
+      "status": "Active",
+      "lastRun": "2024-07-15T10:00:00Z",
+      "runHistory": [
+        {"timestamp": "2024-07-15T10:00:00Z", "status": "Success", "details": "Onboarded 'Pizza Palace'"},
+        {"timestamp": "2024-07-14T15:30:00Z", "status": "Success", "details": "Onboarded 'Sushi Heaven'"}
+      ],
+      "metrics": {
+        "avgCompletionTime": "2 hours",
+        "successRate": "98%"
+      }
+    },
+    {
+      "id": "AOP-DD-002",
+      "name": "Driver Peak Time Dispatch",
+      "description": "Automated dispatch algorithm optimization for drivers during peak hours.",
+      "category": "Logistics",
+      "status": "Active",
+      "lastRun": "2024-07-16T18:00:00Z",
+      "runHistory": [
+        {"timestamp": "2024-07-16T18:00:00Z", "status": "Success", "details": "Optimized dispatch for evening rush"},
+        {"timestamp": "2024-07-16T12:00:00Z", "status": "Success", "details": "Optimized dispatch for lunch rush"}
+      ],
+      "metrics": {
+        "avgDeliveryTimeImprovement": "15%",
+        "driverUtilization": "90%"
+      }
+    },
+    {
+      "id": "AOP-DD-003",
+      "name": "Customer Refund Processing",
+      "description": "Automated workflow for processing customer refund requests based on predefined criteria.",
+      "category": "Customer Support",
+      "status": "Needs Review",
+      "lastRun": "2024-07-16T09:00:00Z",
+      "runHistory": [
+        {"timestamp": "2024-07-16T09:00:00Z", "status": "Failed", "details": "Issue with payment gateway integration. Needs manual review."},
+        {"timestamp": "2024-07-15T17:00:00Z", "status": "Success", "details": "Processed 50 refund requests"}
+      ],
+      "metrics": {
+        "avgProcessingTime": "5 minutes",
+        "automationRate": "85%"
+      }
+    },
+    {
+      "id": "AOP-DD-004",
+      "name": "Menu Update Propagation",
+      "description": "Automated system to update restaurant menus across all platforms and notify relevant Dasher apps.",
+      "category": "Restaurant Operations",
+      "status": "Active",
+      "lastRun": "2024-07-16T11:00:00Z",
+      "runHistory": [
+        {"timestamp": "2024-07-16T11:00:00Z", "status": "Success", "details": "Propagated menu updates for 25 restaurants."}
+      ],
+      "metrics": {
+        "avgUpdateTime": "15 minutes",
+        "errorRate": "1%"
+      }
+    }
+  ],
+  "financialData": {
+    "accountsPayable": [
+      { "vendor": "Restaurant Supply Co.", "invoice": "INV-DD-1023", "amount": 15000, "dueDate": "2024-08-01", "status": "Pending" },
+      { "vendor": "Marketing Solutions LLC", "invoice": "INV-DD-1024", "amount": 7500, "dueDate": "2024-07-25", "status": "Pending" },
+      { "vendor": "Cloud Services Inc.", "invoice": "INV-DD-1025", "amount": 12000, "dueDate": "2024-07-20", "status": "Paid" }
+    ],
+    "accountsReceivable": [
+      { "restaurantPartner": "Burger Joint", "invoice": "INV-R-5001", "amount": 5000, "dueDate": "2024-07-30", "status": "Due Soon" },
+      { "restaurantPartner": "Taco Town", "invoice": "INV-R-5002", "amount": 3200, "dueDate": "2024-07-15", "status": "Overdue" }
+    ],
+    "payroll": {
+      "summary": {
+        "totalEmployees": 5000,
+        "totalDasherContracts": 200000,
+        "lastPayrollRun": "2024-07-15",
+        "totalPaid": 2500000
+      },
+      "runs": [
+        { "id": "PR-DD-2024-07A", "date": "2024-07-15", "type": "Bi-Weekly Employee", "amount": 1250000, "status": "Completed" },
+        { "id": "PR-DD-2024-07D", "date": "2024-07-10", "type": "Dasher Payout", "amount": 750000, "status": "Completed" }
+      ]
+    },
+    "entitlements": [
+      { "dasherId": "D12345", "type": "Early Access to Schedule", "status": "Active", "lastUpdated": "2024-07-01" },
+      { "dasherId": "D67890", "type": "Bonus Pay Eligibility", "status": "Active", "lastUpdated": "2024-07-15" }
+    ]
+  },
+  "dataSourceOptions": [
+    "Doordash Merchant API",
+    "Dasher Activity Database",
+    "Customer Order System",
+    "Payment Gateway Logs",
+    "Internal CRM",
+    "Google Maps API",
+    "Weather Service API"
+  ],
+  "actionOptions": {
+    "restaurant-onboarding": [
+      "Verify legal documents",
+      "Create merchant account",
+      "Configure menu in Doordash system",
+      "Schedule photoshoot",
+      "Send welcome kit"
+    ],
+    "driver-dispatch": [
+      "Analyze real-time order volume",
+      "Predict demand hotspots using ML model",
+      "Calculate optimal driver-to-order ratio",
+      "Send dispatch notifications to available Dashers",
+      "Monitor delivery ETAs and adjust routes dynamically"
+    ],
+    "customer-refund": [
+      "Receive refund request via API/Webhook",
+      "Verify order details against order history",
+      "Check against refund policy rules engine",
+      "If approved, issue refund via Payment Gateway",
+      "Notify customer of refund status",
+      "Flag suspicious requests for manual review"
+    ],
+    "menu-update": [
+      "Receive menu change request from restaurant portal",
+      "Validate changes (e.g., price format, item availability)",
+      "Update menu in central database",
+      "Push updates to customer-facing apps",
+      "Notify Dashers of significant changes (e.g., new items)"
+    ]
+  }, 
+  "dataSourceSamples": {
+    "Doordash Merchant API": [
+      { "event": "Merchant Account Created", "merchantId": "DD-MERCHANT-78901", "status": "Active", "timestamp": "2024-07-19T09:30:00Z" },
+      { "event": "Menu Update Received", "merchantId": "DD-MERCHANT-123", "changeType": "Price Update", "itemsAffected": 10, "timestamp": "2024-07-19T10:45:00Z" }
+    ],
+    "Internal CRM": [
+      { "interactionId": "CRM-INT-001", "customerId": "CUST-001", "type": "Onboarding Call", "summary": "Initial contact, discussed requirements.", "timestamp": "2024-07-18T14:00:00Z"},
+      { "interactionId": "CRM-INT-002", "customerId": "CUST-002", "type": "Support Ticket", "summary": "Resolved payment issue.", "timestamp": "2024-07-19T11:20:00Z"}
+    ],
+    "Payment Gateway Logs": [
+      { "transactionId": "PAY-REFUND-ABCDE123", "type": "Refund", "amount": 3.00, "status": "Success", "timestamp": "2024-07-19T10:15:00Z" },
+      { "transactionId": "PAY-CHARGE-XYZ789", "type": "Charge", "amount": 25.99, "status": "Success", "timestamp": "2024-07-19T12:05:00Z" }
+    ],
+    "Dasher Activity Database": [
+      { "dasherId": "DASH-007", "activity": "Online", "zone": "Downtown", "lastUpdate": "2024-07-26T10:00:00Z" },
+      { "dasherId": "DASH-008", "activity": "Delivering Order", "orderId": "ORD-12345", "lastUpdate": "2024-07-26T10:02:00Z" }
+    ],
+    "Customer Order System": [
+      { "orderId": "ORD-54321", "status": "Pending Confirmation", "items": 2, "total": 28.00, "timestamp": "2024-07-26T09:55:00Z" },
+      { "orderId": "ORD-54322", "status": "Preparing", "items": 1, "total": 15.50, "timestamp": "2024-07-26T09:58:00Z" }
+    ],
+    "Google Maps API": [
+      { "query": "Route Optimization", "origin": "Restaurant A", "destination": "Customer B", "status": "Success", "etaMinutes": 25 },
+      { "query": "Geofence Alert", "dasherId": "DASH-007", "zone": "Hotspot-1", "status": "Entered", "timestamp": "2024-07-26T10:01:00Z" }
+    ],
+    "Weather Service API": [
+      { "location": "Downtown", "temperature": "28°C", "condition": "Sunny", "alerts": "None" },
+      { "location": "Westside", "temperature": "26°C", "condition": "Cloudy", "alerts": "Possible showers later" }
+    ]
+  },
+  "llmOptions": [
+    { "id": "doordash-logistics-llm", "name": "Doordash Logistics LLM", "description": "Optimized for routing, dispatch, and supply-demand prediction." },
+    { "id": "doordash-support-llm", "name": "Doordash Support LLM", "description": "Trained on customer interaction data for automated support and issue resolution." },
+    { "id": "general-purpose-llm", "name": "OpenAI GPT-4o", "description": "State-of-the-art general purpose model for complex reasoning and generation." }
+  ],
+  "workflows": [
+    {
+      "id": "restaurant-onboarding",
+      "name": "Restaurant Onboarding Automation",
+      "description": "Streamlines the process of adding new restaurants to the Doordash platform, from initial application to going live.",
+      "category": "Restaurant Operations",
+      "requiredDataSources": ["Doordash Merchant API", "Internal CRM"],
+      "compatibleDataSources": ["Payment Gateway Logs"]
+    },
+    {
+      "id": "driver-dispatch",
+      "name": "Dynamic Driver Dispatching",
+      "description": "Optimizes Dasher dispatch in real-time based on order volume, traffic conditions, and Dasher availability.",
+      "category": "Logistics",
+      "requiredDataSources": ["Dasher Activity Database", "Customer Order System", "Google Maps API"],
+      "compatibleDataSources": ["Weather Service API"]
+    },
+    {
+      "id": "customer-refund",
+      "name": "Automated Customer Refund Processing",
+      "description": "Handles customer refund requests automatically for common scenarios, reducing manual intervention.",
+      "category": "Customer Support",
+      "requiredDataSources": ["Customer Order System", "Payment Gateway Logs"],
+      "compatibleDataSources": ["Internal CRM"]
+    },
+    {
+      "id": "menu-update",
+      "name": "Real-time Menu Update Propagation",
+      "description": "Ensures that menu changes from restaurants are quickly and accurately reflected across all Doordash platforms.",
+      "category": "Restaurant Operations",
+      "requiredDataSources": ["Doordash Merchant API"],
+      "compatibleDataSources": []
+    }
+  ]
+} 

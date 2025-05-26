@@ -17,4 +17,4 @@ ENV PATH="/app/node_modules/.bin:$PATH"
 EXPOSE 3000
 
 # Use npm start to run the application
-CMD ["npm", "run", "start"]
+CMD ["npm", "run", "dev"]

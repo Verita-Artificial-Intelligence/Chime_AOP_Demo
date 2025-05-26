@@ -1,0 +1,25 @@
+/* Custom styles beyond Tailwind */
+.chat-container::-webkit-scrollbar {
+  width: 6px;
+}
+.chat-container::-webkit-scrollbar-track {
+  background: #1f2937;
+  border-radius: 10px;
+}
+.chat-container::-webkit-scrollbar-thumb {
+  background: #4b5563;
+  border-radius: 10px;
+}
+.chat-container::-webkit-scrollbar-thumb:hover {
+  background: #6b7280;
+}
+
+/* Gradient text styling similar to Devin */
+.text-gradient {
+  background: linear-gradient(90deg, #184A45, #3A6351, #A3B9A7);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  text-fill-color: transparent;
+  display: inline-block;
+}
