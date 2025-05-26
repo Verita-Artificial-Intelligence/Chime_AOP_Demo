@@ -155,7 +155,7 @@ export default function AOPRunHistoryPage() { // Renamed component
             )}
              <div className="mt-4 flex justify-end">
                 <button
-                className="text-xs text-red-500 hover:text-red-700 hover:underline mr-4"
+                className="text-xs text-brand-danger hover:text-red-700 hover:underline mr-4"
                 onClick={() => handleDeleteRun(run.id)}
                 title="Delete this run history"
                 >

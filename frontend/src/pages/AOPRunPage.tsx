@@ -156,7 +156,7 @@ export default function AOPRunPage() {
         )}
         <div className="mt-8 text-center">
           <button 
-            className="px-6 py-2 bg-red-600 text-white rounded-md hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-opacity-50"
+            className="px-6 py-2 bg-brand-primary text-white rounded-md hover:bg-brand-dark focus:outline-none focus:ring-2 focus:ring-brand-primary focus:ring-opacity-50"
             onClick={() => navigate('/agents')} // Navigate back to the history/agents list
           >
             Back to Run History
@@ -169,10 +169,10 @@ export default function AOPRunPage() {
   // If neither runnable config nor AOPInstance data is found
   return (
     <div className="max-w-2xl mx-auto py-16 text-center">
-      <div className="text-xl text-red-500 font-semibold mb-4">Agent Configuration or Run Data Not Found.</div>
-      <p className="text-gray-600 mb-6">Could not find details for ID: {routeId}. It may have been deleted or the ID is incorrect.</p>
+      <div className="text-xl text-brand-primary font-semibold mb-4">Agent Configuration or Run Data Not Found.</div>
+      <p className="text-brand-muted opacity-70 mb-6">Could not find details for ID: {routeId}. It may have been deleted or the ID is incorrect.</p>
       <button 
-        className="px-6 py-2 bg-red-600 text-white rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-50"
+        className="px-6 py-2 bg-brand-primary text-white rounded-md hover:bg-brand-dark focus:outline-none focus:ring-2 focus:ring-brand-primary focus:ring-opacity-50"
         onClick={() => navigate('/agents')} // Navigate to the main history/agents list
       >
         View Full Run History

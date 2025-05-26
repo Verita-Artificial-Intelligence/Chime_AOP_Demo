@@ -112,13 +112,13 @@ export function AOPPage() {
       case 0:
         return (
           <div className="space-y-4">
-            <h2 className="text-2xl font-semibold text-red-500">Welcome to the Chime AOPS Builder</h2>
-            <p className="text-gray-600">
+            <h2 className="text-2xl font-semibold text-brand-primary">Welcome to the Chime AOPS Builder</h2>
+            <p className="text-brand-muted opacity-70">
               Create Automated Operations Procedures (AOPS) to streamline your Chime workflows. Get started by selecting a workflow template.
             </p>
             <button
               onClick={next}
-              className="px-6 py-2 text-white bg-red-600 rounded-md hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-opacity-50"
+              className="px-6 py-2 text-white bg-brand-primary rounded-md hover:bg-brand-dark focus:outline-none focus:ring-2 focus:ring-brand-primary focus:ring-opacity-50"
             >
               Get Started
             </button>
@@ -127,26 +127,26 @@ export function AOPPage() {
       case 1:
         return (
           <div className="space-y-4">
-            <h2 className="text-2xl font-semibold text-gray-700">Select Workflow ({workflows.length} options)</h2>
+            <h2 className="text-2xl font-semibold text-brand-heading">Select Workflow ({workflows.length} options)</h2>
             <div className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-2">
               {workflows.map((wf) => (
                 <button
                   key={wf.id}
                   onClick={() => { setWorkflow(wf.id); next(); }}
-                  className={`p-6 border rounded-lg text-left hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-50 flex flex-col justify-between h-full ${
-                    workflow === wf.id ? 'bg-blue-50 border-blue-500 shadow-lg' : 'border-gray-300'
+                  className={`p-6 border rounded-lg text-left hover:bg-brand-light focus:outline-none focus:ring-2 focus:ring-brand-primary focus:ring-opacity-50 flex flex-col justify-between h-full ${
+                    workflow === wf.id ? 'bg-brand-light border-brand-primary shadow-lg' : 'border-brand-border'
                   }`}
                 >
                   <div>
-                    <h3 className="text-lg font-semibold text-gray-800">{wf.name}</h3>
-                    <p className="text-sm text-gray-600 mt-1">{wf.description}</p>
+                    <h3 className="text-lg font-semibold text-brand-heading">{wf.name}</h3>
+                    <p className="text-sm text-brand-muted opacity-70 mt-1">{wf.description}</p>
                   </div>
-                  <p className="text-xs text-gray-500 mt-3">Category: {wf.category}</p>
+                  <p className="text-xs text-brand-muted opacity-70 mt-3">Category: {wf.category}</p>
                 </button>
               ))}
             </div>
             <div className="flex justify-between mt-6">
-              <button onClick={prev} className="px-4 py-2 text-gray-700 bg-white rounded-md hover:bg-gray-300">Back</button>
+              <button onClick={prev} className="px-4 py-2 text-brand-heading bg-brand-card rounded-md hover:bg-brand-light">Back</button>
             </div>
           </div>
         );
@@ -158,7 +158,7 @@ export function AOPPage() {
         });
         return (
           <div className="space-y-4">
-            <h2 className="text-2xl font-semibold text-gray-700">Select Data Sources for "{currentWorkflowDetails?.name}"</h2>
+            <h2 className="text-2xl font-semibold text-brand-heading">Select Data Sources for "{currentWorkflowDetails?.name}"</h2>
             <div className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3">
               {availableDataSources.map((ds) => {
                 const isRequired = currentWorkflowDetails?.requiredDataSources.includes(ds);
@@ -175,22 +175,22 @@ export function AOPPage() {
                         setDataSources([...dataSources, ds]);
                       }
                     }}
-                    className={`p-4 border rounded-md text-left hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-50 ${
-                      dataSources.includes(ds) ? 'bg-blue-50 border-blue-500' : 'border-gray-300'
+                    className={`p-4 border rounded-md text-left hover:bg-brand-light focus:outline-none focus:ring-2 focus:ring-brand-primary focus:ring-opacity-50 ${
+                      dataSources.includes(ds) ? 'bg-brand-light border-brand-primary' : 'border-brand-border'
                     } ${isRequired && !dataSources.includes(ds) ? 'border-red-500' : ''}`}
                   >
-                    <h3 className="text-lg font-medium text-gray-800">{ds}</h3>
+                    <h3 className="text-lg font-medium text-brand-heading">{ds}</h3>
                     {isRequired && <span className="text-xs text-red-600"> (Required)</span>}
                   </button>
                 );
               })}
             </div>
             <div className="flex justify-between mt-6">
-              <button onClick={prev} className="px-4 py-2 text-gray-700 bg-white rounded-md hover:bg-gray-300">Back</button>
+              <button onClick={prev} className="px-4 py-2 text-brand-heading bg-brand-card rounded-md hover:bg-brand-light">Back</button>
               <button
                 onClick={next}
                 disabled={!(currentWorkflowDetails?.requiredDataSources.every(rs => dataSources.includes(rs)))}
-                className="px-6 py-2 text-white bg-blue-600 rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-50 disabled:opacity-50"
+                className="px-6 py-2 text-white bg-brand-primary rounded-md hover:bg-brand-dark focus:outline-none focus:ring-2 focus:ring-brand-primary focus:ring-opacity-50 disabled:opacity-50"
               >
                 Next
               </button>
@@ -201,7 +201,7 @@ export function AOPPage() {
         const currentActionOptions = actionOptions[workflow as keyof typeof actionOptions] || [];
         return (
           <div className="space-y-4">
-            <h2 className="text-2xl font-semibold text-gray-700">Select Actions for "{workflows.find(wf=>wf.id === workflow)?.name}"</h2>
+            <h2 className="text-2xl font-semibold text-brand-heading">Select Actions for "{workflows.find(wf=>wf.id === workflow)?.name}"</h2>
             {currentActionOptions.length > 0 ? (
               <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
                 {currentActionOptions.map((action) => (
@@ -215,22 +215,22 @@ export function AOPPage() {
                         setActions([...actions, action]);
                       }
                     }}
-                    className={`p-4 border rounded-md text-left hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-50 ${
-                      actions.includes(action) ? 'bg-blue-50 border-blue-500' : 'border-gray-300'
+                    className={`p-4 border rounded-md text-left hover:bg-brand-light focus:outline-none focus:ring-2 focus:ring-brand-primary focus:ring-opacity-50 ${
+                      actions.includes(action) ? 'bg-brand-light border-brand-primary' : 'border-brand-border'
                     }`}
                   >
-                    <h3 className="text-lg font-medium text-gray-800">{action}</h3>
+                    <h3 className="text-lg font-medium text-brand-heading">{action}</h3>
                   </button>
                 ))}
               </div>
             ) : (
-              <p className="text-gray-600">No specific actions defined for this workflow. You can proceed or go back to select a different workflow.</p>
+              <p className="text-brand-muted opacity-70">No specific actions defined for this workflow. You can proceed or go back to select a different workflow.</p>
             )}
             <div className="flex justify-between mt-6">
-              <button onClick={prev} className="px-4 py-2 text-gray-700 bg-white rounded-md hover:bg-gray-300">Back</button>
+              <button onClick={prev} className="px-4 py-2 text-brand-heading bg-brand-card rounded-md hover:bg-brand-light">Back</button>
               <button
                 onClick={next}
-                className="px-6 py-2 text-white bg-blue-600 rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-50"
+                className="px-6 py-2 text-white bg-brand-primary rounded-md hover:bg-brand-dark focus:outline-none focus:ring-2 focus:ring-brand-primary focus:ring-opacity-50"
               >
                 Next
               </button>
@@ -240,29 +240,29 @@ export function AOPPage() {
       case 4:
         return (
           <div className="space-y-4">
-            <h2 className="text-2xl font-semibold text-gray-700">Select LLM for "{workflows.find(wf=>wf.id === workflow)?.name}"</h2>
+            <h2 className="text-2xl font-semibold text-brand-heading">Select LLM for "{workflows.find(wf=>wf.id === workflow)?.name}"</h2>
             <div className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3">
               {llmOptions.map((option) => (
                 <button
                   key={option.id}
                   onClick={() => setLLM(option.id as LLM)}
-                  className={`p-6 border rounded-lg text-left hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-50 flex flex-col justify-between h-full ${
-                    llm === option.id ? 'bg-blue-50 border-blue-500 shadow-lg' : 'border-gray-300'
+                  className={`p-6 border rounded-lg text-left hover:bg-brand-light focus:outline-none focus:ring-2 focus:ring-brand-primary focus:ring-opacity-50 flex flex-col justify-between h-full ${
+                    llm === option.id ? 'bg-brand-light border-brand-primary shadow-lg' : 'border-brand-border'
                   }`}
                 >
                   <div>
-                    <h3 className="text-lg font-semibold text-gray-800">{option.name}</h3>
-                    <p className="text-sm text-gray-600 mt-1">{option.description}</p>
+                    <h3 className="text-lg font-semibold text-brand-heading">{option.name}</h3>
+                    <p className="text-sm text-brand-muted opacity-70 mt-1">{option.description}</p>
                   </div>
                 </button>
               ))}
             </div>
             <div className="flex justify-between mt-8">
-              <button onClick={prev} className="px-4 py-2 text-gray-700 bg-white rounded-md hover:bg-gray-300">Back</button>
+              <button onClick={prev} className="px-4 py-2 text-brand-heading bg-brand-card rounded-md hover:bg-brand-light">Back</button>
               <button
                 onClick={startAgent}
                 disabled={!workflow || dataSources.length === 0 || !llm}
-                className="px-6 py-2 text-white bg-red-600 rounded-md hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-opacity-50 disabled:opacity-50"
+                className="px-6 py-2 text-white bg-brand-primary rounded-md hover:bg-brand-dark focus:outline-none focus:ring-2 focus:ring-brand-primary focus:ring-opacity-50 disabled:opacity-50"
               >
                 Create AOPS
               </button>
@@ -270,14 +270,14 @@ export function AOPPage() {
           </div>
         );
       default:
-        return <div className="text-center text-red-500">Error: Unknown step. Please try again.</div>;
+        return <div className="text-center text-brand-danger">Error: Unknown step. Please try again.</div>;
     }
   };
 
   return (
     <div className="container p-4 mx-auto max-w-4xl">
       <BuilderProgressTracker currentStep={step} steps={stepConfiguration} onStepClick={goToStep} />
-      <div className="p-6 md:p-8 mt-8 bg-white rounded-lg shadow-xl">
+      <div className="p-6 md:p-8 mt-8 bg-brand-card rounded-lg shadow-xl">
         {renderStep()}
       </div>
     </div>
