@@ -1,4 +1,4 @@
-import React, { useRef } from "react";
+import React, { useRef, useEffect } from "react";
 
 interface ProgressTrackerProps {
   steps: { title: string }[];
@@ -9,6 +9,20 @@ const ProgressTracker: React.FC<ProgressTrackerProps> = ({
   steps,
   currentStep,
 }) => {
+  const scrollContainerRef = useRef<HTMLDivElement>(null);
+
+  // Auto-scroll to show current step
+  useEffect(() => {
+    if (scrollContainerRef.current && currentStep > 2) {
+      const stepWidth = 120; // Approximate width of each step
+      const scrollPosition = (currentStep - 2) * stepWidth;
+      scrollContainerRef.current.scrollTo({
+        left: scrollPosition,
+        behavior: 'smooth'
+      });
+    }
+  }, [currentStep]);
+
   // Scroll to the corresponding step card in the simulation timeline
   const handleStepClick = (idx: number) => {
     const el = document.getElementById(`agent-step-card-${idx}`);
@@ -18,10 +32,19 @@ const ProgressTracker: React.FC<ProgressTrackerProps> = ({
   };
 
   return (
-    <div className="flex flex-wrap items-center justify-start mb-6 sticky bottom-0 bg-brand-background z-20 py-2 shadow-card">
-      {steps.map((step, idx) => (
-        <React.Fragment key={idx}>
-          <div className="flex items-center mb-2">
+    <div className="w-full bg-white rounded-lg shadow-sm p-4 mb-6">
+      <div 
+        ref={scrollContainerRef}
+        className="flex items-center overflow-x-auto scrollbar-hide"
+        style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}
+      >
+        <style>{`
+          .scrollbar-hide::-webkit-scrollbar {
+            display: none;
+          }
+        `}</style>
+        {steps.map((step, idx) => (
+          <div key={idx} className="flex items-center flex-shrink-0">
             <button
               type="button"
               aria-label={`Go to ${step.title}`}
@@ -33,13 +56,13 @@ const ProgressTracker: React.FC<ProgressTrackerProps> = ({
               tabIndex={0}
             >
               <div
-                className={`w-8 h-8 flex items-center justify-center rounded-full font-bold border-2 transition-colors
+                className={`w-10 h-10 flex items-center justify-center rounded-full font-bold border-2 transition-all duration-300
                   ${
                     idx < currentStep
-                      ? "bg-brand-success border-brand-success text-brand-dark"
+                      ? "bg-green-500 border-green-500 text-white"
                       : idx === currentStep
-                      ? "bg-brand-primary border-brand-primary text-brand-dark"
-                      : "bg-brand-card border-brand-border text-brand-muted"
+                      ? "bg-brand-primary border-brand-primary text-white scale-110"
+                      : "bg-gray-100 border-gray-300 text-gray-400"
                   }
                   group-focus:ring-2 group-focus:ring-brand-primary group-hover:border-brand-primary`}
               >
@@ -54,25 +77,33 @@ const ProgressTracker: React.FC<ProgressTrackerProps> = ({
                     <path
                       strokeLinecap="round"
                       strokeLinejoin="round"
-                      d="M8 12l2.5 2.5L16 9"
+                      d="M5 13l4 4L19 7"
                     />
                   </svg>
                 ) : (
                   idx + 1
                 )}
               </div>
-              <span className="mt-2 text-xs text-center w-20 text-brand-muted group-hover:text-brand-primary">
+              <span className={`mt-2 text-xs text-center w-20 transition-colors ${
+                idx <= currentStep ? 'text-gray-700 font-medium' : 'text-gray-400'
+              }`}>
                 {step.title}
               </span>
             </button>
             {idx < steps.length - 1 && (
-              <div
-                className={`h-1 mx-2 rounded transition-colors bg-brand-border w-8`}
-              ></div>
+              <div className="flex items-center mx-2">
+                <div
+                  className={`h-1 transition-all duration-300 ${
+                    idx < currentStep 
+                      ? 'bg-green-500 w-16' 
+                      : 'bg-gray-300 w-16'
+                  }`}
+                />
+              </div>
             )}
           </div>
-        </React.Fragment>
-      ))}
+        ))}
+      </div>
     </div>
   );
 };

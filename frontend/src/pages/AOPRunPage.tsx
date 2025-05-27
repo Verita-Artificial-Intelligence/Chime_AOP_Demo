@@ -118,7 +118,7 @@ export default function AOPRunPage() {
       <div className="max-w-3xl mx-auto p-4 md:p-6 bg-white shadow-lg rounded-lg">
         <div className="border-b pb-4 mb-4">
           <h1 className="text-2xl font-bold text-gray-800 mb-1">
-            AOP Run Details: {aopInstanceData.name}
+            AOP Run History Details: {aopInstanceData.name}
           </h1>
           <p className="text-sm text-gray-500">
             ID: {aopInstanceData.id}{" "}
@@ -136,9 +136,11 @@ export default function AOPRunPage() {
             <span
               className={`ml-1 px-2 py-0.5 text-xs font-semibold rounded-full ${
                 aopInstanceData.status.toLowerCase().includes("success") ||
-                aopInstanceData.status.toLowerCase().includes("active") ||
                 aopInstanceData.status.toLowerCase().includes("completed")
                   ? "bg-green-100 text-green-800"
+                  : aopInstanceData.status.toLowerCase().includes("active") ||
+                    aopInstanceData.status.toLowerCase().includes("running")
+                  ? "bg-blue-100 text-blue-800"
                   : aopInstanceData.status.toLowerCase().includes("fail") ||
                     aopInstanceData.status.toLowerCase().includes("error")
                   ? "bg-red-100 text-red-800"
@@ -217,7 +219,7 @@ export default function AOPRunPage() {
         <div className="mt-8 text-center">
           <button
             className="px-6 py-2 bg-brand-primary text-brand-dark rounded-md hover:bg-brand-primaryDark focus:outline-none focus:ring-2 focus:ring-brand-primary focus:ring-opacity-50 transition-all duration-200"
-            onClick={() => navigate("/agents")} // Navigate back to the history/agents list
+            onClick={() => navigate("/aop/run")} // Navigate back to the run history list
           >
             Back to Run History
           </button>

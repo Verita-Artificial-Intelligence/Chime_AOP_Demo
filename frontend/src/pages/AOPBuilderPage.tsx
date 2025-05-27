@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useRef } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useSearchParams } from "react-router-dom";
 import mockData from "../data/mockData.json"; // Assuming mockData is accessible
+import { SparklesIcon } from '@heroicons/react/24/outline';
 
 interface AgentConfig {
   id: string;
@@ -162,11 +163,82 @@ const MOCK_PROMPTS: MockPrompt[] = [
   },
 ];
 
+// AI-generated suggestions based on "history"
+const AI_SUGGESTIONS: MockPrompt[] = [
+  {
+    id: "ai-fraud-investigation",
+    title: "Automating the discovery process for fraud investigation",
+    description: "Based on your previous searches, streamline fraud detection and investigation workflows by automatically collecting and analyzing suspicious activities.",
+    config: {
+      workflow: "fraud-investigation",
+      dataSources: ["Transaction Database", "Customer Profile System", "External Fraud Database", "Payment Gateway Logs"],
+      actions: [
+        "Analyze transaction patterns",
+        "Cross-reference with known fraud indicators",
+        "Generate risk score",
+        "Create investigation report",
+        "Flag suspicious accounts",
+        "Notify compliance team"
+      ],
+      llm: "fraud-detection-llm",
+    },
+  },
+  {
+    id: "ai-compliance-audit",
+    title: "Automated Compliance Audit Trail",
+    description: "Based on your compliance workflows, automatically generate comprehensive audit trails for regulatory requirements.",
+    config: {
+      workflow: "compliance-audit",
+      dataSources: ["System Activity Logs", "User Access Database", "Transaction Records"],
+      actions: [
+        "Collect system activities",
+        "Map user actions to compliance requirements",
+        "Generate audit reports",
+        "Archive for regulatory review"
+      ],
+      llm: "compliance-llm",
+    },
+  },
+];
+
+// Template configurations
+const TEMPLATE_CONFIGS: { [key: string]: MockPrompt } = {
+  'fraud-investigation': {
+    id: "template-fraud",
+    title: "Automating the discovery process for fraud investigation",
+    description: "Comprehensive fraud detection and investigation workflow with automated data collection and analysis.",
+    config: {
+      workflow: "fraud-investigation",
+      dataSources: ["Transaction Database", "Customer Profile System", "External Fraud Database", "Payment Gateway Logs"],
+      actions: [
+        "Analyze transaction patterns",
+        "Cross-reference with known fraud indicators",
+        "Generate risk score",
+        "Create investigation report",
+        "Flag suspicious accounts",
+        "Notify compliance team"
+      ],
+      llm: "fraud-detection-llm",
+    },
+  },
+  // Add other template configurations as needed
+};
+
 export function AOPBuilderPage() {
   const [messages, setMessages] = useState<ChatMessage[]>([]);
   const [isBuilding, setIsBuilding] = useState(false);
+  const [showAISuggestions, setShowAISuggestions] = useState(true);
   const navigate = useNavigate();
+  const [searchParams] = useSearchParams();
   const chatEndRef = useRef<null | HTMLDivElement>(null);
+
+  // Check if we're loading from a template
+  useEffect(() => {
+    const templateId = searchParams.get('template');
+    if (templateId && TEMPLATE_CONFIGS[templateId]) {
+      handlePromptSelect(TEMPLATE_CONFIGS[templateId]);
+    }
+  }, [searchParams]);
 
   const scrollToBottom = () => {
     chatEndRef.current?.scrollIntoView({ behavior: "smooth" });
@@ -266,7 +338,8 @@ export function AOPBuilderPage() {
       addMessage("system", `Agent "${agentConfig.name}" saved successfully!`);
       setMessages((prev) => prev.filter((msg) => msg.id !== "save-button"));
       setTimeout(() => {
-        navigate("/aop/run", {
+        // Navigate to active runs instead of run history
+        navigate("/aop/active-runs", {
           state: {
             workflow: agentConfig.workflow,
             dataSources: agentConfig.dataSources,
@@ -288,7 +361,7 @@ export function AOPBuilderPage() {
   return (
     <div className="container mx-auto max-w-3xl p-4 flex flex-col h-[calc(100vh-100px)] bg-brand-card">
       <h1 className="text-3xl font-bold text-brand-dark mb-6 text-center">
-        AOP Builder Agent
+        AOP Builder
       </h1>
 
       <div className="flex-grow bg-brand-card p-6 rounded-lg overflow-y-auto mb-4">
@@ -323,10 +396,45 @@ export function AOPBuilderPage() {
         <div ref={chatEndRef} />
       </div>
 
-      {/* Prompt Suggestions Area - MOVED BACK OUTSIDE, below chat, above Start Over */}
+      {/* AI Suggestions - Show only at the beginning */}
+      {!isBuilding && messages.length === 0 && showAISuggestions && (
+        <div className="mb-4 p-4 bg-brand-light rounded-lg">
+          <div className="flex items-center mb-3">
+            <SparklesIcon className="h-5 w-5 text-brand-primary mr-2" />
+            <h3 className="text-sm font-semibold text-brand-dark">
+              Based on your previous searches
+            </h3>
+          </div>
+          <div className="grid grid-cols-1 gap-3">
+            {AI_SUGGESTIONS.map((suggestion) => (
+              <button
+                key={suggestion.id}
+                onClick={() => {
+                  setShowAISuggestions(false);
+                  handlePromptSelect(suggestion);
+                }}
+                className="p-3 border border-brand-primary/20 rounded-lg text-left bg-white hover:bg-brand-light focus:outline-none focus:ring-2 focus:ring-brand-primary focus:ring-opacity-50 transition-all duration-150"
+              >
+                <h4 className="text-sm font-medium text-brand-dark">
+                  {suggestion.title}
+                </h4>
+                <p className="text-xs text-brand-muted mt-1">
+                  {suggestion.description}
+                </p>
+              </button>
+            ))}
+          </div>
+        </div>
+      )}
+
+      {/* Regular Prompt Suggestions */}
       {!isBuilding &&
-        messages.filter((m) => m.id === "save-button").length === 0 && (
+        messages.filter((m) => m.id === "save-button").length === 0 &&
+        messages.length === 0 && (
           <div className="mb-4 p-2">
+            <h3 className="text-sm font-semibold text-brand-muted mb-3">
+              Or choose from other templates:
+            </h3>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
               {MOCK_PROMPTS.map((prompt) => (
                 <button
@@ -356,6 +464,7 @@ export function AOPBuilderPage() {
               onClick={() => {
                 setMessages([]);
                 setIsBuilding(false);
+                setShowAISuggestions(true);
               }}
               className="px-6 py-2 text-brand-dark bg-brand-card rounded-md hover:bg-brand-light focus:outline-none focus:ring-2 focus:ring-brand-primary"
             >

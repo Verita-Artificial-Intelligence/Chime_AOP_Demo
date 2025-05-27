@@ -14,6 +14,9 @@ import AOPRunPage from "./pages/AOPRunPage";
 import { AOPBuilderPage } from "./pages/AOPBuilderPage";
 import AgentsPage from "./pages/AgentsPage";
 import { HomePage } from "./pages/HomePage";
+import { AOPTemplatesPage } from "./pages/AOPTemplatesPage";
+import { ActiveRunsPage } from "./pages/ActiveRunsPage";
+import { SecurityPage } from "./pages/SecurityPage";
 
 function PlaceholderPage({ title }: { title: string }) {
   return (
@@ -30,9 +33,13 @@ export function App() {
         <Route path="/" element={<HomePage />} />
         <Route path="/integrations" element={<IntegrationsPage />} />
         <Route path="/aop" element={<AOPPage />} />
-        <Route path="/aop/run" element={<AOPRunPage />} />
+        <Route path="/aop/run" element={<AgentsPage />} />
+        <Route path="/aop/run/:id" element={<AOPRunPage />} />
         <Route path="/aop/builder" element={<AOPBuilderPage />} />
+        <Route path="/aop/templates" element={<AOPTemplatesPage />} />
+        <Route path="/aop/active-runs" element={<ActiveRunsPage />} />
         <Route path="/agents" element={<AgentsPage />} />
+        <Route path="/security" element={<SecurityPage />} />
         <Route path="*" element={<Navigate to="/" replace />} />
       </Routes>
     </Layout>

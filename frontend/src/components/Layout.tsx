@@ -29,12 +29,14 @@ const navItems: NavItem[] = [
     name: "AOPS",
     icon: BoltIcon,
     subItems: [
-      { name: "AOPS Builder Agent", href: "/aop/builder" },
-      { name: "Run History", href: "/aop/run" },
-      { name: "Saved Agents", href: "/agents" },
+      { name: "AOP Builder", href: "/aop/builder" },
+      { name: "AOP Run History", href: "/aop/run" },
+      { name: "AOP Templates", href: "/aop/templates" },
+      { name: "Active Runs", href: "/aop/active-runs" },
     ],
   },
   { name: "Integrations", href: "/integrations", icon: CircleStackIcon },
+  { name: "Security & OAuth", href: "/security", icon: CogIcon },
   // Example of a top-level settings link if needed, otherwise keep it under a sub-menu
   // { name: 'Platform Settings', href: '/settings', icon: CogIcon },
 ];

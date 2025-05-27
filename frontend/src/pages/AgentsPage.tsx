@@ -76,6 +76,23 @@ export default function AOPRunHistoryPage() {
   const isMockData =
     JSON.stringify(runHistory) === JSON.stringify(mockData.aopsInstances || []);
 
+  // Helper function to get display status
+  const getDisplayStatus = (run: AOPInstance) => {
+    if (run.status.toLowerCase().includes("active") || run.status.toLowerCase().includes("running")) {
+      // For active runs, try to extract step information from the latest run history
+      if (run.runHistory && run.runHistory.length > 0) {
+        const latestEntry = run.runHistory[run.runHistory.length - 1];
+        // Try to extract step info from details
+        const stepMatch = latestEntry.details.match(/step (\d+) of (\d+)/i);
+        if (stepMatch) {
+          return `Step ${stepMatch[1]} of ${stepMatch[2]}`;
+        }
+      }
+      return "Active";
+    }
+    return run.status;
+  };
+
   return (
     <div className="max-w-7xl mx-auto p-4 md:p-6">
       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-6">
@@ -90,7 +107,7 @@ export default function AOPRunHistoryPage() {
         {/* Button to navigate to AOP builder page */}
         <button
           className="mt-4 sm:mt-0 px-6 py-2.5 bg-brand-primary text-brand-dark rounded-md text-sm font-semibold hover:bg-brand-primaryDark transition-all duration-200 whitespace-nowrap"
-          onClick={() => navigate("/aop")} // Navigate to the AOP manual builder or chat builder
+          onClick={() => navigate("/aop/builder")} // Navigate to the AOP builder
         >
           Build New AOP
         </button>
@@ -123,121 +140,127 @@ export default function AOPRunHistoryPage() {
       )}
 
       <div className="space-y-6">
-        {runHistory.map((run) => (
-          <div
-            key={run.id}
-            className="bg-brand-card border border-brand-border rounded-lg p-6 hover:border-brand-primary transition-all duration-200"
-          >
-            <div className="flex flex-col sm:flex-row justify-between items-start mb-3">
-              <div>
-                <h2
-                  className="text-xl font-semibold text-brand-heading hover:text-brand-primary cursor-pointer"
-                  onClick={() => navigate(`/aop/run/${run.id}`)}
-                >
-                  {run.name}
-                </h2>
-                <p className="text-sm text-brand-muted opacity-70">
-                  ID: {run.id} {run.category && `| Category: ${run.category}`}
-                </p>
+        {runHistory.map((run) => {
+          const displayStatus = getDisplayStatus(run);
+          const isActive = run.status.toLowerCase().includes("active") || run.status.toLowerCase().includes("running");
+          
+          return (
+            <div
+              key={run.id}
+              className="bg-brand-card border border-brand-border rounded-lg p-6 hover:border-brand-primary transition-all duration-200"
+            >
+              <div className="flex flex-col sm:flex-row justify-between items-start mb-3">
+                <div>
+                  <h2
+                    className="text-xl font-semibold text-brand-heading hover:text-brand-primary cursor-pointer"
+                    onClick={() => navigate(`/aop/run/${run.id}`)}
+                  >
+                    {run.name}
+                  </h2>
+                  <p className="text-sm text-brand-muted opacity-70">
+                    ID: {run.id} {run.category && `| Category: ${run.category}`}
+                  </p>
+                </div>
+                <div className="mt-2 sm:mt-0 sm:ml-4 flex-shrink-0">
+                  <span
+                    className={`px-3 py-1 text-xs font-semibold rounded-full ${
+                      run.status.toLowerCase().includes("success") ||
+                      run.status.toLowerCase().includes("completed")
+                        ? "bg-green-100 text-green-800"
+                        : isActive
+                        ? "bg-blue-100 text-blue-800"
+                        : run.status.toLowerCase().includes("fail") ||
+                          run.status.toLowerCase().includes("error")
+                        ? "bg-red-100 text-red-800"
+                        : "bg-yellow-100 text-yellow-800"
+                    }`}
+                  >
+                    {displayStatus}
+                  </span>
+                </div>
               </div>
-              <div className="mt-2 sm:mt-0 sm:ml-4 flex-shrink-0">
-                <span
-                  className={`px-3 py-1 text-xs font-semibold rounded-full ${
-                    run.status.toLowerCase().includes("success") ||
-                    run.status.toLowerCase().includes("active") ||
-                    run.status.toLowerCase().includes("completed")
-                      ? "bg-green-100 text-green-800"
-                      : run.status.toLowerCase().includes("fail") ||
-                        run.status.toLowerCase().includes("error")
-                      ? "bg-red-100 text-red-800"
-                      : "bg-yellow-100 text-yellow-800"
-                  }`}
-                >
-                  {run.status}
-                </span>
+
+              <p className="text-sm text-brand-muted opacity-70 mb-3">
+                {run.description || "No description provided."}
+              </p>
+
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-x-4 gap-y-2 text-sm mb-4">
+                <div>
+                  <span className="font-medium text-brand-heading">
+                    Last Run:
+                  </span>{" "}
+                  {new Date(run.lastRun).toLocaleString()}
+                </div>
+                {run.metrics &&
+                  Object.entries(run.metrics).map(([key, value]) => (
+                    <div key={key}>
+                      <span className="font-medium text-brand-heading">
+                        {key
+                          .replace(/([A-Z])/g, " $1")
+                          .replace(/^./, (str) => str.toUpperCase())}
+                        :
+                      </span>{" "}
+                      {value}
+                    </div>
+                  ))}
               </div>
-            </div>
 
-            <p className="text-sm text-brand-muted opacity-70 mb-3">
-              {run.description || "No description provided."}
-            </p>
-
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-x-4 gap-y-2 text-sm mb-4">
-              <div>
-                <span className="font-medium text-brand-heading">
-                  Last Run:
-                </span>{" "}
-                {new Date(run.lastRun).toLocaleString()}
-              </div>
-              {run.metrics &&
-                Object.entries(run.metrics).map(([key, value]) => (
-                  <div key={key}>
-                    <span className="font-medium text-brand-heading">
-                      {key
-                        .replace(/([A-Z])/g, " $1")
-                        .replace(/^./, (str) => str.toUpperCase())}
-                      :
-                    </span>{" "}
-                    {value}
-                  </div>
-                ))}
-            </div>
-
-            {run.runHistory && run.runHistory.length > 0 && (
-              <div className="mt-4">
-                <h4 className="text-sm font-semibold text-brand-heading mb-2">
-                  Recent Activity:
-                </h4>
-                <ul className="space-y-2 max-h-32 overflow-y-auto border rounded-md p-3 bg-brand-light">
-                  {run.runHistory.slice(0, 5).map(
-                    (
-                      historyItem,
-                      index // Show latest 5 for brevity
-                    ) => (
-                      <li
-                        key={index}
-                        className="text-xs text-brand-muted border-b border-brand-border pb-1 last:border-b-0 last:pb-0"
-                      >
-                        <span
-                          className={`font-medium ${
-                            historyItem.status.toLowerCase() === "success"
-                              ? "text-green-600"
-                              : historyItem.status.toLowerCase() === "failed"
-                              ? "text-red-600"
-                              : "text-yellow-600"
-                          }`}
+              {run.runHistory && run.runHistory.length > 0 && (
+                <div className="mt-4">
+                  <h4 className="text-sm font-semibold text-brand-heading mb-2">
+                    Recent Activity:
+                  </h4>
+                  <ul className="space-y-2 max-h-32 overflow-y-auto border rounded-md p-3 bg-brand-light">
+                    {run.runHistory.slice(0, 5).map(
+                      (
+                        historyItem,
+                        index // Show latest 5 for brevity
+                      ) => (
+                        <li
+                          key={index}
+                          className="text-xs text-brand-muted border-b border-brand-border pb-1 last:border-b-0 last:pb-0"
                         >
-                          {historyItem.status}:
-                        </span>{" "}
-                        {historyItem.details}
-                        <span className="text-brand-muted opacity-50">
-                          (
-                          {new Date(historyItem.timestamp).toLocaleTimeString()}
-                          )
-                        </span>
-                      </li>
-                    )
-                  )}
-                </ul>
+                          <span
+                            className={`font-medium ${
+                              historyItem.status.toLowerCase() === "success"
+                                ? "text-green-600"
+                                : historyItem.status.toLowerCase() === "failed"
+                                ? "text-red-600"
+                                : "text-yellow-600"
+                            }`}
+                          >
+                            {historyItem.status}:
+                          </span>{" "}
+                          {historyItem.details}
+                          <span className="text-brand-muted opacity-50">
+                            (
+                            {new Date(historyItem.timestamp).toLocaleTimeString()}
+                            )
+                          </span>
+                        </li>
+                      )
+                    )}
+                  </ul>
+                </div>
+              )}
+              <div className="mt-4 flex justify-end">
+                <button
+                  className="text-xs text-brand-danger hover:text-red-700 hover:underline mr-4"
+                  onClick={() => handleDeleteRun(run.id)}
+                  title="Delete this run history"
+                >
+                  Delete Run
+                </button>
+                <button
+                  className="px-4 py-1.5 bg-brand-primary text-brand-dark rounded-md text-xs font-semibold hover:bg-brand-primaryDark transition-all duration-200"
+                  onClick={() => navigate(`/aop/run/${run.id}`)} // Navigate to the specific run simulation/details page
+                >
+                  {isActive ? 'View Progress' : 'View Details'}
+                </button>
               </div>
-            )}
-            <div className="mt-4 flex justify-end">
-              <button
-                className="text-xs text-brand-danger hover:text-red-700 hover:underline mr-4"
-                onClick={() => handleDeleteRun(run.id)}
-                title="Delete this run history"
-              >
-                Delete Run
-              </button>
-              <button
-                className="px-4 py-1.5 bg-brand-primary text-brand-dark rounded-md text-xs font-semibold hover:bg-brand-primaryDark transition-all duration-200"
-                onClick={() => navigate(`/aop/run/${run.id}`)} // Navigate to the specific run simulation/details page
-              >
-                View Details / Rerun
-              </button>
             </div>
-          </div>
-        ))}
+          );
+        })}
       </div>
     </div>
   );

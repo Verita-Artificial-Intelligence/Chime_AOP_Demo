@@ -225,12 +225,10 @@ export function AIAgentExecutionSimulation({ workflow, dataSources, actions, llm
   };
 
   return (
-    <div className="max-w-3xl mx-auto py-section px-4">
-      {/* Stepper at the very top of the simulation area */}
-      <div className="sticky top-0 z-30 bg-brand-background flex justify-center mb-8" style={{minHeight: '64px'}}>
-        <div className="w-full max-w-3xl">
-          <ProgressTracker steps={stepperSteps} currentStep={currentStep} />
-        </div>
+    <div className="max-w-3xl mx-auto py-8 px-4">
+      {/* Horizontal progress bar at the top */}
+      <div className="mb-8">
+        <ProgressTracker steps={stepperSteps} currentStep={currentStep} />
       </div>
       <div id="agent-simulation-content">
       {/* Modern summary card with pills/badges */}

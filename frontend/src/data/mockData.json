@@ -435,8 +435,69 @@
       "results": [
         { "notificationType": "Dasher App Alert", "message": "Alert: 'The Burger Place' has added a new 'Mega Burger'. Check menu for details.", "dashersNotified": 500, "region": "City Center" }
       ]
+    },
+    {
+      "action": "Analyze transaction patterns",
+      "results": [
+        { "analysisId": "ANALYSIS-001", "transactionId": "TXN-001", "pattern": "High-value purchase in new location", "riskScore": 85, "flagged": true },
+        { "analysisId": "ANALYSIS-002", "transactionId": "TXN-003", "pattern": "Multiple high-value transactions within 30 mins", "riskScore": 92, "flagged": true }
+      ]
+    },
+    {
+      "action": "Cross-reference with known fraud indicators",
+      "results": [
+        { "matchId": "MATCH-001", "transactionId": "TXN-001", "fraudDatabase": "External", "matchType": "Location + Merchant Category", "confidence": "High" },
+        { "matchId": "MATCH-002", "transactionId": "TXN-003", "fraudDatabase": "External", "matchType": "Amount + Time Pattern", "confidence": "Very High" }
+      ]
+    },
+    {
+      "action": "Generate risk score",
+      "results": [
+        { "scoreId": "SCORE-001", "transactionId": "TXN-001", "finalRiskScore": 87, "factors": ["Location", "Amount", "New Device"], "recommendation": "Manual Review" },
+        { "scoreId": "SCORE-002", "transactionId": "TXN-003", "finalRiskScore": 94, "factors": ["Pattern", "Amount", "Velocity"], "recommendation": "Block Transaction" }
+      ]
+    },
+    {
+      "action": "Create investigation report",
+      "results": [
+        { "reportId": "REPORT-001", "status": "Generated", "transactions": 2, "totalAmount": 13500, "riskLevel": "High", "assignedTo": "Fraud Team Lead" }
+      ]
+    },
+    {
+      "action": "Flag suspicious accounts",
+      "results": [
+        { "accountId": "ACCT-001", "customerId": "CUST-002", "status": "Flagged", "reason": "Multiple high-risk transactions", "restrictionsApplied": "Temporary hold" }
+      ]
+    },
+    {
+      "action": "Notify compliance team",
+      "results": [
+        { "notificationId": "NOTIFY-001", "recipients": ["compliance@company.com", "fraud-team@company.com"], "priority": "High", "status": "Sent", "timestamp": "2024-07-19T10:45:00Z" }
+      ]
     }
   ],
+  "dataSourceSamples": {
+    "Transaction Database": [
+      { "transactionId": "TXN-001", "amount": 5000, "merchant": "Electronics Store", "timestamp": "2024-07-19T10:00:00Z", "cardType": "Credit", "location": "New York", "riskScore": 85 },
+      { "transactionId": "TXN-002", "amount": 150, "merchant": "Gas Station", "timestamp": "2024-07-19T10:15:00Z", "cardType": "Debit", "location": "New York", "riskScore": 15 },
+      { "transactionId": "TXN-003", "amount": 8500, "merchant": "Jewelry Store", "timestamp": "2024-07-19T10:30:00Z", "cardType": "Credit", "location": "Miami", "riskScore": 92 }
+    ],
+    "Customer Profile System": [
+      { "customerId": "CUST-001", "name": "John Doe", "accountAge": "5 years", "avgMonthlySpend": 2000, "location": "New York", "fraudHistory": "None" },
+      { "customerId": "CUST-002", "name": "Jane Smith", "accountAge": "2 months", "avgMonthlySpend": 500, "location": "Miami", "fraudHistory": "1 incident" },
+      { "customerId": "CUST-003", "name": "Bob Johnson", "accountAge": "3 years", "avgMonthlySpend": 1500, "location": "Chicago", "fraudHistory": "None" }
+    ],
+    "External Fraud Database": [
+      { "fraudId": "FRAUD-001", "type": "Card Cloning", "reportedDate": "2024-07-18", "location": "Miami", "merchantCategory": "Jewelry", "amount": 7500 },
+      { "fraudId": "FRAUD-002", "type": "Identity Theft", "reportedDate": "2024-07-17", "location": "New York", "merchantCategory": "Electronics", "amount": 4500 },
+      { "fraudId": "FRAUD-003", "type": "Account Takeover", "reportedDate": "2024-07-16", "location": "Los Angeles", "merchantCategory": "Online", "amount": 3200 }
+    ],
+    "Payment Gateway Logs": [
+      { "logId": "LOG-001", "transactionId": "TXN-001", "status": "Approved", "responseCode": "00", "ipAddress": "192.168.1.100", "deviceId": "DEV-123" },
+      { "logId": "LOG-002", "transactionId": "TXN-002", "status": "Approved", "responseCode": "00", "ipAddress": "10.0.0.50", "deviceId": "DEV-456" },
+      { "logId": "LOG-003", "transactionId": "TXN-003", "status": "Flagged", "responseCode": "05", "ipAddress": "192.168.1.100", "deviceId": "DEV-123" }
+    ]
+  },
   "aopsInstances": [
     {
       "id": "AOP-NOT-FOUND-MOCK",
@@ -551,7 +612,13 @@
     "Payment Gateway Logs",
     "Internal CRM",
     "Google Maps API",
-    "Weather Service API"
+    "Weather Service API",
+    "Transaction Database",
+    "Customer Profile System",
+    "External Fraud Database",
+    "System Activity Logs",
+    "User Access Database",
+    "Transaction Records"
   ],
   "actionOptions": {
     "restaurant-onboarding": [
@@ -582,6 +649,20 @@
       "Update menu in central database",
       "Push updates to customer-facing apps",
       "Notify Dashers of significant changes (e.g., new items)"
+    ],
+    "fraud-investigation": [
+      "Analyze transaction patterns",
+      "Cross-reference with known fraud indicators",
+      "Generate risk score",
+      "Create investigation report",
+      "Flag suspicious accounts",
+      "Notify compliance team"
+    ],
+    "compliance-audit": [
+      "Collect system activities",
+      "Map user actions to compliance requirements",
+      "Generate audit reports",
+      "Archive for regulatory review"
     ]
   }, 
   "dataSourceSamples": {
@@ -617,7 +698,9 @@
   "llmOptions": [
     { "id": "doordash-logistics-llm", "name": "Doordash Logistics LLM", "description": "Optimized for routing, dispatch, and supply-demand prediction." },
     { "id": "doordash-support-llm", "name": "Doordash Support LLM", "description": "Trained on customer interaction data for automated support and issue resolution." },
-    { "id": "general-purpose-llm", "name": "OpenAI GPT-4o", "description": "State-of-the-art general purpose model for complex reasoning and generation." }
+    { "id": "general-purpose-llm", "name": "OpenAI GPT-4o", "description": "State-of-the-art general purpose model for complex reasoning and generation." },
+    { "id": "fraud-detection-llm", "name": "Fraud Detection LLM", "description": "Specialized model trained on financial fraud patterns and anomaly detection." },
+    { "id": "compliance-llm", "name": "Compliance LLM", "description": "Trained on regulatory requirements and compliance documentation for automated audit trails." }
   ],
   "workflows": [
     {
@@ -650,6 +733,22 @@
       "description": "Ensures that menu changes from restaurants are quickly and accurately reflected across all Doordash platforms.",
       "category": "Restaurant Operations",
       "requiredDataSources": ["Doordash Merchant API"],
+      "compatibleDataSources": []
+    },
+    {
+      "id": "fraud-investigation",
+      "name": "Fraud Investigation Automation",
+      "description": "Automates the discovery process for fraud investigation by analyzing transaction patterns and cross-referencing multiple data sources.",
+      "category": "Fraud & Compliance",
+      "requiredDataSources": ["Transaction Database", "Customer Profile System", "External Fraud Database", "Payment Gateway Logs"],
+      "compatibleDataSources": []
+    },
+    {
+      "id": "compliance-audit",
+      "name": "Compliance Audit Trail",
+      "description": "Automatically generates comprehensive audit trails for regulatory compliance requirements.",
+      "category": "Compliance",
+      "requiredDataSources": ["System Activity Logs", "User Access Database", "Transaction Records"],
       "compatibleDataSources": []
     }
   ]
