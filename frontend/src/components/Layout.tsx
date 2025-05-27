@@ -27,24 +27,7 @@ const navItems: NavItem[] = [
       { name: 'Saved Agents', href: '/agents' },
     ],
   },
-  {
-    name: 'Integrations',
-    icon: CircleStackIcon, // Changed from CogIcon to avoid repetition, CircleStack is more data/integration like
-    subItems: [
-      { name: 'Browse Integrations', href: '/integrations' },
-      { name: 'Manage Integrations', href: '/integrations/manage' }, 
-      { name: 'Manage Connections', href: '/connections/manage' }, 
-    ],
-  },
-  {
-    name: 'Data Sources',
-    icon: CpuChipIcon,
-    subItems: [
-      { name: 'Oracle On-Prem', href: '/data-sources/oracle-on-prem' },
-      { name: 'Orbit Analytics', href: '/data-sources/orbit-analytics' },
-      { name: 'PowerBI Dashboards', href: '/data-sources/powerbi-dashboards' },
-    ],
-  },
+  { name: 'Integrations', href: '/integrations', icon: CircleStackIcon },
   // Example of a top-level settings link if needed, otherwise keep it under a sub-menu
   // { name: 'Platform Settings', href: '/settings', icon: CogIcon }, 
 ];
