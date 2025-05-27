@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import mockData from "../data/mockData.json"; // Import mockData
 
@@ -78,7 +78,10 @@ export default function AOPRunHistoryPage() {
 
   // Helper function to get display status
   const getDisplayStatus = (run: AOPInstance) => {
-    if (run.status.toLowerCase().includes("active") || run.status.toLowerCase().includes("running")) {
+    if (
+      run.status.toLowerCase().includes("active") ||
+      run.status.toLowerCase().includes("running")
+    ) {
       // For active runs, try to extract step information from the latest run history
       if (run.runHistory && run.runHistory.length > 0) {
         const latestEntry = run.runHistory[run.runHistory.length - 1];
@@ -142,8 +145,10 @@ export default function AOPRunHistoryPage() {
       <div className="space-y-6">
         {runHistory.map((run) => {
           const displayStatus = getDisplayStatus(run);
-          const isActive = run.status.toLowerCase().includes("active") || run.status.toLowerCase().includes("running");
-          
+          const isActive =
+            run.status.toLowerCase().includes("active") ||
+            run.status.toLowerCase().includes("running");
+
           return (
             <div
               key={run.id}
@@ -234,7 +239,9 @@ export default function AOPRunHistoryPage() {
                           {historyItem.details}
                           <span className="text-brand-muted opacity-50">
                             (
-                            {new Date(historyItem.timestamp).toLocaleTimeString()}
+                            {new Date(
+                              historyItem.timestamp
+                            ).toLocaleTimeString()}
                             )
                           </span>
                         </li>
@@ -255,7 +262,7 @@ export default function AOPRunHistoryPage() {
                   className="px-4 py-1.5 bg-brand-primary text-brand-dark rounded-md text-xs font-semibold hover:bg-brand-primaryDark transition-all duration-200"
                   onClick={() => navigate(`/aop/run/${run.id}`)} // Navigate to the specific run simulation/details page
                 >
-                  {isActive ? 'View Progress' : 'View Details'}
+                  {isActive ? "View Progress" : "View Details"}
                 </button>
               </div>
             </div>

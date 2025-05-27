@@ -240,7 +240,7 @@ export default function AOPRunPage() {
       </p>
       <button
         className="px-6 py-2 bg-brand-primary text-brand-dark rounded-md hover:bg-brand-primaryDark focus:outline-none focus:ring-2 focus:ring-brand-primary focus:ring-opacity-50 transition-all duration-200 font-semibold"
-        onClick={() => navigate("/agents")} // Navigate to the main history/agents list
+        onClick={() => navigate("/aop/run")} // Navigate to the main history list
       >
         View Full Run History
       </button>

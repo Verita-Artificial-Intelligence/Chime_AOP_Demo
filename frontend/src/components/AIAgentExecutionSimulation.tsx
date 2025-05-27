@@ -261,8 +261,11 @@ export function AIAgentExecutionSimulation({ workflow, dataSources, actions, llm
           <div className="bg-brand-card border border-brand-border rounded-card shadow-card px-8 py-6 flex flex-col items-center w-full max-w-md">
             <span className="inline-flex items-center text-brand-success text-base font-semibold gap-2 mb-4">
               <svg className="w-5 h-5 text-brand-success" fill="none" stroke="currentColor" strokeWidth="3" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="2" fill="none"/><path strokeLinecap="round" strokeLinejoin="round" d="M8 12l2.5 2.5L16 9"/></svg>
-              Agent workflow completed
+              Agent workflow completed successfully!
             </span>
+            <p className="text-sm text-gray-600 mb-4 text-center">
+              The fraud investigation workflow has been executed and all suspicious activities have been analyzed.
+            </p>
             <div className="flex justify-center gap-4 mt-2 w-full">
               <button className="btn-primary w-1/2" onClick={onRestart}>New Agent</button>
               <button className="btn-primary w-1/2" onClick={handleDownloadPDF}>Download Report</button>

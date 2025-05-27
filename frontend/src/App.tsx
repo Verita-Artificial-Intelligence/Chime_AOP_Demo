@@ -18,14 +18,6 @@ import { AOPTemplatesPage } from "./pages/AOPTemplatesPage";
 import { ActiveRunsPage } from "./pages/ActiveRunsPage";
 import { SecurityPage } from "./pages/SecurityPage";
 
-function PlaceholderPage({ title }: { title: string }) {
-  return (
-    <div className="p-8">
-      <h1 className="text-3xl font-bold text-gray-800">{title}</h1>
-    </div>
-  );
-}
-
 export function App() {
   return (
     <Layout>
@@ -38,7 +30,6 @@ export function App() {
         <Route path="/aop/builder" element={<AOPBuilderPage />} />
         <Route path="/aop/templates" element={<AOPTemplatesPage />} />
         <Route path="/aop/active-runs" element={<ActiveRunsPage />} />
-        <Route path="/agents" element={<AgentsPage />} />
         <Route path="/security" element={<SecurityPage />} />
         <Route path="*" element={<Navigate to="/" replace />} />
       </Routes>

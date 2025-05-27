@@ -1,10 +1,11 @@
-import React from "react";
-import { useNavigate } from "react-router-dom";
+import React, { useState, useEffect } from "react";
+import { useNavigate, useLocation } from "react-router-dom";
 import {
   PlayIcon,
   ClockIcon,
   ArrowPathIcon,
 } from "@heroicons/react/24/outline";
+import { AIAgentExecutionSimulation } from "../components/AIAgentExecutionSimulation";
 
 interface ActiveRun {
   id: string;
@@ -14,26 +15,70 @@ interface ActiveRun {
   totalSteps: number;
   status: "running" | "paused";
   estimatedCompletion: string;
+  workflow: string;
+  dataSources: string[];
+  actions: string[];
+  llm: string;
 }
-
-// Mock data - in real app this would come from API
-const mockActiveRuns: ActiveRun[] = [
-  {
-    id: "run-001",
-    name: "Automating the discovery process for fraud investigation",
-    startTime: "2024-03-21 14:30:00",
-    currentStep: 6,
-    totalSteps: 10,
-    status: "running",
-    estimatedCompletion: "5 mins",
-  },
-];
 
 export const ActiveRunsPage: React.FC = () => {
   const navigate = useNavigate();
+  const location = useLocation();
+  const [showSimulation, setShowSimulation] = useState(false);
+  const [activeRun, setActiveRun] = useState<ActiveRun | null>(null);
 
-  const handleViewRun = (runId: string) => {
-    navigate(`/aop/run/${runId}`);
+  // Check if we're coming from the AOP Builder with a new run
+  useEffect(() => {
+    if (location.state && location.state.workflow) {
+      const newRun: ActiveRun = {
+        id: location.state.id || `run-${Date.now()}`,
+        name: "Automating the discovery process for fraud investigation",
+        startTime: new Date().toLocaleString(),
+        currentStep: 1,
+        totalSteps: 10,
+        status: "running",
+        estimatedCompletion: "15-20 mins",
+        workflow: location.state.workflow,
+        dataSources: location.state.dataSources,
+        actions: location.state.actions,
+        llm: location.state.llm,
+      };
+      setActiveRun(newRun);
+      setShowSimulation(true);
+    }
+  }, [location.state]);
+
+  const handleSimulationComplete = () => {
+    // After simulation completes, clear the active run
+    setShowSimulation(false);
+    setActiveRun(null);
+    // Optionally save to run history
+    navigate("/aop/run");
+  };
+
+  // If we're showing the simulation, display it
+  if (showSimulation && activeRun) {
+    return (
+      <AIAgentExecutionSimulation
+        workflow={activeRun.workflow}
+        dataSources={activeRun.dataSources}
+        actions={activeRun.actions}
+        llm={activeRun.llm}
+        onRestart={() => {
+          setShowSimulation(false);
+          setActiveRun(null);
+          navigate("/aop/builder");
+        }}
+      />
+    );
+  }
+
+  // Mock data - empty by default unless there's an active run
+  const mockActiveRuns: ActiveRun[] = activeRun ? [activeRun] : [];
+
+  const handleViewRun = (run: ActiveRun) => {
+    setActiveRun(run);
+    setShowSimulation(true);
   };
 
   if (mockActiveRuns.length === 0) {
@@ -138,7 +183,7 @@ export const ActiveRunsPage: React.FC = () => {
 
             <div className="flex items-center justify-between">
               <button
-                onClick={() => handleViewRun(run.id)}
+                onClick={() => handleViewRun(run)}
                 className="px-4 py-2 bg-brand-primary text-white rounded-md hover:bg-brand-dark transition-colors"
               >
                 View Details

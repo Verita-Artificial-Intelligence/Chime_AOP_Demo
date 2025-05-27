@@ -28,17 +28,17 @@ const quickAccessItems = [
     icon: CircleStackIcon,
   },
   {
-    name: "Manage Saved Agents",
-    href: "/agents",
-    description: "View and manage your saved AOP configurations.",
-    icon: CpuChipIcon,
-  },
-  {
     name: "Explore Integrations",
     href: "/integrations",
     description:
       "Browse and manage connections to various data sources and services.",
     icon: CircleStackIcon,
+  },
+  {
+    name: "Security Settings",
+    href: "/security",
+    description: "Manage outh tokens, permissions, and security settings.",
+    icon: CpuChipIcon,
   },
 ];
 

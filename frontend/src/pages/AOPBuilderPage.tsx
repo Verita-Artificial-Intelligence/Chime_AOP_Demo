@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef } from "react";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import mockData from "../data/mockData.json"; // Assuming mockData is accessible
-import { SparklesIcon } from '@heroicons/react/24/outline';
+import { SparklesIcon } from "@heroicons/react/24/outline";
 
 interface AgentConfig {
   id: string;
@@ -168,17 +168,23 @@ const AI_SUGGESTIONS: MockPrompt[] = [
   {
     id: "ai-fraud-investigation",
     title: "Automating the discovery process for fraud investigation",
-    description: "Based on your previous searches, streamline fraud detection and investigation workflows by automatically collecting and analyzing suspicious activities.",
+    description:
+      "Based on your previous searches, streamline fraud detection and investigation workflows by automatically collecting and analyzing suspicious activities.",
     config: {
       workflow: "fraud-investigation",
-      dataSources: ["Transaction Database", "Customer Profile System", "External Fraud Database", "Payment Gateway Logs"],
+      dataSources: [
+        "Transaction Database",
+        "Customer Profile System",
+        "External Fraud Database",
+        "Payment Gateway Logs",
+      ],
       actions: [
         "Analyze transaction patterns",
         "Cross-reference with known fraud indicators",
         "Generate risk score",
         "Create investigation report",
         "Flag suspicious accounts",
-        "Notify compliance team"
+        "Notify compliance team",
       ],
       llm: "fraud-detection-llm",
     },
@@ -186,15 +192,20 @@ const AI_SUGGESTIONS: MockPrompt[] = [
   {
     id: "ai-compliance-audit",
     title: "Automated Compliance Audit Trail",
-    description: "Based on your compliance workflows, automatically generate comprehensive audit trails for regulatory requirements.",
+    description:
+      "Based on your compliance workflows, automatically generate comprehensive audit trails for regulatory requirements.",
     config: {
       workflow: "compliance-audit",
-      dataSources: ["System Activity Logs", "User Access Database", "Transaction Records"],
+      dataSources: [
+        "System Activity Logs",
+        "User Access Database",
+        "Transaction Records",
+      ],
       actions: [
         "Collect system activities",
         "Map user actions to compliance requirements",
         "Generate audit reports",
-        "Archive for regulatory review"
+        "Archive for regulatory review",
       ],
       llm: "compliance-llm",
     },
@@ -203,20 +214,26 @@ const AI_SUGGESTIONS: MockPrompt[] = [
 
 // Template configurations
 const TEMPLATE_CONFIGS: { [key: string]: MockPrompt } = {
-  'fraud-investigation': {
+  "fraud-investigation": {
     id: "template-fraud",
     title: "Automating the discovery process for fraud investigation",
-    description: "Comprehensive fraud detection and investigation workflow with automated data collection and analysis.",
+    description:
+      "Comprehensive fraud detection and investigation workflow with automated data collection and analysis.",
     config: {
       workflow: "fraud-investigation",
-      dataSources: ["Transaction Database", "Customer Profile System", "External Fraud Database", "Payment Gateway Logs"],
+      dataSources: [
+        "Transaction Database",
+        "Customer Profile System",
+        "External Fraud Database",
+        "Payment Gateway Logs",
+      ],
       actions: [
         "Analyze transaction patterns",
         "Cross-reference with known fraud indicators",
         "Generate risk score",
         "Create investigation report",
         "Flag suspicious accounts",
-        "Notify compliance team"
+        "Notify compliance team",
       ],
       llm: "fraud-detection-llm",
     },
@@ -234,7 +251,7 @@ export function AOPBuilderPage() {
 
   // Check if we're loading from a template
   useEffect(() => {
-    const templateId = searchParams.get('template');
+    const templateId = searchParams.get("template");
     if (templateId && TEMPLATE_CONFIGS[templateId]) {
       handlePromptSelect(TEMPLATE_CONFIGS[templateId]);
     }
@@ -426,52 +443,6 @@ export function AOPBuilderPage() {
           </div>
         </div>
       )}
-
-      {/* Regular Prompt Suggestions */}
-      {!isBuilding &&
-        messages.filter((m) => m.id === "save-button").length === 0 &&
-        messages.length === 0 && (
-          <div className="mb-4 p-2">
-            <h3 className="text-sm font-semibold text-brand-muted mb-3">
-              Or choose from other templates:
-            </h3>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
-              {MOCK_PROMPTS.map((prompt) => (
-                <button
-                  key={prompt.id}
-                  onClick={() => handlePromptSelect(prompt)}
-                  disabled={isBuilding}
-                  className="p-4 border rounded-lg text-left bg-brand-card hover:bg-brand-light focus:outline-none focus:ring-2 focus:ring-brand-primary focus:ring-opacity-50 disabled:opacity-60 transition-all duration-150 ease-in-out"
-                >
-                  <h3 className="text-md font-semibold text-brand-dark">
-                    {prompt.title}
-                  </h3>
-                  <p className="text-sm text-brand-muted mt-1">
-                    {prompt.description}
-                  </p>
-                </button>
-              ))}
-            </div>
-          </div>
-        )}
-
-      {/* Start Over button */}
-      {!isBuilding &&
-        messages.length > 0 &&
-        messages[messages.length - 1].id !== "save-button" && (
-          <div className="mb-4 p-2 text-center">
-            <button
-              onClick={() => {
-                setMessages([]);
-                setIsBuilding(false);
-                setShowAISuggestions(true);
-              }}
-              className="px-6 py-2 text-brand-dark bg-brand-card rounded-md hover:bg-brand-light focus:outline-none focus:ring-2 focus:ring-brand-primary"
-            >
-              Start Over
-            </button>
-          </div>
-        )}
 
       <div className="mt-auto p-4 bg-brand-card border-t border-brand-border rounded-b-lg">
         <input

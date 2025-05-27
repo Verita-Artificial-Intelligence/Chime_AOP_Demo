@@ -36,3 +36,28 @@ body {
 .text-gradient {
   @apply bg-gradient-brand bg-clip-text text-transparent;
 }
+
+/* Loader and animation styles for AIAgentExecutionSimulation */
+.loader {
+  border-top-color: #635BFF;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+@keyframes fadeIn {
+  from { 
+    opacity: 0; 
+    transform: translateY(10px); 
+  }
+  to { 
+    opacity: 1; 
+    transform: translateY(0); 
+  }
+}
+
+.animate-fadeIn {
+  animation: fadeIn 0.5s ease-out forwards;
+}
