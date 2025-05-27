@@ -245,6 +245,7 @@ export function AOPBuilderPage() {
   const [messages, setMessages] = useState<ChatMessage[]>([]);
   const [isBuilding, setIsBuilding] = useState(false);
   const [showAISuggestions, setShowAISuggestions] = useState(true);
+  const [chatInput, setChatInput] = useState("");
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
   const chatEndRef = useRef<null | HTMLDivElement>(null);
@@ -283,6 +284,7 @@ export function AOPBuilderPage() {
   const handlePromptSelect = async (prompt: MockPrompt) => {
     if (isBuilding) return;
     setIsBuilding(true);
+    setShowAISuggestions(false);
     addMessage("user", `I want to: ${prompt.title}`);
 
     addMessage("agent", `Okay, let's build an AOP for: "${prompt.title}".`);
@@ -342,6 +344,35 @@ export function AOPBuilderPage() {
     setIsBuilding(false);
   };
 
+  const handleChatSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!chatInput.trim() || isBuilding) return;
+
+    const userMessage = chatInput.trim();
+    setChatInput("");
+    
+    // Check for keywords and trigger appropriate workflow
+    const lowerCaseMessage = userMessage.toLowerCase();
+    
+    if (lowerCaseMessage.includes('fraud')) {
+      // Trigger fraud investigation workflow
+      const fraudPrompt = AI_SUGGESTIONS.find(s => s.id === "ai-fraud-investigation");
+      if (fraudPrompt) {
+        handlePromptSelect(fraudPrompt);
+      }
+    } else if (lowerCaseMessage.includes('compliance')) {
+      // Trigger compliance audit workflow
+      const compliancePrompt = AI_SUGGESTIONS.find(s => s.id === "ai-compliance-audit");
+      if (compliancePrompt) {
+        handlePromptSelect(compliancePrompt);
+      }
+    } else {
+      // For other messages, just add them to the chat
+      addMessage("user", userMessage);
+      addMessage("agent", "I understand you're looking for help with automation. Try mentioning 'fraud' for fraud investigation workflows or 'compliance' for audit trail automation.");
+    }
+  };
+
   const saveAgent = (agentConfig: AgentConfig) => {
     try {
       const storedAgentsString = localStorage.getItem("aopAgents");
@@ -392,9 +423,9 @@ export function AOPBuilderPage() {
             <div
               className={`p-3 rounded-lg max-w-md ${
                 msg.sender === "user"
-                  ? "bg-brand-primary text-brand-dark"
+                  ? "bg-brand-primary text-white"
                   : msg.sender === "agent"
-                  ? "bg-brand-card text-brand-dark"
+                  ? "bg-gray-100 text-brand-dark"
                   : "bg-brand-light text-brand-primary text-sm italic w-full text-center"
               }`}
             >
@@ -402,7 +433,7 @@ export function AOPBuilderPage() {
               {msg.id === "save-button" && msg.config && (
                 <button
                   onClick={() => saveAgent(msg.config as AgentConfig)}
-                  className="mt-2 px-4 py-2 bg-brand-primary text-brand-dark rounded-md hover:bg-brand-primaryDark focus:outline-none focus:ring-2 focus:ring-brand-primary focus:ring-opacity-50 w-full transition-all duration-200 font-semibold"
+                  className="mt-2 px-4 py-2 bg-white text-brand-primary rounded-md hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-white focus:ring-opacity-50 w-full transition-all duration-200 font-semibold"
                 >
                   Save & Run This AOP
                 </button>
@@ -444,14 +475,16 @@ export function AOPBuilderPage() {
         </div>
       )}
 
-      <div className="mt-auto p-4 bg-brand-card border-t border-brand-border rounded-b-lg">
+      <form onSubmit={handleChatSubmit} className="mt-auto p-4 bg-brand-card border-t border-brand-border rounded-b-lg">
         <input
           type="text"
-          placeholder="Chat disabled in demo mode (select a prompt above to begin building your AOP)..."
-          disabled
-          className="w-full p-3 border border-brand-border rounded-md bg-brand-light cursor-not-allowed"
+          placeholder="Type your AOP request..."
+          value={chatInput}
+          onChange={(e) => setChatInput(e.target.value)}
+          disabled={isBuilding}
+          className="w-full p-3 border border-brand-border rounded-md bg-white focus:outline-none focus:ring-2 focus:ring-brand-primary disabled:bg-gray-100 disabled:cursor-not-allowed"
         />
-      </div>
+      </form>
     </div>
   );
 }
