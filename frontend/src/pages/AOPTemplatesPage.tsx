@@ -23,7 +23,7 @@ const templates: Template[] = [
     estimatedTime: '15-20 mins',
   },
   {
-    id: 'kyc-compliance',
+    id: 'compliance-audit',
     name: 'KYC Compliance Verification',
     description: 'Automate Know Your Customer (KYC) processes including identity verification, document validation, and risk assessment.',
     category: 'Compliance',

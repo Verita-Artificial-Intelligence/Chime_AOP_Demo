@@ -109,6 +109,27 @@ const TEMPLATE_CONFIGS: { [key: string]: MockPrompt } = {
     },
   },
   // Add other template configurations as needed
+  "compliance-audit": {
+    id: "template-compliance",
+    title: "Automated Compliance Audit Trail",
+    description:
+      "Comprehensive compliance audit trail with automated data collection and analysis.",
+    config: {
+      workflow: "compliance-audit",
+      dataSources: [
+        "System Activity Logs",
+        "User Access Database",
+        "Transaction Records",
+      ],
+      actions: [
+        "Collect system activities",
+        "Map user actions to compliance requirements",
+        "Generate audit reports",
+        "Archive for regulatory review",
+      ],
+      llm: "compliance-llm",
+    },
+  },
 };
 
 export function AOPBuilderPage() {
@@ -124,7 +145,20 @@ export function AOPBuilderPage() {
   useEffect(() => {
     const templateId = searchParams.get("template");
     if (templateId && TEMPLATE_CONFIGS[templateId]) {
-      handlePromptSelect(TEMPLATE_CONFIGS[templateId]);
+      // For template initialization, we'll handle it differently to avoid duplicates
+      const template = TEMPLATE_CONFIGS[templateId];
+      setShowAISuggestions(false);
+      // Only add the initial user message
+      setMessages([{
+        id: Date.now().toString(),
+        sender: "user",
+        text: `I want to: ${template.title}`,
+        timestamp: new Date().toISOString(),
+      }]);
+      // Then trigger the build process after a short delay
+      setTimeout(() => {
+        handlePromptSelectFromTemplate(template);
+      }, 500);
     }
   }, [searchParams]);
 
@@ -149,6 +183,68 @@ export function AOPBuilderPage() {
         config,
       },
     ]);
+  };
+
+  const handlePromptSelectFromTemplate = async (prompt: MockPrompt) => {
+    if (isBuilding) return;
+    setIsBuilding(true);
+    
+    // Don't add user message as it's already added in the template initialization
+    addMessage("agent", `Okay, let's build an AOP for: "${prompt.title}".`);
+    await new Promise((resolve) => setTimeout(resolve, 1000));
+
+    const workflowDetails = mockData.workflows.find(
+      (wf) => wf.id === prompt.config.workflow
+    );
+    addMessage(
+      "agent",
+      `Selecting workflow: ${
+        workflowDetails?.name || prompt.config.workflow
+      }...`
+    );
+    await new Promise((resolve) => setTimeout(resolve, 1500));
+
+    for (const ds of prompt.config.dataSources) {
+      addMessage("agent", `Adding data source: ${ds}...`);
+      await new Promise((resolve) => setTimeout(resolve, 700));
+    }
+
+    if (prompt.config.actions.length > 0) {
+      for (const action of prompt.config.actions) {
+        addMessage("agent", `Adding action: ${action}...`);
+        await new Promise((resolve) => setTimeout(resolve, 700));
+      }
+    } else {
+      addMessage("agent", `No specific actions required for this workflow.`);
+      await new Promise((resolve) => setTimeout(resolve, 700));
+    }
+
+    const llmDetails = mockData.llmOptions.find(
+      (llm) => llm.id === prompt.config.llm
+    );
+    addMessage(
+      "agent",
+      `Selecting LLM: ${llmDetails?.name || prompt.config.llm}...`
+    );
+    await new Promise((resolve) => setTimeout(resolve, 1000));
+
+    const finalAgentConfig: AgentConfig = {
+      id: prompt.config.workflow + "-" + Date.now(),
+      name: prompt.title,
+      workflow: prompt.config.workflow,
+      dataSources: prompt.config.dataSources,
+      actions: prompt.config.actions,
+      llm: prompt.config.llm,
+      createdAt: new Date().toISOString(),
+    };
+
+    addMessage(
+      "system",
+      `AOP Configuration for "${prompt.title}" is complete!`,
+      finalAgentConfig
+    );
+
+    setIsBuilding(false);
   };
 
   const handlePromptSelect = async (prompt: MockPrompt) => {
