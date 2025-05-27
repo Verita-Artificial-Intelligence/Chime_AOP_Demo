@@ -104,7 +104,7 @@ export const ActiveRunsPage: React.FC = () => {
           <div className="flex gap-4 justify-center">
             <button
               onClick={() => navigate("/aop/templates")}
-              className="px-4 py-2 bg-brand-primary text-white rounded-md hover:bg-brand-dark transition-colors"
+              className="px-4 py-2 bg-brand-primary text-brand-dark rounded-md hover:bg-brand-dark transition-colors font-semibold"
             >
               Browse Templates
             </button>

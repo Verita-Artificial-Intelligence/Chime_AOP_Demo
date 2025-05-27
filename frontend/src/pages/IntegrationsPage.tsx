@@ -110,9 +110,9 @@ export const IntegrationsPage: React.FC = () => {
             <button
               key={category}
               onClick={() => setSelectedCategory(category)}
-              className={`px-4 py-2 rounded-full text-sm font-medium transition-colors ${
+              className={`px-4 py-2 rounded-full text-sm font-medium transition-colors font-semibold ${
                 selectedCategory === category
-                  ? 'bg-brand-primary text-white'
+                  ? 'bg-brand-primary text-brand-dark'
                   : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
               }`}
             >

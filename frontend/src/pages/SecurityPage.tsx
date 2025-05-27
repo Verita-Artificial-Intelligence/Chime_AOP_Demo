@@ -23,7 +23,7 @@ export const SecurityPage: React.FC = () => {
                   <h3 className="font-medium text-gray-900">Google OAuth 2.0</h3>
                   <p className="text-sm text-gray-600">Enable Google sign-in for users</p>
                 </div>
-                <button className="px-4 py-2 bg-brand-primary text-white rounded-md hover:bg-brand-dark">
+                <button className="px-4 py-2 bg-brand-primary text-brand-dark rounded-md hover:bg-brand-dark font-semibold">
                   Configure
                 </button>
               </div>
@@ -34,7 +34,7 @@ export const SecurityPage: React.FC = () => {
                   <h3 className="font-medium text-gray-900">Microsoft Azure AD</h3>
                   <p className="text-sm text-gray-600">Enterprise authentication via Azure</p>
                 </div>
-                <button className="px-4 py-2 bg-brand-primary text-white rounded-md hover:bg-brand-dark">
+                <button className="px-4 py-2 bg-brand-primary text-brand-dark rounded-md hover:bg-brand-dark font-semibold">
                   Configure
                 </button>
               </div>
@@ -115,7 +115,7 @@ export const SecurityPage: React.FC = () => {
                 <button className="text-sm text-red-600 hover:text-red-700">Revoke</button>
               </div>
             </div>
-            <button className="w-full px-4 py-2 bg-brand-primary text-white rounded-md hover:bg-brand-dark">
+            <button className="w-full px-4 py-2 bg-brand-primary text-brand-dark rounded-md hover:bg-brand-dark font-semibold">
               Generate New API Key
             </button>
           </div>
