@@ -2,14 +2,62 @@
 @tailwind components;
 @tailwind utilities;
 
-.btn {
-  @apply px-base py-sm rounded-md text-white bg-blue hover:bg-blue-hover transition;
+body {
+  @apply font-sans bg-brand-background text-brand-heading;
 }
 
-.input {
-  @apply w-full px-base py-sm border border-borderLight rounded-md;
+.btn-primary {
+  @apply bg-brand-primary text-brand-dark font-semibold rounded-lg h-8 px-4 transition-all duration-200
+         hover:bg-brand-hover focus:ring-2 focus:ring-brand-primary focus:outline-none;
 }
 
-.link {
-  @apply text-blue hover:text-blue-hover;
+.btn-secondary {
+  @apply bg-white text-brand-dark font-semibold rounded-lg h-8 px-4 border border-brand-border transition-all duration-200
+         hover:bg-brand-light hover:border-brand-primary focus:ring-2 focus:ring-brand-primary focus:outline-none;
+}
+
+.btn-danger {
+  @apply bg-white text-[#B3261E] font-semibold rounded-lg h-8 px-4 border border-[#B3261E] transition-all duration-200
+         hover:bg-[#F7E4E2] focus:ring-2 focus:ring-[#B3261E] focus:outline-none;
+}
+
+.card {
+  @apply bg-brand-card rounded-card shadow-card p-8;
+}
+
+.text-muted {
+  @apply text-brand-muted;
+}
+
+.text-heading {
+  @apply text-brand-heading;
+}
+
+.text-gradient {
+  @apply bg-gradient-brand bg-clip-text text-transparent;
+}
+
+/* Loader and animation styles for AIAgentExecutionSimulation */
+.loader {
+  border-top-color: #635BFF;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+@keyframes fadeIn {
+  from { 
+    opacity: 0; 
+    transform: translateY(10px); 
+  }
+  to { 
+    opacity: 1; 
+    transform: translateY(0); 
+  }
+}
+
+.animate-fadeIn {
+  animation: fadeIn 0.5s ease-out forwards;
 }

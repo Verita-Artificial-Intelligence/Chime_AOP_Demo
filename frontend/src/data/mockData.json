@@ -1,0 +1,447 @@
+{
+  "entitlementsTableData": [
+    { "employee": "John Smith", "type": "Annual Leave", "balance": 15, "lastUpdated": "2024-05-01" },
+    { "employee": "Sarah Johnson", "type": "Sick Leave", "balance": 10, "lastUpdated": "2024-05-01" },
+    { "employee": "Michael Brown", "type": "Annual Leave", "balance": 20, "lastUpdated": "2024-05-01" },
+    { "employee": "Emily Davis", "type": "Parental Leave", "balance": 90, "lastUpdated": "2024-05-01" },
+    { "employee": "David Wilson", "type": "Annual Leave", "balance": 12, "lastUpdated": "2024-05-01" },
+    { "employee": "Lisa Anderson", "type": "Sick Leave", "balance": 8, "lastUpdated": "2024-05-01" },
+    { "employee": "James Taylor", "type": "Annual Leave", "balance": 18, "lastUpdated": "2024-05-01" },
+    { "employee": "Jessica Lee", "type": "Long Service Leave", "balance": 65, "lastUpdated": "2024-05-01" }
+  ],
+  "payrollRuns": [
+    { "id": "PR-2024-05", "date": "2024-05-01", "employees": 125, "amount": 450000, "status": "Completed" },
+    { "id": "PR-2024-04B", "date": "2024-04-15", "employees": 122, "amount": 445000, "status": "Completed" },
+    { "id": "PR-2024-04A", "date": "2024-04-01", "employees": 120, "amount": 440000, "status": "Completed" },
+    { "id": "PR-2024-03B", "date": "2024-03-15", "employees": 118, "amount": 435000, "status": "Completed" },
+    { "id": "PR-2024-03A", "date": "2024-03-01", "employees": 115, "amount": 430000, "status": "Completed" },
+    { "id": "PR-2024-02B", "date": "2024-02-15", "employees": 115, "amount": 428000, "status": "Completed" }
+  ],
+  "payrollByMonth": [
+    { "month": "Jun 2023", "amount": 820000 },
+    { "month": "Jul 2023", "amount": 825000 },
+    { "month": "Aug 2023", "amount": 830000 },
+    { "month": "Sep 2023", "amount": 835000 },
+    { "month": "Oct 2023", "amount": 840000 },
+    { "month": "Nov 2023", "amount": 842000 },
+    { "month": "Dec 2023", "amount": 845000 },
+    { "month": "Jan 2024", "amount": 850000 },
+    { "month": "Feb 2024", "amount": 856000 },
+    { "month": "Mar 2024", "amount": 865000 },
+    { "month": "Apr 2024", "amount": 885000 },
+    { "month": "May 2024", "amount": 890000 }
+  ],
+  "receivablesTableData": [
+    { "customer": "Acme Corp", "invoice": "INV-2024-001", "amount": 45000, "dueDate": "2024-05-15", "status": "Due Soon" },
+    { "customer": "TechCorp", "invoice": "INV-2024-002", "amount": 28500, "dueDate": "2024-05-20", "status": "Due Soon" },
+    { "customer": "GlobalRetail", "invoice": "INV-2024-003", "amount": 52000, "dueDate": "2024-04-30", "status": "Overdue" },
+    { "customer": "AlphaBank", "invoice": "INV-2024-004", "amount": 38000, "dueDate": "2024-06-01", "status": "Pending" },
+    { "customer": "MediCorp", "invoice": "INV-2024-005", "amount": 62000, "dueDate": "2024-05-10", "status": "Due Soon" },
+    { "customer": "Beta Systems", "invoice": "INV-2024-006", "amount": 33500, "dueDate": "2024-04-25", "status": "Overdue" },
+    { "customer": "Delta Industries", "invoice": "INV-2024-007", "amount": 41000, "dueDate": "2024-06-05", "status": "Pending" },
+    { "customer": "Omega Solutions", "invoice": "INV-2024-008", "amount": 29500, "dueDate": "2024-05-18", "status": "Due Soon" }
+  ],
+  "receivablesByMonth": [
+    { "month": "Jun 2023", "amount": 265000 },
+    { "month": "Jul 2023", "amount": 270000 },
+    { "month": "Aug 2023", "amount": 275000 },
+    { "month": "Sep 2023", "amount": 278000 },
+    { "month": "Oct 2023", "amount": 282000 },
+    { "month": "Nov 2023", "amount": 285000 },
+    { "month": "Dec 2023", "amount": 275000 },
+    { "month": "Jan 2024", "amount": 280000 },
+    { "month": "Feb 2024", "amount": 310000 },
+    { "month": "Mar 2024", "amount": 295000 },
+    { "month": "Apr 2024", "amount": 320000 },
+    { "month": "May 2024", "amount": 329500 }
+  ],
+  "payablesTableData": [
+    { "vendor": "AWS Cloud Services", "invoice": "AWS-2024-125", "amount": 85000, "dueDate": "2024-05-15", "status": "Due Soon" },
+    { "vendor": "Office Solutions Inc", "invoice": "OSI-2024-089", "amount": 12500, "dueDate": "2024-05-20", "status": "Due Soon" },
+    { "vendor": "Tech Hardware Ltd", "invoice": "THL-2024-234", "amount": 45000, "dueDate": "2024-04-30", "status": "Overdue" },
+    { "vendor": "Marketing Pro", "invoice": "MP-2024-067", "amount": 28000, "dueDate": "2024-06-01", "status": "Pending" },
+    { "vendor": "Software Licenses Co", "invoice": "SLC-2024-156", "amount": 56000, "dueDate": "2024-05-10", "status": "Due Soon" },
+    { "vendor": "IT Support Services", "invoice": "ITS-2024-078", "amount": 22500, "dueDate": "2024-04-25", "status": "Overdue" },
+    { "vendor": "Data Center Corp", "invoice": "DCC-2024-112", "amount": 67000, "dueDate": "2024-06-05", "status": "Pending" },
+    { "vendor": "Security Systems", "invoice": "SS-2024-045", "amount": 34000, "dueDate": "2024-05-18", "status": "Due Soon" }
+  ],
+  "payablesByMonth": [
+    { "month": "Jun 2023", "amount": 305000 },
+    { "month": "Jul 2023", "amount": 308000 },
+    { "month": "Aug 2023", "amount": 310000 },
+    { "month": "Sep 2023", "amount": 312000 },
+    { "month": "Oct 2023", "amount": 315000 },
+    { "month": "Nov 2023", "amount": 318000 },
+    { "month": "Dec 2023", "amount": 315000 },
+    { "month": "Jan 2024", "amount": 320000 },
+    { "month": "Feb 2024", "amount": 335000 },
+    { "month": "Mar 2024", "amount": 345000 },
+    { "month": "Apr 2024", "amount": 350000 },
+    { "month": "May 2024", "amount": 350000 }
+  ],
+  "webApiData": [
+    {
+      "endpoint": "/api/investments",
+      "method": "GET",
+      "response": [
+        { "investmentId": "INV-001", "type": "Stock", "amount": 100000, "status": "Active" },
+        { "investmentId": "INV-002", "type": "Bond", "amount": 50000, "status": "Matured" },
+        { "investmentId": "INV-003", "type": "ETF", "amount": 75000, "status": "Active" },
+        { "investmentId": "INV-004", "type": "Real Estate", "amount": 200000, "status": "Active" },
+        { "investmentId": "INV-005", "type": "Mutual Fund", "amount": 30000, "status": "Pending" },
+        { "investmentId": "INV-006", "type": "Stock", "amount": 120000, "status": "Active" },
+        { "investmentId": "INV-007", "type": "Bond", "amount": 40000, "status": "Matured" }
+      ]
+    }
+  ],
+  "powerAppsData": [
+    {
+      "visualId": "custom-investment-query",
+      "query": "SELECT * FROM Investments WHERE status = 'Active'",
+      "results": [
+        { "investmentId": "INV-001", "type": "Stock", "amount": 100000, "owner": "Sarah Johnson" },
+        { "investmentId": "INV-003", "type": "ETF", "amount": 75000, "owner": "Michael Williams" },
+        { "investmentId": "INV-004", "type": "Real Estate", "amount": 200000, "owner": "Jessica Lee" },
+        { "investmentId": "INV-006", "type": "Stock", "amount": 120000, "owner": "David Rodriguez" }
+      ]
+    },
+    {
+      "visualId": "investment-summary",
+      "query": "SELECT type, SUM(amount) as total FROM Investments GROUP BY type",
+      "results": [
+        { "type": "Stock", "total": 220000 },
+        { "type": "Bond", "total": 90000 },
+        { "type": "ETF", "total": 75000 },
+        { "type": "Real Estate", "total": 200000 },
+        { "type": "Mutual Fund", "total": 30000 }
+      ]
+    }
+  ],
+  "excelData": [
+    {
+      "sheetName": "Investments",
+      "rows": [
+        { "investmentId": "INV-001", "type": "Stock", "amount": 100000 },
+        { "investmentId": "INV-002", "type": "Bond", "amount": 50000 },
+        { "investmentId": "INV-003", "type": "ETF", "amount": 75000 },
+        { "investmentId": "INV-004", "type": "Real Estate", "amount": 200000 },
+        { "investmentId": "INV-005", "type": "Mutual Fund", "amount": 30000 },
+        { "investmentId": "INV-006", "type": "Stock", "amount": 120000 },
+        { "investmentId": "INV-007", "type": "Bond", "amount": 40000 }
+      ]
+    }
+  ],
+  "actionResults": [
+    {
+      "action": "Verify legal documents",
+      "results": [
+        { "documentName": "Business License - Restaurant X", "status": "Verified", "verifiedBy": "Automated System", "date": "2024-07-19" },
+        { "documentName": "Food Handler Permit - Chef A", "status": "Verified", "verifiedBy": "Automated System", "date": "2024-07-19" },
+        { "documentName": "Insurance Policy", "status": "Awaiting Upload", "assignedTo": "Onboarding Team", "notes": "Initial check complete, policy doc pending."}
+      ]
+    },
+    {
+      "action": "Create merchant account",
+      "results": [
+        { "accountID": "DD-MERCHANT-78901", "restaurantName": "The Noodle House", "status": "Active", "creationDate": "2024-07-19" },
+        { "paymentGatewayLink": "Stripe Connect - Provisional", "nextStep": "Link Bank Account" }
+      ]
+    },
+    {
+      "action": "Configure menu in Doordash system",
+      "results": [
+        { "menuImportStatus": "Success", "itemsImported": 55, "categoriesCreated": 8 },
+        { "pendingReview": "Price validation for 3 items", "manualCheckRequired": "Image quality for 'Special Dish'" }
+      ]
+    },
+    {
+      "action": "Schedule photoshoot",
+      "results": [
+        { "restaurantID": "DD-MERCHANT-78901", "photographerAssigned": "Jane Doe Photography", "scheduledDate": "2024-07-25T14:00:00Z" },
+        { "confirmationSentToRestaurant": "Yes", "contactPerson": "Mr. Lee" }
+      ]
+    },
+    {
+      "action": "Send welcome kit",
+      "results": [
+        { "kitTrackingNumber": "UPS1Z9A00000000000", "status": "Shipped", "estimatedDelivery": "2024-07-22" },
+        { "contents": "Tablet, Doordash Stickers, Quick Start Guide", "addressVerified": "Yes" }
+      ]
+    },
+    {
+      "action": "Analyze real-time order volume",
+      "results": [
+        { "timePeriod": "Last 15 mins", "incomingOrders": 120, "averageOrderValue": 25.50, "trendingCuisine": "Pizza" },
+        { "zone": "Downtown", "currentDemand": "High", "availableDashers": 15 }
+      ]
+    },
+    {
+      "action": "Predict demand hotspots using ML model",
+      "results": [
+        { "hotspotID": "HS-DT-001", "location": "Main St & 5th Ave", "predictedOrdersNextHour": 45, "confidence": "85%" },
+        { "hotspotID": "HS-UNI-003", "location": "University Campus Area", "predictedOrdersNextHour": 60, "confidence": "92%" }
+      ]
+    },
+    {
+      "action": "Calculate optimal driver-to-order ratio",
+      "results": [
+        { "currentRatio": "1 Dasher : 2.5 Orders", "targetRatio": "1 Dasher : 1.8 Orders", "adjustmentNeeded": "Increase Dasher density by 15% in Zone A" }
+      ]
+    },
+    {
+      "action": "Send dispatch notifications to available Dashers",
+      "results": [
+        { "batchID": "DISPATCH-BATCH-101", "notificationsSent": 50, "acceptedByDashers": 35, "avgAcceptanceTimeSec": 15 },
+        { "peakPayBonusActive": "+$3.00 per delivery", "zones": ["Downtown", "Westside"] }
+      ]
+    },
+    {
+      "action": "Monitor delivery ETAs and adjust routes dynamically",
+      "results": [
+        { "orderID": "ORD-12345", "initialETA": "25 mins", "currentETA": "22 mins", "rerouted": "Yes", "reason": "Traffic congestion detected" },
+        { "orderID": "ORD-12346", "initialETA": "30 mins", "currentETA": "30 mins", "rerouted": "No", "status": "On Track" }
+      ]
+    },
+    {
+      "action": "Receive refund request via API/Webhook",
+      "results": [
+        { "requestID": "REF-9876", "source": "Customer App API", "timestamp": "2024-07-19T10:05:00Z", "status": "Processing" }
+      ]
+    },
+    {
+      "action": "Verify order details against order history",
+      "results": [
+        { "orderID": "ORD-54321", "customerID": "CUST-001", "items": "1x Large Pizza, 1x Coke", "orderTotal": 28.00, "verificationStatus": "Match Found" }
+      ]
+    },
+    {
+      "action": "Check against refund policy rules engine",
+      "results": [
+        { "policyRuleID": "POLICY-LATE-DELIVERY", "matched": "No" },
+        { "policyRuleID": "POLICY-MISSING-ITEMS", "matched": "Yes", "details": "Customer reported missing Coke" },
+        { "refundDecision": "Partial Refund Approved", "amount": 3.00 }
+      ]
+    },
+    {
+      "action": "If approved, issue refund via Payment Gateway",
+      "results": [
+        { "transactionID": "PAY-REFUND-ABCDE123", "amount": 3.00, "status": "Success", "gatewayResponse": "Refund processed successfully" }
+      ]
+    },
+    {
+      "action": "Notify customer of refund status",
+      "results": [
+        { "notificationType": "In-App Message", "customerID": "CUST-001", "message": "Your refund of $3.00 has been processed.", "status": "Sent" },
+        { "notificationType": "Email", "emailAddress": "customer@example.com", "status": "Sent" }
+      ]
+    },
+    {
+      "action": "Flag suspicious requests for manual review",
+      "results": [
+        { "requestID": "REF-9880", "reasonFlagged": "High refund frequency for customer", "assignedTo": "Fraud Prevention Team", "status": "Pending Review" }
+      ]
+    },
+    {
+      "action": "Receive menu change request from restaurant portal",
+      "results": [
+        { "requestID": "MENU-CHG-005", "restaurantID": "DD-MERCHANT-123", "changeType": "Price Update", "itemsAffected": 10, "status": "Received" }
+      ]
+    },
+    {
+      "action": "Validate changes (e.g., price format, item availability)",
+      "results": [
+        { "validationRule": "Price Format Check", "status": "Passed" },
+        { "validationRule": "Item Availability Cross-Reference", "status": "Passed" },
+        { "overallValidation": "Success" }
+      ]
+    },
+    {
+      "action": "Update menu in central database",
+      "results": [
+        { "databaseTable": "RestaurantMenus", "rowsUpdated": 10, "timestamp": "2024-07-19T11:00:00Z", "status": "Success" }
+      ]
+    },
+    {
+      "action": "Push updates to customer-facing apps",
+      "results": [
+        { "platform": "iOS App", "updateStatus": "Pushed", "version": "4.5.1" },
+        { "platform": "Android App", "updateStatus": "Pushed", "version": "4.5.0" },
+        { "platform": "Web App", "updateStatus": "Pushed", "cacheClearScheduled": "Yes" }
+      ]
+    },
+    {
+      "action": "Notify Dashers of significant changes (e.g., new items)",
+      "results": [
+        { "notificationType": "Dasher App Alert", "message": "Alert: 'The Burger Place' has added a new 'Mega Burger'. Check menu for details.", "dashersNotified": 500, "region": "City Center" }
+      ]
+    },
+    {
+      "action": "Analyze transaction patterns",
+      "results": [
+        { "analysisId": "ANALYSIS-001", "transactionId": "TXN-001", "pattern": "High-value purchase in new location", "riskScore": 85, "flagged": true },
+        { "analysisId": "ANALYSIS-002", "transactionId": "TXN-003", "pattern": "Multiple high-value transactions within 30 mins", "riskScore": 92, "flagged": true }
+      ]
+    },
+    {
+      "action": "Cross-reference with known fraud indicators",
+      "results": [
+        { "matchId": "MATCH-001", "transactionId": "TXN-001", "fraudDatabase": "External", "matchType": "Location + Merchant Category", "confidence": "High" },
+        { "matchId": "MATCH-002", "transactionId": "TXN-003", "fraudDatabase": "External", "matchType": "Amount + Time Pattern", "confidence": "Very High" }
+      ]
+    },
+    {
+      "action": "Generate risk score",
+      "results": [
+        { "scoreId": "SCORE-001", "transactionId": "TXN-001", "finalRiskScore": 87, "factors": ["Location", "Amount", "New Device"], "recommendation": "Manual Review" },
+        { "scoreId": "SCORE-002", "transactionId": "TXN-003", "finalRiskScore": 94, "factors": ["Pattern", "Amount", "Velocity"], "recommendation": "Block Transaction" }
+      ]
+    },
+    {
+      "action": "Create investigation report",
+      "results": [
+        { "reportId": "REPORT-001", "status": "Generated", "transactions": 2, "totalAmount": 13500, "riskLevel": "High", "assignedTo": "Fraud Team Lead" }
+      ]
+    },
+    {
+      "action": "Flag suspicious accounts",
+      "results": [
+        { "accountId": "ACCT-001", "customerId": "CUST-002", "status": "Flagged", "reason": "Multiple high-risk transactions", "restrictionsApplied": "Temporary hold" }
+      ]
+    },
+    {
+      "action": "Notify compliance team",
+      "results": [
+        { "notificationId": "NOTIFY-001", "recipients": ["compliance@company.com", "fraud-team@company.com"], "priority": "High", "status": "Sent", "timestamp": "2024-07-19T10:45:00Z" }
+      ]
+    }
+  ],
+  "aopsInstances": [
+    {
+      "id": "AOP1",
+      "name": "Automating the discovery process for fraud investigation",
+      "description": "Automating the discovery process for fraud investigation....",
+      "category": "Fraud & Compliance",
+      "status": "Completed",
+      "lastRun": "2024-01-01T00:00:00Z",
+      "runHistory": [
+        {"timestamp": "2024-01-02T00:02:00Z", "status": "Warning", "details": "Minor issues detected in data retrieval."},
+        {"timestamp": "2024-01-01T00:06:00Z", "status": "Info", "details": "AOP for fraud investigation successfully completed."}
+      ],
+      "metrics": {
+        "dataRetrievalStatus": "Done",
+        "reason": "Data retrieval completed successfully."
+      }
+    }
+  ],
+  "financialData": {
+    "accountsPayable": [
+      { "vendor": "Restaurant Supply Co.", "invoice": "INV-DD-1023", "amount": 15000, "dueDate": "2024-08-01", "status": "Pending" },
+      { "vendor": "Marketing Solutions LLC", "invoice": "INV-DD-1024", "amount": 7500, "dueDate": "2024-07-25", "status": "Pending" },
+      { "vendor": "Cloud Services Inc.", "invoice": "INV-DD-1025", "amount": 12000, "dueDate": "2024-07-20", "status": "Paid" }
+    ],
+    "accountsReceivable": [
+      { "restaurantPartner": "Burger Joint", "invoice": "INV-R-5001", "amount": 5000, "dueDate": "2024-07-30", "status": "Due Soon" },
+      { "restaurantPartner": "Taco Town", "invoice": "INV-R-5002", "amount": 3200, "dueDate": "2024-07-15", "status": "Overdue" }
+    ],
+    "payroll": {
+      "summary": {
+        "totalEmployees": 5000,
+        "totalDasherContracts": 200000,
+        "lastPayrollRun": "2024-07-15",
+        "totalPaid": 2500000
+      },
+      "runs": [
+        { "id": "PR-DD-2024-07A", "date": "2024-07-15", "type": "Bi-Weekly Employee", "amount": 1250000, "status": "Completed" },
+        { "id": "PR-DD-2024-07D", "date": "2024-07-10", "type": "Dasher Payout", "amount": 750000, "status": "Completed" }
+      ]
+    },
+    "entitlements": [
+      { "dasherId": "D12345", "type": "Early Access to Schedule", "status": "Active", "lastUpdated": "2024-07-01" },
+      { "dasherId": "D67890", "type": "Bonus Pay Eligibility", "status": "Active", "lastUpdated": "2024-07-15" }
+    ]
+  },
+  "dataSourceOptions": [
+    "Transaction Database",
+    "Customer Profile System",
+    "External Fraud Database",
+    "System Activity Logs",
+    "User Access Database",
+    "Transaction Records"
+  ],
+  "actionOptions": {
+    "fraud-investigation": [
+      "Analyze transaction patterns",
+      "Cross-reference with known fraud indicators",
+      "Generate risk score",
+      "Create investigation report",
+      "Flag suspicious accounts",
+      "Notify compliance team"
+    ],
+    "compliance-audit": [
+      "Collect system activities",
+      "Map user actions to compliance requirements",
+      "Generate audit reports",
+      "Archive for regulatory review"
+    ]
+  }, 
+  "dataSourceSamples": {
+    "Transaction Database": [
+      { "transactionId": "TXN-001", "amount": 5000, "merchant": "Electronics Store", "timestamp": "2024-07-19T10:00:00Z", "cardType": "Credit", "location": "New York", "riskScore": 85 },
+      { "transactionId": "TXN-002", "amount": 150, "merchant": "Gas Station", "timestamp": "2024-07-19T10:15:00Z", "cardType": "Debit", "location": "New York", "riskScore": 15 },
+      { "transactionId": "TXN-003", "amount": 8500, "merchant": "Jewelry Store", "timestamp": "2024-07-19T10:30:00Z", "cardType": "Credit", "location": "Miami", "riskScore": 92 }
+    ],
+    "Customer Profile System": [
+      { "customerId": "CUST-001", "name": "John Doe", "accountAge": "5 years", "avgMonthlySpend": 2000, "location": "New York", "fraudHistory": "None" },
+      { "customerId": "CUST-002", "name": "Jane Smith", "accountAge": "2 months", "avgMonthlySpend": 500, "location": "Miami", "fraudHistory": "1 incident" },
+      { "customerId": "CUST-003", "name": "Bob Johnson", "accountAge": "3 years", "avgMonthlySpend": 1500, "location": "Chicago", "fraudHistory": "None" }
+    ],
+    "External Fraud Database": [
+      { "fraudId": "FRAUD-001", "type": "Card Cloning", "reportedDate": "2024-07-18", "location": "Miami", "merchantCategory": "Jewelry", "amount": 7500 },
+      { "fraudId": "FRAUD-002", "type": "Identity Theft", "reportedDate": "2024-07-17", "location": "New York", "merchantCategory": "Electronics", "amount": 4500 },
+      { "fraudId": "FRAUD-003", "type": "Account Takeover", "reportedDate": "2024-07-16", "location": "Los Angeles", "merchantCategory": "Online", "amount": 3200 }
+    ],
+    "Payment Gateway Logs": [
+      { "logId": "LOG-001", "transactionId": "TXN-001", "status": "Approved", "responseCode": "00", "ipAddress": "192.168.1.100", "deviceId": "DEV-123" },
+      { "logId": "LOG-002", "transactionId": "TXN-002", "status": "Approved", "responseCode": "00", "ipAddress": "10.0.0.50", "deviceId": "DEV-456" },
+      { "logId": "LOG-003", "transactionId": "TXN-003", "status": "Flagged", "responseCode": "05", "ipAddress": "192.168.1.100", "deviceId": "DEV-123" }
+    ],
+    "System Activity Logs": [
+      { "logId": "LOG-001", "activity": "User login", "timestamp": "2024-07-19T10:00:00Z", "user": "CUST-001" },
+      { "logId": "LOG-002", "activity": "Transaction processed", "timestamp": "2024-07-19T10:15:00Z", "user": "CUST-002" },
+      { "logId": "LOG-003", "activity": "Transaction flagged", "timestamp": "2024-07-19T10:30:00Z", "user": "CUST-003" }
+    ],
+    "User Access Database": [
+      { "userId": "U-001", "name": "John Doe", "role": "Admin", "lastLogin": "2024-07-19T10:00:00Z" },
+      { "userId": "U-002", "name": "Jane Smith", "role": "User", "lastLogin": "2024-07-19T10:15:00Z" },
+      { "userId": "U-003", "name": "Bob Johnson", "role": "Admin", "lastLogin": "2024-07-19T10:30:00Z" }
+    ],
+    "Transaction Records": [
+      { "recordId": "REC-001", "transactionId": "TXN-001", "amount": 5000, "timestamp": "2024-07-19T10:00:00Z", "status": "Completed" },
+      { "recordId": "REC-002", "transactionId": "TXN-002", "amount": 150, "timestamp": "2024-07-19T10:15:00Z", "status": "Completed" },
+      { "recordId": "REC-003", "transactionId": "TXN-003", "amount": 8500, "timestamp": "2024-07-19T10:30:00Z", "status": "Flagged" }
+    ]
+  },
+  "llmOptions": [
+    { "id": "general-purpose-llm", "name": "OpenAI GPT-4o", "description": "State-of-the-art general purpose model for complex reasoning and generation." },
+    { "id": "fraud-detection-llm", "name": "Fraud Detection LLM", "description": "Specialized model trained on financial fraud patterns and anomaly detection." },
+    { "id": "compliance-llm", "name": "Compliance LLM", "description": "Trained on regulatory requirements and compliance documentation for automated audit trails." }
+  ],
+  "workflows": [
+    {
+      "id": "fraud-investigation",
+      "name": "Fraud Investigation Automation",
+      "description": "Automates the discovery process for fraud investigation by analyzing transaction patterns and cross-referencing multiple data sources.",
+      "category": "Fraud & Compliance",
+      "requiredDataSources": ["Transaction Database", "Customer Profile System", "External Fraud Database", "Payment Gateway Logs"],
+      "compatibleDataSources": []
+    },
+    {
+      "id": "compliance-audit",
+      "name": "Compliance Audit Trail",
+      "description": "Automatically generates comprehensive audit trails for regulatory compliance requirements.",
+      "category": "Compliance",
+      "requiredDataSources": ["System Activity Logs", "User Access Database", "Transaction Records"],
+      "compatibleDataSources": []
+    }
+  ]
+} 

@@ -1,0 +1,25 @@
+/* Custom styles beyond Tailwind */
+.chat-container::-webkit-scrollbar {
+  width: 6px;
+}
+.chat-container::-webkit-scrollbar-track {
+  background: #ECF9EE;
+  border-radius: 10px;
+}
+.chat-container::-webkit-scrollbar-thumb {
+  background: #1EC677;
+  border-radius: 10px;
+}
+.chat-container::-webkit-scrollbar-thumb:hover {
+  background: #0D4029;
+}
+
+/* Gradient text styling with new color scheme */
+.text-gradient {
+  background: linear-gradient(90deg, #1EC677, #0D4029, #ECF9EE);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  text-fill-color: transparent;
+  display: inline-block;
+}
