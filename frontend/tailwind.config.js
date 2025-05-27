@@ -17,13 +17,13 @@ export default {
           background: "#FFFFFF", // White background like Chime
           card: "#FFFFFF", // White for cards
           border: "#E5E7EB", // Light gray border
-          heading: "#0D3F29", // Dark green for headings (from Chime's darker shade)
-          muted: "#6B7280", // Gray for muted text
+          heading: "#0D4029", // Deep green for headings
+          muted: "#0D4029", // Deep green for muted text
           sidebar: "#FFFFFF", // White background for sidebar
           sidebarBorder: "#E5E7EB", // Light gray for sidebar borders
           sidebarActive: "#1EC677", // Primary green for active states
           light: "#E9FCF3", // Very light green tint
-          dark: "#0D3F29", // Dark green
+          dark: "#0D4029", // Deep green
         },
         // Adding Chime's color palette
         chime: {

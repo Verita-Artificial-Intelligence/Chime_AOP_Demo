@@ -7,12 +7,12 @@ body {
 }
 
 .btn-primary {
-  @apply bg-brand-primary text-white font-semibold rounded-lg h-8 px-4 transition-all duration-200
+  @apply bg-brand-primary text-brand-dark font-semibold rounded-lg h-8 px-4 transition-all duration-200
          hover:bg-brand-primaryDark focus:ring-2 focus:ring-brand-primary focus:outline-none;
 }
 
 .btn-secondary {
-  @apply bg-white text-brand-primary font-semibold rounded-lg h-8 px-4 border border-brand-border transition-all duration-200
+  @apply bg-white text-brand-dark font-semibold rounded-lg h-8 px-4 border border-brand-border transition-all duration-200
          hover:bg-brand-light hover:border-brand-primary focus:ring-2 focus:ring-brand-primary focus:outline-none;
 }
 

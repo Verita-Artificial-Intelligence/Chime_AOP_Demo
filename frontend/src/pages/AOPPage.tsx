@@ -1,7 +1,7 @@
-import React from 'react';
-import { useNavigate } from 'react-router-dom';
-import { BuilderProgressTracker } from '../components/ProgressTracker';
-import mockData from '../data/mockData.json';
+import React from "react";
+import { useNavigate } from "react-router-dom";
+import { BuilderProgressTracker } from "../components/ProgressTracker";
+import mockData from "../data/mockData.json";
 
 type WorkflowId = string;
 type DataSource = string;
@@ -22,10 +22,10 @@ type Result = {
 
 export function AOPPage() {
   const [step, setStep] = React.useState(0);
-  const [workflow, setWorkflow] = React.useState<WorkflowId>('');
+  const [workflow, setWorkflow] = React.useState<WorkflowId>("");
   const [dataSources, setDataSources] = React.useState<DataSource[]>([]);
   const [actions, setActions] = React.useState<Action[]>([]);
-  const [llm, setLLM] = React.useState<LLM>(mockData.llmOptions[0]?.id || '');
+  const [llm, setLLM] = React.useState<LLM>(mockData.llmOptions[0]?.id || "");
   const navigate = useNavigate();
 
   const workflows = mockData.workflows;
@@ -34,20 +34,20 @@ export function AOPPage() {
   const llmOptions = mockData.llmOptions;
 
   const stepConfiguration = [
-    { title: 'Start' },
-    { title: 'Workflow' },
-    { title: 'Data Sources' },
-    { title: 'Actions' },
-    { title: 'LLM' },
+    { title: "Start" },
+    { title: "Workflow" },
+    { title: "Data Sources" },
+    { title: "Actions" },
+    { title: "LLM" },
   ];
 
   function getCompatibleDataSourcesForWorkflow(wfId: WorkflowId) {
-    const wf = workflows.find(w => w.id === wfId);
+    const wf = workflows.find((w) => w.id === wfId);
     return wf?.compatibleDataSources || [];
   }
-  
+
   function getRequiredDataSourcesForWorkflow(wfId: WorkflowId) {
-    const wf = workflows.find(w => w.id === wfId);
+    const wf = workflows.find((w) => w.id === wfId);
     return wf?.requiredDataSources || [];
   }
 
@@ -56,7 +56,7 @@ export function AOPPage() {
       const compatible = getCompatibleDataSourcesForWorkflow(workflow);
       const required = getRequiredDataSourcesForWorkflow(workflow);
       const allAvailable = [...new Set([...compatible, ...required])];
-      
+
       if (allAvailable.length === 1) {
         setDataSources([allAvailable[0]]);
       } else {
@@ -69,21 +69,25 @@ export function AOPPage() {
   function goToStep(idx: number) {
     if (idx <= step) setStep(idx);
   }
-  function next() { setStep((s) => Math.min(s + 1, stepConfiguration.length - 1)); }
-  function prev() { setStep((s) => Math.max(s - 1, 0)); }
+  function next() {
+    setStep((s) => Math.min(s + 1, stepConfiguration.length - 1));
+  }
+  function prev() {
+    setStep((s) => Math.max(s - 1, 0));
+  }
   function startAgent() {
     function getStoredAgents() {
-      const storedAgents = localStorage.getItem('aopAgents');
+      const storedAgents = localStorage.getItem("aopAgents");
       if (storedAgents) {
         return JSON.parse(storedAgents);
       }
       return [];
     }
     function saveAgents(agents: any) {
-      localStorage.setItem('aopAgents', JSON.stringify(agents));
+      localStorage.setItem("aopAgents", JSON.stringify(agents));
     }
     const newAgent = {
-      id: workflow + '-' + Date.now(),
+      id: workflow + "-" + Date.now(),
       workflow,
       dataSources,
       actions,
@@ -93,18 +97,15 @@ export function AOPPage() {
     const existingAgents = getStoredAgents();
     saveAgents([...existingAgents, newAgent]);
 
-    navigate(
-      '/aop/run',
-      {
-        state: {
-          workflow: workflow,
-          dataSources: dataSources,
-          actions: actions,
-          llm: llm,
-          id: newAgent.id
-        }
-      }
-    );
+    navigate("/aop/run", {
+      state: {
+        workflow: workflow,
+        dataSources: dataSources,
+        actions: actions,
+        llm: llm,
+        id: newAgent.id,
+      },
+    });
   }
 
   const renderStep = () => {
@@ -112,13 +113,16 @@ export function AOPPage() {
       case 0:
         return (
           <div className="space-y-4">
-            <h2 className="text-2xl font-semibold text-brand-primary">Welcome to the Chime AOPS Builder</h2>
-            <p className="text-brand-muted opacity-70">
-              Create Automated Operations Procedures (AOPS) to streamline your Chime workflows. Get started by selecting a workflow template.
+            <h2 className="text-2xl font-semibold text-brand-dark">
+              Welcome to the Chime AOPS Builder
+            </h2>
+            <p className="text-brand-muted">
+              Create Automated Operations Procedures (AOPS) to streamline your
+              Chime workflows. Get started by selecting a workflow template.
             </p>
             <button
               onClick={next}
-              className="px-6 py-2 text-white bg-brand-primary rounded-md hover:bg-brand-primaryDark focus:outline-none focus:ring-2 focus:ring-brand-primary focus:ring-opacity-50 transition-all duration-200"
+              className="px-6 py-2 text-brand-dark bg-brand-primary rounded-md hover:bg-brand-primaryDark focus:outline-none focus:ring-2 focus:ring-brand-primary focus:ring-opacity-50 transition-all duration-200"
             >
               Get Started
             </button>
@@ -127,41 +131,67 @@ export function AOPPage() {
       case 1:
         return (
           <div className="space-y-4">
-            <h2 className="text-2xl font-semibold text-brand-heading">Select Workflow ({workflows.length} options)</h2>
+            <h2 className="text-2xl font-semibold text-brand-dark">
+              Select Workflow ({workflows.length} options)
+            </h2>
             <div className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-2">
               {workflows.map((wf) => (
                 <button
                   key={wf.id}
-                  onClick={() => { setWorkflow(wf.id); next(); }}
+                  onClick={() => {
+                    setWorkflow(wf.id);
+                    next();
+                  }}
                   className={`p-6 border rounded-lg text-left hover:bg-brand-light focus:outline-none focus:ring-2 focus:ring-brand-primary focus:ring-opacity-50 flex flex-col justify-between h-full ${
-                    workflow === wf.id ? 'bg-brand-light border-brand-primary' : 'border-brand-border'
+                    workflow === wf.id
+                      ? "bg-brand-light border-brand-primary"
+                      : "border-brand-border"
                   }`}
                 >
                   <div>
-                    <h3 className="text-lg font-semibold text-brand-heading">{wf.name}</h3>
-                    <p className="text-sm text-brand-muted opacity-70 mt-1">{wf.description}</p>
+                    <h3 className="text-lg font-semibold text-brand-dark">
+                      {wf.name}
+                    </h3>
+                    <p className="text-sm text-brand-muted mt-1">
+                      {wf.description}
+                    </p>
                   </div>
-                  <p className="text-xs text-brand-muted opacity-70 mt-3">Category: {wf.category}</p>
+                  <p className="text-xs text-brand-muted mt-3">
+                    Category: {wf.category}
+                  </p>
                 </button>
               ))}
             </div>
             <div className="flex justify-between mt-6">
-              <button onClick={prev} className="px-4 py-2 text-brand-heading bg-white border border-brand-border rounded-md hover:bg-brand-light transition-all duration-200">Back</button>
+              <button
+                onClick={prev}
+                className="px-4 py-2 text-brand-dark bg-white border border-brand-border rounded-md hover:bg-brand-light transition-all duration-200"
+              >
+                Back
+              </button>
             </div>
           </div>
         );
       case 2:
-        const currentWorkflowDetails = workflows.find(wf => wf.id === workflow);
-        const availableDataSources = dataSourceOptions.filter(ds => {
-            if (!currentWorkflowDetails) return true;
-            return [...(currentWorkflowDetails.compatibleDataSources || []), ...(currentWorkflowDetails.requiredDataSources || [])].includes(ds);
+        const currentWorkflowDetails = workflows.find(
+          (wf) => wf.id === workflow
+        );
+        const availableDataSources = dataSourceOptions.filter((ds) => {
+          if (!currentWorkflowDetails) return true;
+          return [
+            ...(currentWorkflowDetails.compatibleDataSources || []),
+            ...(currentWorkflowDetails.requiredDataSources || []),
+          ].includes(ds);
         });
         return (
           <div className="space-y-4">
-            <h2 className="text-2xl font-semibold text-brand-heading">Select Data Sources for "{currentWorkflowDetails?.name}"</h2>
+            <h2 className="text-2xl font-semibold text-brand-dark">
+              Select Data Sources for "{currentWorkflowDetails?.name}"
+            </h2>
             <div className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3">
               {availableDataSources.map((ds) => {
-                const isRequired = currentWorkflowDetails?.requiredDataSources.includes(ds);
+                const isRequired =
+                  currentWorkflowDetails?.requiredDataSources.includes(ds);
                 return (
                   <button
                     key={ds}
@@ -169,28 +199,47 @@ export function AOPPage() {
                       const isSelected = dataSources.includes(ds);
                       if (isSelected) {
                         if (!isRequired) {
-                           setDataSources(dataSources.filter((d) => d !== ds));
+                          setDataSources(dataSources.filter((d) => d !== ds));
                         }
                       } else {
                         setDataSources([...dataSources, ds]);
                       }
                     }}
                     className={`p-4 border rounded-md text-left hover:bg-brand-light focus:outline-none focus:ring-2 focus:ring-brand-primary focus:ring-opacity-50 ${
-                      dataSources.includes(ds) ? 'bg-brand-light border-brand-primary' : 'border-brand-border'
-                    } ${isRequired && !dataSources.includes(ds) ? 'border-red-500' : ''}`}
+                      dataSources.includes(ds)
+                        ? "bg-brand-light border-brand-primary"
+                        : "border-brand-border"
+                    } ${
+                      isRequired && !dataSources.includes(ds)
+                        ? "border-red-500"
+                        : ""
+                    }`}
                   >
-                    <h3 className="text-lg font-medium text-brand-heading">{ds}</h3>
-                    {isRequired && <span className="text-xs text-red-600"> (Required)</span>}
+                    <h3 className="text-lg font-medium text-brand-dark">
+                      {ds}
+                    </h3>
+                    {isRequired && (
+                      <span className="text-xs text-red-600"> (Required)</span>
+                    )}
                   </button>
                 );
               })}
             </div>
             <div className="flex justify-between mt-6">
-              <button onClick={prev} className="px-4 py-2 text-brand-heading bg-white border border-brand-border rounded-md hover:bg-brand-light transition-all duration-200">Back</button>
+              <button
+                onClick={prev}
+                className="px-4 py-2 text-brand-dark bg-white border border-brand-border rounded-md hover:bg-brand-light transition-all duration-200"
+              >
+                Back
+              </button>
               <button
                 onClick={next}
-                disabled={!(currentWorkflowDetails?.requiredDataSources.every(rs => dataSources.includes(rs)))}
-                className="px-6 py-2 text-white bg-brand-primary rounded-md hover:bg-brand-primaryDark focus:outline-none focus:ring-2 focus:ring-brand-primary focus:ring-opacity-50 disabled:opacity-50 transition-all duration-200"
+                disabled={
+                  !currentWorkflowDetails?.requiredDataSources.every((rs) =>
+                    dataSources.includes(rs)
+                  )
+                }
+                className="px-6 py-2 text-brand-dark bg-brand-primary rounded-md hover:bg-brand-primaryDark focus:outline-none focus:ring-2 focus:ring-brand-primary focus:ring-opacity-50 disabled:opacity-50 transition-all duration-200"
               >
                 Next
               </button>
@@ -198,10 +247,14 @@ export function AOPPage() {
           </div>
         );
       case 3:
-        const currentActionOptions = actionOptions[workflow as keyof typeof actionOptions] || [];
+        const currentActionOptions =
+          actionOptions[workflow as keyof typeof actionOptions] || [];
         return (
           <div className="space-y-4">
-            <h2 className="text-2xl font-semibold text-brand-heading">Select Actions for "{workflows.find(wf=>wf.id === workflow)?.name}"</h2>
+            <h2 className="text-2xl font-semibold text-brand-dark">
+              Select Actions for "
+              {workflows.find((wf) => wf.id === workflow)?.name}"
+            </h2>
             {currentActionOptions.length > 0 ? (
               <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
                 {currentActionOptions.map((action) => (
@@ -216,21 +269,33 @@ export function AOPPage() {
                       }
                     }}
                     className={`p-4 border rounded-md text-left hover:bg-brand-light focus:outline-none focus:ring-2 focus:ring-brand-primary focus:ring-opacity-50 ${
-                      actions.includes(action) ? 'bg-brand-light border-brand-primary' : 'border-brand-border'
+                      actions.includes(action)
+                        ? "bg-brand-light border-brand-primary"
+                        : "border-brand-border"
                     }`}
                   >
-                    <h3 className="text-lg font-medium text-brand-heading">{action}</h3>
+                    <h3 className="text-lg font-medium text-brand-dark">
+                      {action}
+                    </h3>
                   </button>
                 ))}
               </div>
             ) : (
-              <p className="text-brand-muted opacity-70">No specific actions defined for this workflow. You can proceed or go back to select a different workflow.</p>
+              <p className="text-brand-muted">
+                No specific actions defined for this workflow. You can proceed
+                or go back to select a different workflow.
+              </p>
             )}
             <div className="flex justify-between mt-6">
-              <button onClick={prev} className="px-4 py-2 text-brand-heading bg-white border border-brand-border rounded-md hover:bg-brand-light transition-all duration-200">Back</button>
+              <button
+                onClick={prev}
+                className="px-4 py-2 text-brand-dark bg-white border border-brand-border rounded-md hover:bg-brand-light transition-all duration-200"
+              >
+                Back
+              </button>
               <button
                 onClick={next}
-                className="px-6 py-2 text-white bg-brand-primary rounded-md hover:bg-brand-primaryDark focus:outline-none focus:ring-2 focus:ring-brand-primary focus:ring-opacity-50 transition-all duration-200"
+                className="px-6 py-2 text-brand-dark bg-brand-primary rounded-md hover:bg-brand-primaryDark focus:outline-none focus:ring-2 focus:ring-brand-primary focus:ring-opacity-50 transition-all duration-200"
               >
                 Next
               </button>
@@ -240,29 +305,43 @@ export function AOPPage() {
       case 4:
         return (
           <div className="space-y-4">
-            <h2 className="text-2xl font-semibold text-brand-heading">Select LLM for "{workflows.find(wf=>wf.id === workflow)?.name}"</h2>
+            <h2 className="text-2xl font-semibold text-brand-dark">
+              Select LLM for "{workflows.find((wf) => wf.id === workflow)?.name}
+              "
+            </h2>
             <div className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3">
               {llmOptions.map((option) => (
                 <button
                   key={option.id}
                   onClick={() => setLLM(option.id as LLM)}
                   className={`p-6 border rounded-lg text-left hover:bg-brand-light focus:outline-none focus:ring-2 focus:ring-brand-primary focus:ring-opacity-50 flex flex-col justify-between h-full ${
-                    llm === option.id ? 'bg-brand-light border-brand-primary' : 'border-brand-border'
+                    llm === option.id
+                      ? "bg-brand-light border-brand-primary"
+                      : "border-brand-border"
                   }`}
                 >
                   <div>
-                    <h3 className="text-lg font-semibold text-brand-heading">{option.name}</h3>
-                    <p className="text-sm text-brand-muted opacity-70 mt-1">{option.description}</p>
+                    <h3 className="text-lg font-semibold text-brand-dark">
+                      {option.name}
+                    </h3>
+                    <p className="text-sm text-brand-muted mt-1">
+                      {option.description}
+                    </p>
                   </div>
                 </button>
               ))}
             </div>
             <div className="flex justify-between mt-8">
-              <button onClick={prev} className="px-4 py-2 text-brand-heading bg-white border border-brand-border rounded-md hover:bg-brand-light transition-all duration-200">Back</button>
+              <button
+                onClick={prev}
+                className="px-4 py-2 text-brand-dark bg-white border border-brand-border rounded-md hover:bg-brand-light transition-all duration-200"
+              >
+                Back
+              </button>
               <button
                 onClick={startAgent}
                 disabled={!workflow || dataSources.length === 0 || !llm}
-                className="px-6 py-2 text-white bg-brand-primary rounded-md hover:bg-brand-primaryDark focus:outline-none focus:ring-2 focus:ring-brand-primary focus:ring-opacity-50 disabled:opacity-50 transition-all duration-200"
+                className="px-6 py-2 text-brand-dark bg-brand-primary rounded-md hover:bg-brand-primaryDark focus:outline-none focus:ring-2 focus:ring-brand-primary focus:ring-opacity-50 disabled:opacity-50 transition-all duration-200"
               >
                 Create AOPS
               </button>
@@ -270,16 +349,24 @@ export function AOPPage() {
           </div>
         );
       default:
-        return <div className="text-center text-brand-danger">Error: Unknown step. Please try again.</div>;
+        return (
+          <div className="text-center text-brand-danger">
+            Error: Unknown step. Please try again.
+          </div>
+        );
     }
   };
 
   return (
     <div className="container p-4 mx-auto max-w-4xl">
-      <BuilderProgressTracker currentStep={step} steps={stepConfiguration} onStepClick={goToStep} />
+      <BuilderProgressTracker
+        currentStep={step}
+        steps={stepConfiguration}
+        onStepClick={goToStep}
+      />
       <div className="p-6 md:p-8 mt-8 bg-brand-card rounded-lg border border-brand-border">
         {renderStep()}
       </div>
     </div>
   );
-} 
+}
