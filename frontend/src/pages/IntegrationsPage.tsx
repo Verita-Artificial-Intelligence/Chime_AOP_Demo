@@ -36,14 +36,6 @@ const mockIntegrations: Integration[] = [
     popular: true,
   },
   {
-    id: 'github',
-    name: 'GitHub',
-    description: 'Connect GitHub repositories for automated code deployment and issue tracking.',
-    category: 'Development',
-    logo: '🐙',
-    popular: true,
-  },
-  {
     id: 'aws',
     name: 'AWS',
     description: 'Integrate with Amazon Web Services for cloud infrastructure automation.',

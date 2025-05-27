@@ -33,136 +33,6 @@ interface MockPrompt {
   };
 }
 
-// Placeholder for mock prompts - we'll define these later
-const MOCK_PROMPTS: MockPrompt[] = [
-  // We will populate this using the mockData
-  {
-    id: "prompt-1",
-    title: "Onboard a New Restaurant Partner",
-    description:
-      "Automate the full onboarding process for a new restaurant, from document verification to menu setup and welcome kit dispatch.",
-    config: {
-      workflow: "restaurant-onboarding",
-      dataSources: [
-        "Doordash Merchant API",
-        "Internal CRM",
-        "Payment Gateway Logs",
-      ],
-      actions: [
-        "Verify legal documents",
-        "Create merchant account",
-        "Configure menu in Doordash system",
-        "Schedule photoshoot",
-        "Send welcome kit",
-      ],
-      llm: "doordash-support-llm",
-    },
-  },
-  {
-    id: "prompt-2",
-    title: "Optimize Peak Time Driver Dispatch",
-    description:
-      "Dynamically adjust driver dispatch during peak hours using real-time data and predictive modeling to improve delivery times.",
-    config: {
-      workflow: "driver-dispatch",
-      dataSources: [
-        "Dasher Activity Database",
-        "Customer Order System",
-        "Google Maps API",
-        "Weather Service API",
-      ],
-      actions: [
-        "Analyze real-time order volume",
-        "Predict demand hotspots using ML model",
-        "Calculate optimal driver-to-order ratio",
-        "Send dispatch notifications to available Dashers",
-        "Monitor delivery ETAs and adjust routes dynamically",
-      ],
-      llm: "doordash-logistics-llm",
-    },
-  },
-  {
-    id: "prompt-3",
-    title: "Process Customer Refund Requests Automatically",
-    description:
-      "Handle common customer refund scenarios automatically by verifying order details and applying refund policies.",
-    config: {
-      workflow: "customer-refund",
-      dataSources: [
-        "Customer Order System",
-        "Payment Gateway Logs",
-        "Internal CRM",
-      ],
-      actions: [
-        "Receive refund request via API/Webhook",
-        "Verify order details against order history",
-        "Check against refund policy rules engine",
-        "If approved, issue refund via Payment Gateway",
-        "Notify customer of refund status",
-        "Flag suspicious requests for manual review",
-      ],
-      llm: "doordash-support-llm",
-    },
-  },
-  {
-    id: "prompt-4",
-    title: "Propagate Restaurant Menu Updates in Real-Time",
-    description:
-      "Ensure menu changes from restaurants are reflected instantly across all Doordash platforms and notify Dashers of significant updates.",
-    config: {
-      workflow: "menu-update",
-      dataSources: ["Doordash Merchant API"],
-      actions: [
-        "Receive menu change request from restaurant portal",
-        "Validate changes (e.g., price format, item availability)",
-        "Update menu in central database",
-        "Push updates to customer-facing apps",
-        "Notify Dashers of significant changes (e.g., new items)",
-      ],
-      llm: "general-purpose-llm", // Or a more specific one if available
-    },
-  },
-  {
-    id: "prompt-5",
-    title: "Monitor Restaurant Operational Hours",
-    description:
-      "Check and flag discrepancies in restaurant operating hours reported versus actual availability.",
-    config: {
-      workflow: "restaurant-ops-monitoring", // Invented workflow ID
-      dataSources: ["Doordash Merchant API", "Dasher Activity Database"],
-      actions: [
-        "Fetch Stated Restaurant Hours",
-        "Analyze Dasher Reports for Operational Status",
-        "Compare Stated vs. Observed Hours",
-        "Flag Discrepancies for Review",
-      ],
-      llm: "doordash-logistics-llm", // Plausible LLM for operational tasks
-    },
-  },
-  {
-    id: "prompt-6",
-    title: "Proactive Dasher Peak Pay Adjustment",
-    description:
-      "Adjust Dasher peak pay incentives in real-time based on sudden demand surges or Dasher shortages.",
-    config: {
-      workflow: "dynamic-incentive-adjustment", // Invented workflow ID
-      dataSources: [
-        "Customer Order System",
-        "Dasher Activity Database",
-        "Weather Service API",
-      ],
-      actions: [
-        "Monitor Real-Time Order Demand",
-        "Assess Current Dasher Availability by Zone",
-        "Identify Incentive Adjustment Triggers",
-        "Calculate and Apply New Peak Pay Rates",
-        "Notify Dashers of Incentive Changes",
-      ],
-      llm: "doordash-logistics-llm", // Logistics LLM for dynamic adjustments
-    },
-  },
-];
-
 // AI-generated suggestions based on "history"
 const AI_SUGGESTIONS: MockPrompt[] = [
   {
@@ -350,26 +220,33 @@ export function AOPBuilderPage() {
 
     const userMessage = chatInput.trim();
     setChatInput("");
-    
+
     // Check for keywords and trigger appropriate workflow
     const lowerCaseMessage = userMessage.toLowerCase();
-    
-    if (lowerCaseMessage.includes('fraud')) {
+
+    if (lowerCaseMessage.includes("fraud")) {
       // Trigger fraud investigation workflow
-      const fraudPrompt = AI_SUGGESTIONS.find(s => s.id === "ai-fraud-investigation");
+      const fraudPrompt = AI_SUGGESTIONS.find(
+        (s) => s.id === "ai-fraud-investigation"
+      );
       if (fraudPrompt) {
         handlePromptSelect(fraudPrompt);
       }
-    } else if (lowerCaseMessage.includes('compliance')) {
+    } else if (lowerCaseMessage.includes("compliance")) {
       // Trigger compliance audit workflow
-      const compliancePrompt = AI_SUGGESTIONS.find(s => s.id === "ai-compliance-audit");
+      const compliancePrompt = AI_SUGGESTIONS.find(
+        (s) => s.id === "ai-compliance-audit"
+      );
       if (compliancePrompt) {
         handlePromptSelect(compliancePrompt);
       }
     } else {
       // For other messages, just add them to the chat
       addMessage("user", userMessage);
-      addMessage("agent", "I understand you're looking for help with automation. Try mentioning 'fraud' for fraud investigation workflows or 'compliance' for audit trail automation.");
+      addMessage(
+        "agent",
+        "I understand you're looking for help with automation. Try mentioning 'fraud' for fraud investigation workflows or 'compliance' for audit trail automation."
+      );
     }
   };
 
@@ -475,7 +352,10 @@ export function AOPBuilderPage() {
         </div>
       )}
 
-      <form onSubmit={handleChatSubmit} className="mt-auto p-4 bg-brand-card border-t border-brand-border rounded-b-lg">
+      <form
+        onSubmit={handleChatSubmit}
+        className="mt-auto p-4 bg-brand-card border-t border-brand-border rounded-b-lg"
+      >
         <input
           type="text"
           placeholder="Type your AOP request..."

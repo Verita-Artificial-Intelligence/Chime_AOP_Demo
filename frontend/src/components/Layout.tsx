@@ -2,10 +2,8 @@ import React from "react";
 import { Link, useLocation } from "react-router-dom";
 import {
   HomeIcon,
-  TableCellsIcon,
   BoltIcon,
   CircleStackIcon,
-  CpuChipIcon,
   CogIcon,
 } from "@heroicons/react/24/outline";
 import { ChevronDownIcon } from "@heroicons/react/20/solid";
@@ -30,15 +28,13 @@ const navItems: NavItem[] = [
     icon: BoltIcon,
     subItems: [
       { name: "AOP Builder", href: "/aop/builder" },
-      { name: "AOP Run History", href: "/aop/run" },
       { name: "AOP Templates", href: "/aop/templates" },
+      { name: "AOP Run History", href: "/aop/run" },
       { name: "Active Runs", href: "/aop/active-runs" },
     ],
   },
   { name: "Integrations", href: "/integrations", icon: CircleStackIcon },
   { name: "Security & OAuth", href: "/security", icon: CogIcon },
-  // Example of a top-level settings link if needed, otherwise keep it under a sub-menu
-  // { name: 'Platform Settings', href: '/settings', icon: CogIcon },
 ];
 
 interface LayoutProps {
