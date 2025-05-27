@@ -32,11 +32,11 @@ const ProgressTracker: React.FC<ProgressTrackerProps> = ({
   };
 
   return (
-    <div className="w-full bg-white rounded-lg shadow-sm p-4 mb-6">
+    <div className="w-full bg-white rounded-lg shadow-sm px-4 pb-4 pt-8 mb-6">
       <div 
         ref={scrollContainerRef}
         className="flex items-center overflow-x-auto scrollbar-hide"
-        style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}
+        style={{ scrollbarWidth: 'none', msOverflowStyle: 'none', minHeight: '60px' }}
       >
         <style>{`
           .scrollbar-hide::-webkit-scrollbar {
@@ -44,7 +44,7 @@ const ProgressTracker: React.FC<ProgressTrackerProps> = ({
           }
         `}</style>
         {steps.map((step, idx) => (
-          <div key={idx} className="flex items-center flex-shrink-0">
+          <div key={idx} className="flex items-center flex-shrink-0 py-2">
             <button
               type="button"
               aria-label={`Go to ${step.title}`}
@@ -56,13 +56,13 @@ const ProgressTracker: React.FC<ProgressTrackerProps> = ({
               tabIndex={0}
             >
               <div
-                className={`w-10 h-10 flex items-center justify-center rounded-full font-bold border-2 transition-all duration-300
+                className={`flex items-center justify-center rounded-full font-bold border-2 transition-all duration-300
                   ${
                     idx < currentStep
-                      ? "bg-green-500 border-green-500 text-white"
+                      ? "w-10 h-10 bg-green-500 border-green-500 text-white"
                       : idx === currentStep
-                      ? "bg-brand-primary border-brand-primary text-white scale-110"
-                      : "bg-gray-100 border-gray-300 text-gray-400"
+                      ? "w-12 h-12 bg-brand-primary border-brand-primary text-white shadow-lg"
+                      : "w-10 h-10 bg-gray-100 border-gray-300 text-gray-400"
                   }
                   group-focus:ring-2 group-focus:ring-brand-primary group-hover:border-brand-primary`}
               >

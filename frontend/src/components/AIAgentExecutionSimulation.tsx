@@ -69,6 +69,23 @@ export function AIAgentExecutionSimulation({ workflow, dataSources, actions, llm
     }
   }, [currentStep, stepSequence.length, mockData, executionComplete]);
 
+  // Auto-scroll to the current step card
+  useEffect(() => {
+    if (currentStep > 0) {
+      // Small delay to ensure the element is rendered
+      setTimeout(() => {
+        const stepElement = document.getElementById(`agent-step-card-${currentStep - 1}`);
+        if (stepElement) {
+          stepElement.scrollIntoView({ 
+            behavior: 'smooth', 
+            block: 'center',
+            inline: 'nearest'
+          });
+        }
+      }, 100);
+    }
+  }, [currentStep]);
+
   // Helper to get a human-readable summary/table for each data source
   const getDataSourceSummary = (ds: string) => {
     if (!mockData) return null;
