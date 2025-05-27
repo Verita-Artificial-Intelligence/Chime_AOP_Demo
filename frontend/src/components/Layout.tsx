@@ -41,7 +41,7 @@ export const Layout: React.FC<LayoutProps> = ({ children }) => {
 
   return (
     <div className="flex h-screen bg-brand-background">
-      <aside className="w-64 bg-brand-sidebar shadow-md flex flex-col">
+      <aside className="w-64 bg-brand-sidebar border-r border-brand-sidebarBorder flex flex-col">
         <div className="p-4 border-b border-brand-sidebarBorder">
           <Link to="/">
             <h1 className="text-2xl font-bold text-brand-primary hover:text-brand-dark transition-colors">Chime AOPS</h1> 

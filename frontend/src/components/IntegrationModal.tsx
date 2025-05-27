@@ -47,7 +47,7 @@ export function IntegrationModal({ open, onClose, type }: IntegrationModalProps)
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-60">
-      <div className="bg-brand-card rounded-xl shadow-lg p-6 w-full max-w-md relative">
+      <div className="bg-brand-card rounded-xl border border-brand-border p-6 w-full max-w-md relative">
         <button onClick={onClose} className="absolute top-3 right-3 text-brand-muted hover:text-brand-heading text-2xl">×</button>
         <h2 className="text-2xl font-bold mb-2 text-brand-heading">{data.name}</h2>
         <div className="mb-2 text-sm text-brand-muted opacity-70">{data.description}</div>

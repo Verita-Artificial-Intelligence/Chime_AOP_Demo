@@ -83,7 +83,7 @@ export default function AOPRunHistoryPage() { // Renamed component
         </div>
         {/* Button to navigate to AOP builder page */}
         <button
-          className="mt-4 sm:mt-0 px-6 py-2.5 bg-brand-primary text-white rounded-md text-sm font-semibold hover:bg-brand-dark transition shadow-sm whitespace-nowrap"
+          className="mt-4 sm:mt-0 px-6 py-2.5 bg-brand-primary text-white rounded-md text-sm font-semibold hover:bg-brand-primaryDark transition-all duration-200 whitespace-nowrap"
           onClick={() => navigate('/aop')} // Navigate to the AOP manual builder or chat builder
         >
           Build New AOP
@@ -111,7 +111,7 @@ export default function AOPRunHistoryPage() { // Renamed component
         {runHistory.map(run => (
           <div
             key={run.id}
-            className="bg-brand-card border border-brand-border rounded-lg shadow-sm p-6 hover:shadow-md transition-shadow duration-150"
+            className="bg-brand-card border border-brand-border rounded-lg p-6 hover:border-brand-primary transition-all duration-200"
           >
             <div className="flex flex-col sm:flex-row justify-between items-start mb-3">
               <div>
@@ -162,7 +162,7 @@ export default function AOPRunHistoryPage() { // Renamed component
                 Delete Run
                 </button>
                 <button
-                    className="px-4 py-1.5 bg-brand-heading text-white rounded-md text-xs font-semibold hover:bg-brand-dark transition shadow-sm"
+                    className="px-4 py-1.5 bg-brand-heading text-white rounded-md text-xs font-semibold hover:bg-brand-primaryDark transition-all duration-200"
                     onClick={() => navigate(`/aop/run/${run.id}`)} // Navigate to the specific run simulation/details page
                 >
                     View Details / Rerun

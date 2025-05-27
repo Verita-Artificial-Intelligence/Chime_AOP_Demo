@@ -38,12 +38,12 @@ const quickAccessItems = [
 export function HomePage() {
   return (
     <div className="p-6 md:p-8">
-      <div className="bg-brand-card p-8 rounded-xl shadow-lg mb-8">
-        <h1 className="text-4xl font-bold text-brand-primary mb-3">Welcome to the Chime AOPS Platform!</h1>
+      <div className="bg-brand-card p-8 rounded-xl border border-brand-border mb-8">
+        <h1 className="text-4xl font-bold text-brand-primary mb-3">Welcome to the Chime AOPS Platform</h1>
         <p className="text-lg text-brand-heading mb-6">
           Streamline your operations with powerful automation tools. Build, manage, and monitor your Automated Operation Procedures (AOPs) all in one place.
         </p>
-        <p className="text-brand-muted opacity-70">
+                  <p className="text-brand-muted">
           Use the sidebar to navigate or select one of the quick access options below to get started.
         </p>
       </div>
@@ -54,13 +54,13 @@ export function HomePage() {
           <Link
             key={item.name}
             to={item.href}
-            className="block p-6 bg-brand-card rounded-lg shadow-md hover:shadow-xl transition-shadow duration-200 group border border-brand-border hover:border-brand-primary"
+            className="block p-6 bg-brand-card rounded-lg transition-all duration-200 group border border-brand-border hover:bg-brand-light hover:border-brand-primary"
           >
             <div className="flex items-center mb-3">
               <item.icon className="w-8 h-8 text-brand-primary mr-4 flex-shrink-0" />
               <h3 className="text-xl font-semibold text-brand-heading group-hover:text-brand-primary">{item.name}</h3>
             </div>
-            <p className="text-sm text-brand-muted opacity-70 mb-4">{item.description}</p>
+            <p className="text-sm text-brand-muted mb-4">{item.description}</p>
             <div className="flex items-center text-sm text-brand-primary group-hover:underline">
               Go to {item.name}
               <ArrowRightIcon className="w-4 h-4 ml-1.5 transition-transform duration-200 group-hover:translate-x-1" />

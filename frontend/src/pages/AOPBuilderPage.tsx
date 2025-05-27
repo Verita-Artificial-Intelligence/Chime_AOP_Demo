@@ -240,7 +240,7 @@ export function AOPBuilderPage() {
               {msg.id === 'save-button' && msg.config && (
                 <button
                   onClick={() => saveAgent(msg.config as AgentConfig)}
-                  className="mt-2 px-4 py-2 bg-brand-primary text-white rounded-md hover:bg-brand-dark focus:outline-none focus:ring-2 focus:ring-brand-primary focus:ring-opacity-50 w-full"
+                  className="mt-2 px-4 py-2 bg-brand-primary text-white rounded-md hover:bg-brand-primaryDark focus:outline-none focus:ring-2 focus:ring-brand-primary focus:ring-opacity-50 w-full transition-all duration-200"
                 >
                   Save & Run This AOP
                 </button>

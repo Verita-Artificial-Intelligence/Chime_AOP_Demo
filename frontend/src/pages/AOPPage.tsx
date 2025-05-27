@@ -118,7 +118,7 @@ export function AOPPage() {
             </p>
             <button
               onClick={next}
-              className="px-6 py-2 text-white bg-brand-primary rounded-md hover:bg-brand-dark focus:outline-none focus:ring-2 focus:ring-brand-primary focus:ring-opacity-50"
+              className="px-6 py-2 text-white bg-brand-primary rounded-md hover:bg-brand-primaryDark focus:outline-none focus:ring-2 focus:ring-brand-primary focus:ring-opacity-50 transition-all duration-200"
             >
               Get Started
             </button>
@@ -134,7 +134,7 @@ export function AOPPage() {
                   key={wf.id}
                   onClick={() => { setWorkflow(wf.id); next(); }}
                   className={`p-6 border rounded-lg text-left hover:bg-brand-light focus:outline-none focus:ring-2 focus:ring-brand-primary focus:ring-opacity-50 flex flex-col justify-between h-full ${
-                    workflow === wf.id ? 'bg-brand-light border-brand-primary shadow-lg' : 'border-brand-border'
+                    workflow === wf.id ? 'bg-brand-light border-brand-primary' : 'border-brand-border'
                   }`}
                 >
                   <div>
@@ -146,7 +146,7 @@ export function AOPPage() {
               ))}
             </div>
             <div className="flex justify-between mt-6">
-              <button onClick={prev} className="px-4 py-2 text-brand-heading bg-brand-card rounded-md hover:bg-brand-light">Back</button>
+              <button onClick={prev} className="px-4 py-2 text-brand-heading bg-white border border-brand-border rounded-md hover:bg-brand-light transition-all duration-200">Back</button>
             </div>
           </div>
         );
@@ -186,11 +186,11 @@ export function AOPPage() {
               })}
             </div>
             <div className="flex justify-between mt-6">
-              <button onClick={prev} className="px-4 py-2 text-brand-heading bg-brand-card rounded-md hover:bg-brand-light">Back</button>
+              <button onClick={prev} className="px-4 py-2 text-brand-heading bg-white border border-brand-border rounded-md hover:bg-brand-light transition-all duration-200">Back</button>
               <button
                 onClick={next}
                 disabled={!(currentWorkflowDetails?.requiredDataSources.every(rs => dataSources.includes(rs)))}
-                className="px-6 py-2 text-white bg-brand-primary rounded-md hover:bg-brand-dark focus:outline-none focus:ring-2 focus:ring-brand-primary focus:ring-opacity-50 disabled:opacity-50"
+                className="px-6 py-2 text-white bg-brand-primary rounded-md hover:bg-brand-primaryDark focus:outline-none focus:ring-2 focus:ring-brand-primary focus:ring-opacity-50 disabled:opacity-50 transition-all duration-200"
               >
                 Next
               </button>
@@ -227,10 +227,10 @@ export function AOPPage() {
               <p className="text-brand-muted opacity-70">No specific actions defined for this workflow. You can proceed or go back to select a different workflow.</p>
             )}
             <div className="flex justify-between mt-6">
-              <button onClick={prev} className="px-4 py-2 text-brand-heading bg-brand-card rounded-md hover:bg-brand-light">Back</button>
+              <button onClick={prev} className="px-4 py-2 text-brand-heading bg-white border border-brand-border rounded-md hover:bg-brand-light transition-all duration-200">Back</button>
               <button
                 onClick={next}
-                className="px-6 py-2 text-white bg-brand-primary rounded-md hover:bg-brand-dark focus:outline-none focus:ring-2 focus:ring-brand-primary focus:ring-opacity-50"
+                className="px-6 py-2 text-white bg-brand-primary rounded-md hover:bg-brand-primaryDark focus:outline-none focus:ring-2 focus:ring-brand-primary focus:ring-opacity-50 transition-all duration-200"
               >
                 Next
               </button>
@@ -247,7 +247,7 @@ export function AOPPage() {
                   key={option.id}
                   onClick={() => setLLM(option.id as LLM)}
                   className={`p-6 border rounded-lg text-left hover:bg-brand-light focus:outline-none focus:ring-2 focus:ring-brand-primary focus:ring-opacity-50 flex flex-col justify-between h-full ${
-                    llm === option.id ? 'bg-brand-light border-brand-primary shadow-lg' : 'border-brand-border'
+                    llm === option.id ? 'bg-brand-light border-brand-primary' : 'border-brand-border'
                   }`}
                 >
                   <div>
@@ -258,11 +258,11 @@ export function AOPPage() {
               ))}
             </div>
             <div className="flex justify-between mt-8">
-              <button onClick={prev} className="px-4 py-2 text-brand-heading bg-brand-card rounded-md hover:bg-brand-light">Back</button>
+              <button onClick={prev} className="px-4 py-2 text-brand-heading bg-white border border-brand-border rounded-md hover:bg-brand-light transition-all duration-200">Back</button>
               <button
                 onClick={startAgent}
                 disabled={!workflow || dataSources.length === 0 || !llm}
-                className="px-6 py-2 text-white bg-brand-primary rounded-md hover:bg-brand-dark focus:outline-none focus:ring-2 focus:ring-brand-primary focus:ring-opacity-50 disabled:opacity-50"
+                className="px-6 py-2 text-white bg-brand-primary rounded-md hover:bg-brand-primaryDark focus:outline-none focus:ring-2 focus:ring-brand-primary focus:ring-opacity-50 disabled:opacity-50 transition-all duration-200"
               >
                 Create AOPS
               </button>
@@ -277,7 +277,7 @@ export function AOPPage() {
   return (
     <div className="container p-4 mx-auto max-w-4xl">
       <BuilderProgressTracker currentStep={step} steps={stepConfiguration} onStepClick={goToStep} />
-      <div className="p-6 md:p-8 mt-8 bg-brand-card rounded-lg shadow-xl">
+      <div className="p-6 md:p-8 mt-8 bg-brand-card rounded-lg border border-brand-border">
         {renderStep()}
       </div>
     </div>
