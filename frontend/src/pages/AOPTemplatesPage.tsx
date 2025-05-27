@@ -140,7 +140,7 @@ export const AOPTemplatesPage: React.FC = () => {
         </p>
         <button
           onClick={() => navigate('/aop/builder')}
-          className="px-4 py-2 bg-brand-primary text-brand-dark rounded-md hover:bg-brand-dark transition-colors font-semibold"
+          className="px-4 py-2 bg-brand-primary text-brand-dark rounded-md hover:bg-brand-hover transition-colors font-semibold"
         >
           Create Custom AOP
         </button>

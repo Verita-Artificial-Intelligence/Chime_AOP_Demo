@@ -109,7 +109,7 @@ export default function AOPRunHistoryPage() {
         </div>
         {/* Button to navigate to AOP builder page */}
         <button
-          className="mt-4 sm:mt-0 px-6 py-2.5 bg-brand-primary text-brand-dark rounded-md text-sm font-semibold hover:bg-brand-primaryDark transition-all duration-200 whitespace-nowrap"
+          className="mt-4 sm:mt-0 px-6 py-2.5 bg-brand-primary text-brand-dark rounded-md text-sm font-semibold hover:bg-brand-hover transition-all duration-200 whitespace-nowrap"
           onClick={() => navigate("/aop/builder")} // Navigate to the AOP builder
         >
           Build New AOP
@@ -259,7 +259,7 @@ export default function AOPRunHistoryPage() {
                   Delete Run
                 </button>
                 <button
-                  className="px-4 py-1.5 bg-brand-primary text-brand-dark rounded-md text-xs font-semibold hover:bg-brand-primaryDark transition-all duration-200"
+                  className="px-4 py-1.5 bg-brand-primary text-brand-dark rounded-md text-xs font-semibold hover:bg-brand-hover transition-all duration-200"
                   onClick={() => navigate(`/aop/run/${run.id}`)} // Navigate to the specific run simulation/details page
                 >
                   {isActive ? "View Progress" : "View Details"}

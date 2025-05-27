@@ -317,18 +317,19 @@
   ],
   "aopsInstances": [
     {
-      "id": "AOP-NOT-FOUND-MOCK",
-      "name": "Missing AOP Run (Mock Data)",
-      "description": "This is a placeholder record. The AOP run you were looking for could not be found. It might have been deleted or the ID was incorrect.",
-      "category": "System Information",
-      "status": "Not Found",
+      "id": "AOP1",
+      "name": "Automating the discovery process for fraud investigation",
+      "description": "Automating the discovery process for fraud investigation....",
+      "category": "Fraud & Compliance",
+      "status": "Completed",
       "lastRun": "2024-01-01T00:00:00Z",
       "runHistory": [
-        {"timestamp": "2024-01-01T00:00:00Z", "status": "Info", "details": "Original AOP run data not found. Displaying this mock record instead."}
+        {"timestamp": "2024-01-02T00:02:00Z", "status": "Warning", "details": "Minor issues detected in data retrieval."},
+        {"timestamp": "2024-01-01T00:06:00Z", "status": "Info", "details": "AOP for fraud investigation successfully completed."}
       ],
       "metrics": {
-        "dataRetrievalStatus": "Failed",
-        "reason": "Record missing or ID invalid"
+        "dataRetrievalStatus": "Done",
+        "reason": "Data retrieval completed successfully."
       }
     }
   ],

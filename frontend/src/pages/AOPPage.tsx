@@ -122,7 +122,7 @@ export function AOPPage() {
             </p>
             <button
               onClick={next}
-              className="px-6 py-2 text-brand-dark bg-brand-primary rounded-md hover:bg-brand-primaryDark focus:outline-none focus:ring-2 focus:ring-brand-primary focus:ring-opacity-50 transition-all duration-200"
+              className="px-6 py-2 text-brand-dark bg-brand-primary rounded-md hover:bg-brand-hover focus:outline-none focus:ring-2 focus:ring-brand-primary focus:ring-opacity-50 transition-all duration-200"
             >
               Get Started
             </button>
@@ -239,7 +239,7 @@ export function AOPPage() {
                     dataSources.includes(rs)
                   )
                 }
-                className="px-6 py-2 text-brand-dark bg-brand-primary rounded-md hover:bg-brand-primaryDark focus:outline-none focus:ring-2 focus:ring-brand-primary focus:ring-opacity-50 disabled:opacity-50 transition-all duration-200"
+                className="px-6 py-2 text-brand-dark bg-brand-primary rounded-md hover:bg-brand-hover focus:outline-none focus:ring-2 focus:ring-brand-primary focus:ring-opacity-50 disabled:opacity-50 transition-all duration-200"
               >
                 Next
               </button>
@@ -295,7 +295,7 @@ export function AOPPage() {
               </button>
               <button
                 onClick={next}
-                className="px-6 py-2 text-brand-dark bg-brand-primary rounded-md hover:bg-brand-primaryDark focus:outline-none focus:ring-2 focus:ring-brand-primary focus:ring-opacity-50 transition-all duration-200"
+                className="px-6 py-2 text-brand-dark bg-brand-primary rounded-md hover:bg-brand-hover focus:outline-none focus:ring-2 focus:ring-brand-primary focus:ring-opacity-50 transition-all duration-200"
               >
                 Next
               </button>
@@ -341,7 +341,7 @@ export function AOPPage() {
               <button
                 onClick={startAgent}
                 disabled={!workflow || dataSources.length === 0 || !llm}
-                className="px-6 py-2 text-brand-dark bg-brand-primary rounded-md hover:bg-brand-primaryDark focus:outline-none focus:ring-2 focus:ring-brand-primary focus:ring-opacity-50 disabled:opacity-50 transition-all duration-200"
+                className="px-6 py-2 text-brand-dark bg-brand-primary rounded-md hover:bg-brand-hover focus:outline-none focus:ring-2 focus:ring-brand-primary focus:ring-opacity-50 disabled:opacity-50 transition-all duration-200"
               >
                 Create AOPS
               </button>

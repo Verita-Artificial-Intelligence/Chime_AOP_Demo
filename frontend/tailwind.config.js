@@ -12,6 +12,7 @@ export default {
           primary: "#1EC677", // Chime's primary green
           primaryDark: "#179B5E", // Darker green for hover states
           primaryLight: "#37E192", // Lighter green for hover backgrounds
+          hover: "#009c52", // Little darker green for hover states
           success: "#1EC677", // Using primary for success states
           danger: "#ff4d4f", // Keeping existing danger color
           background: "#FFFFFF", // White background like Chime
