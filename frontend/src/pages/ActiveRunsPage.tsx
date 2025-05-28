@@ -27,15 +27,15 @@ export const ActiveRunsPage: React.FC = () => {
   const [showSimulation, setShowSimulation] = useState(false);
   const [activeRun, setActiveRun] = useState<ActiveRun | null>(null);
 
-  // Check if we're coming from the AOP Builder with a new run
+  // Check if we're coming from the AOP Builder or Templates with a new run
   useEffect(() => {
     if (location.state && location.state.workflow) {
       const newRun: ActiveRun = {
         id: location.state.id || `run-${Date.now()}`,
-        name: "Automating the discovery process for fraud investigation",
+        name: location.state.name || "Automating the discovery process for fraud investigation",
         startTime: new Date().toLocaleString(),
         currentStep: 1,
-        totalSteps: 10,
+        totalSteps: location.state.actions ? location.state.actions.length + location.state.dataSources.length + 2 : 10,
         status: "running",
         estimatedCompletion: "15-20 mins",
         workflow: location.state.workflow,
@@ -45,14 +45,60 @@ export const ActiveRunsPage: React.FC = () => {
       };
       setActiveRun(newRun);
       setShowSimulation(true);
+      
+      // Clear the location state to prevent re-runs on refresh
+      window.history.replaceState({}, document.title);
     }
   }, [location.state]);
 
   const handleSimulationComplete = () => {
+    // Save the completed run to localStorage
+    const completedRun = {
+      id: activeRun?.id || `run-${Date.now()}`,
+      name: activeRun?.name || "Unknown Run",
+      description: `Automated workflow execution for ${activeRun?.workflow}`,
+      category: activeRun?.workflow === 'fraud-investigation' ? 'Fraud & Compliance' : 'Compliance',
+      status: "Completed",
+      lastRun: new Date().toISOString(),
+      runHistory: [
+        {
+          timestamp: new Date().toISOString(),
+          status: "Success",
+          details: "AOP workflow completed successfully"
+        }
+      ],
+      metrics: {
+        dataSourcesAnalyzed: String(activeRun?.dataSources.length || 0),
+        actionsExecuted: String(activeRun?.actions.length || 0),
+        totalSteps: String(activeRun?.totalSteps || 0),
+        executionTime: activeRun?.estimatedCompletion || "Unknown"
+      }
+    };
+
+    // Get existing run history from localStorage
+    const existingHistory = localStorage.getItem('aopRunHistory');
+    let runHistory = [];
+    
+    if (existingHistory) {
+      try {
+        runHistory = JSON.parse(existingHistory);
+      } catch (e) {
+        console.error('Error parsing existing run history:', e);
+        runHistory = [];
+      }
+    }
+
+    // Add the new completed run
+    runHistory.push(completedRun);
+    
+    // Save back to localStorage
+    localStorage.setItem('aopRunHistory', JSON.stringify(runHistory));
+
     // After simulation completes, clear the active run
     setShowSimulation(false);
     setActiveRun(null);
-    // Optionally save to run history
+    
+    // Navigate to run history
     navigate("/aop/run");
   };
 

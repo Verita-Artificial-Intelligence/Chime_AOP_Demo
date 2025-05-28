@@ -1,13 +1,14 @@
 import React, { useState } from 'react';
-import { MagnifyingGlassIcon } from '@heroicons/react/24/outline';
+import { MagnifyingGlassIcon, XMarkIcon, CheckCircleIcon } from '@heroicons/react/24/outline';
 
 interface Integration {
   id: string;
   name: string;
   description: string;
   category: string;
-  logo: string;
+  logoUrl: string;
   popular?: boolean;
+  connected?: boolean;
 }
 
 const mockIntegrations: Integration[] = [
@@ -16,65 +17,83 @@ const mockIntegrations: Integration[] = [
     name: 'Salesforce',
     description: 'Connect your Salesforce CRM to automate sales workflows and data synchronization.',
     category: 'CRM',
-    logo: '🔷',
+    logoUrl: 'https://cdn.jsdelivr.net/gh/simple-icons/simple-icons@v9/icons/salesforce.svg',
     popular: true,
+    connected: false,
   },
   {
     id: 'slack',
     name: 'Slack',
     description: 'Integrate with Slack for real-time notifications and team collaboration.',
     category: 'Communication',
-    logo: '💬',
+    logoUrl: 'https://cdn.jsdelivr.net/gh/simple-icons/simple-icons@v9/icons/slack.svg',
     popular: true,
+    connected: true,
   },
   {
     id: 'jira',
     name: 'Jira',
     description: 'Sync issues and automate project management workflows with Jira.',
     category: 'Project Management',
-    logo: '📋',
+    logoUrl: 'https://cdn.jsdelivr.net/gh/simple-icons/simple-icons@v9/icons/jira.svg',
     popular: true,
-  },
-  {
-    id: 'aws',
-    name: 'AWS',
-    description: 'Integrate with Amazon Web Services for cloud infrastructure automation.',
-    category: 'Cloud',
-    logo: '☁️',
+    connected: false,
   },
   {
     id: 'google-workspace',
     name: 'Google Workspace',
     description: 'Connect Google Workspace apps for document management and collaboration.',
     category: 'Productivity',
-    logo: '📧',
+    logoUrl: 'https://cdn.jsdelivr.net/gh/simple-icons/simple-icons@v9/icons/google.svg',
+    connected: true,
   },
   {
     id: 'microsoft-365',
     name: 'Microsoft 365',
     description: 'Integrate with Microsoft 365 for Office apps and Teams collaboration.',
     category: 'Productivity',
-    logo: '📊',
+    logoUrl: 'https://cdn.jsdelivr.net/gh/simple-icons/simple-icons@v9/icons/microsoft.svg',
+    connected: false,
   },
   {
     id: 'zendesk',
     name: 'Zendesk',
     description: 'Automate customer support workflows with Zendesk integration.',
     category: 'Support',
-    logo: '🎧',
+    logoUrl: 'https://cdn.jsdelivr.net/gh/simple-icons/simple-icons@v9/icons/zendesk.svg',
+    connected: false,
   },
   {
     id: 'stripe',
     name: 'Stripe',
     description: 'Process payments and manage subscriptions with Stripe integration.',
     category: 'Finance',
-    logo: '💳',
+    logoUrl: 'https://cdn.jsdelivr.net/gh/simple-icons/simple-icons@v9/icons/stripe.svg',
+    connected: false,
+  },
+  {
+    id: 'github',
+    name: 'GitHub',
+    description: 'Automate your development workflows with GitHub integration.',
+    category: 'Development',
+    logoUrl: 'https://cdn.jsdelivr.net/gh/simple-icons/simple-icons@v9/icons/github.svg',
+    connected: false,
+  },
+  {
+    id: 'shopify',
+    name: 'Shopify',
+    description: 'Connect your Shopify store for e-commerce automation.',
+    category: 'E-commerce',
+    logoUrl: 'https://cdn.jsdelivr.net/gh/simple-icons/simple-icons@v9/icons/shopify.svg',
+    connected: false,
   },
 ];
 
 export const IntegrationsPage: React.FC = () => {
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedCategory, setSelectedCategory] = useState('All');
+  const [selectedIntegration, setSelectedIntegration] = useState<Integration | null>(null);
+  const [showModal, setShowModal] = useState(false);
 
   const categories = ['All', ...Array.from(new Set(mockIntegrations.map(i => i.category)))];
 
@@ -84,6 +103,16 @@ export const IntegrationsPage: React.FC = () => {
     const matchesCategory = selectedCategory === 'All' || integration.category === selectedCategory;
     return matchesSearch && matchesCategory;
   });
+
+  const handleConnectClick = (integration: Integration) => {
+    setSelectedIntegration(integration);
+    setShowModal(true);
+  };
+
+  const closeModal = () => {
+    setShowModal(false);
+    setSelectedIntegration(null);
+  };
 
   return (
     <div className="max-w-7xl mx-auto">
@@ -127,22 +156,55 @@ export const IntegrationsPage: React.FC = () => {
         {filteredIntegrations.map(integration => (
           <div
             key={integration.id}
-            className="bg-white rounded-lg border border-gray-200 p-6 hover:shadow-lg transition-shadow cursor-pointer"
+            className="bg-white rounded-lg border border-gray-200 p-6 hover:shadow-lg transition-all duration-200 group relative"
           >
+            {integration.connected && (
+              <div className="absolute top-4 right-4">
+                <CheckCircleIcon className="h-5 w-5 text-green-500" />
+              </div>
+            )}
+            
             <div className="flex items-start justify-between mb-4">
-              <div className="text-4xl">{integration.logo}</div>
+              <div className="w-12 h-12 flex items-center justify-center bg-gray-50 rounded-lg group-hover:bg-brand-light transition-colors">
+                <img 
+                  src={integration.logoUrl} 
+                  alt={`${integration.name} logo`}
+                  className="w-8 h-8 object-contain"
+                  style={{ filter: 'grayscale(100%)' }}
+                  onLoad={(e) => {
+                    const img = e.target as HTMLImageElement;
+                    img.style.filter = 'none';
+                  }}
+                />
+              </div>
               {integration.popular && (
                 <span className="px-2 py-1 bg-blue-100 text-blue-700 text-xs font-medium rounded-full">
                   Popular
                 </span>
               )}
             </div>
-            <h3 className="text-lg font-semibold text-gray-900 mb-2">{integration.name}</h3>
-            <p className="text-sm text-gray-600 mb-4">{integration.description}</p>
+            
+            <h3 className="text-lg font-semibold text-gray-900 mb-2 group-hover:text-brand-primary transition-colors">
+              {integration.name}
+            </h3>
+            
+            <p className="text-sm text-gray-600 mb-4 line-clamp-3">
+              {integration.description}
+            </p>
+            
             <div className="flex items-center justify-between">
-              <span className="text-xs text-gray-500">{integration.category}</span>
-              <button className="text-sm font-medium text-brand-primary hover:text-brand-dark">
-                Connect →
+              <span className="text-xs text-gray-500 px-2 py-1 bg-gray-100 rounded-full">
+                {integration.category}
+              </span>
+              <button 
+                onClick={() => handleConnectClick(integration)}
+                className={`px-4 py-2 text-sm font-medium rounded-md transition-all ${
+                  integration.connected
+                    ? 'bg-green-100 text-green-700 hover:bg-green-200'
+                    : 'bg-brand-primary text-brand-dark hover:bg-brand-hover'
+                }`}
+              >
+                {integration.connected ? 'Connected' : 'Connect'}
               </button>
             </div>
           </div>
@@ -152,6 +214,68 @@ export const IntegrationsPage: React.FC = () => {
       {filteredIntegrations.length === 0 && (
         <div className="text-center py-12">
           <p className="text-gray-500">No integrations found matching your criteria.</p>
+        </div>
+      )}
+
+      {/* Modal */}
+      {showModal && selectedIntegration && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
+          <div className="bg-white rounded-lg max-w-md w-full p-6 relative">
+            <button
+              onClick={closeModal}
+              className="absolute top-4 right-4 text-gray-400 hover:text-gray-600"
+            >
+              <XMarkIcon className="h-6 w-6" />
+            </button>
+            
+            <div className="flex items-center mb-4">
+              <div className="w-12 h-12 flex items-center justify-center bg-gray-50 rounded-lg mr-4">
+                <img 
+                  src={selectedIntegration.logoUrl} 
+                  alt={`${selectedIntegration.name} logo`}
+                  className="w-8 h-8 object-contain"
+                />
+              </div>
+              <div>
+                <h3 className="text-lg font-semibold text-gray-900">
+                  {selectedIntegration.connected ? 'Manage' : 'Connect to'} {selectedIntegration.name}
+                </h3>
+                <p className="text-sm text-gray-600">{selectedIntegration.category}</p>
+              </div>
+            </div>
+            
+            <p className="text-gray-600 mb-6">
+              {selectedIntegration.connected 
+                ? `You are currently connected to ${selectedIntegration.name}. Manage your integration settings below.`
+                : `Connect your ${selectedIntegration.name} account to enable automation workflows.`
+              }
+            </p>
+            
+            <div className="space-y-3">
+              {selectedIntegration.connected ? (
+                <>
+                  <button className="w-full px-4 py-2 bg-gray-100 text-gray-700 rounded-md hover:bg-gray-200 transition-colors">
+                    View Connection Details
+                  </button>
+                  <button className="w-full px-4 py-2 bg-red-100 text-red-700 rounded-md hover:bg-red-200 transition-colors">
+                    Disconnect
+                  </button>
+                </>
+              ) : (
+                <>
+                  <button className="w-full px-4 py-2 bg-brand-primary text-brand-dark rounded-md hover:bg-brand-hover transition-colors font-semibold">
+                    Authorize Connection
+                  </button>
+                  <button 
+                    onClick={closeModal}
+                    className="w-full px-4 py-2 border border-gray-300 text-gray-700 rounded-md hover:bg-gray-50 transition-colors"
+                  >
+                    Cancel
+                  </button>
+                </>
+              )}
+            </div>
+          </div>
         </div>
       )}
     </div>
