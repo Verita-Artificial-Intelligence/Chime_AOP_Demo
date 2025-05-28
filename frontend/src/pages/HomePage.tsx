@@ -10,6 +10,12 @@ import {
 
 const quickAccessItems = [
   {
+    name: "AOP Templates",
+    href: "/aop/templates",
+    description: "Browse pre-built automation templates for common workflows.",
+    icon: BoltIcon,
+  },
+  {
     name: "Build an AOP (Legacy)",
     href: "/aop",
     description: "Manually configure a new Automated Operation Procedure.",
