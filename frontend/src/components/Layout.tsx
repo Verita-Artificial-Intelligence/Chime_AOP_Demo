@@ -7,6 +7,7 @@ import {
   CogIcon,
 } from "@heroicons/react/24/outline";
 import { ChevronDownIcon } from "@heroicons/react/20/solid";
+import content from "../config/content";
 
 interface NavItem {
   name: string;
@@ -24,7 +25,7 @@ interface NavSubItem {
 const navItems: NavItem[] = [
   { name: "Home", href: "/", icon: HomeIcon },
   {
-    name: "AOPS",
+    name: content.platformName,
     icon: BoltIcon,
     subItems: [
       { name: "AOP Builder", href: "/aop/builder" },
@@ -50,7 +51,7 @@ export const Layout: React.FC<LayoutProps> = ({ children }) => {
         <div className="p-4 border-b border-brand-sidebarBorder">
           <Link to="/">
             <h1 className="text-2xl font-bold text-brand-dark hover:text-brand-primary transition-colors">
-              Chime AOPS
+              {content.clientName} {content.platformName}
             </h1>
           </Link>
         </div>
@@ -123,7 +124,7 @@ export const Layout: React.FC<LayoutProps> = ({ children }) => {
         </nav>
         <div className="p-4 border-t border-brand-sidebarBorder">
           <p className="text-xs text-brand-muted opacity-70">
-            © 2025 Chime AOPS
+            {content.footerText}
           </p>
         </div>
       </aside>

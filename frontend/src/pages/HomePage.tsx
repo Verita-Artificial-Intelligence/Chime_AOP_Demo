@@ -7,6 +7,7 @@ import {
   CpuChipIcon,
   ArrowRightIcon,
 } from "@heroicons/react/24/outline";
+import content from "../config/content";
 
 const quickAccessItems = [
   {
@@ -53,7 +54,7 @@ export function HomePage() {
     <div className="p-6 md:p-8">
       <div className="bg-brand-card p-8 rounded-xl border border-brand-border mb-8">
         <h1 className="text-4xl font-bold text-brand-dark mb-3">
-          Welcome to the Chime AOPS Platform
+          {content.welcomeMessage}
         </h1>
         <p className="text-lg text-brand-dark mb-6">
           Streamline your operations with powerful automation tools. Build,

@@ -2,6 +2,7 @@ import React from "react";
 import { useNavigate } from "react-router-dom";
 import { BuilderProgressTracker } from "../components/ProgressTracker";
 import mockData from "../data/mockData.json";
+import content from "../config/content";
 
 type WorkflowId = string;
 type DataSource = string;
@@ -114,11 +115,11 @@ export function AOPPage() {
         return (
           <div className="space-y-4">
             <h2 className="text-2xl font-semibold text-brand-dark">
-              Welcome to the Chime AOPS Builder
+              {content.builderWelcomeMessage}
             </h2>
             <p className="text-brand-muted">
-              Create Automated Operations Procedures (AOPS) to streamline your
-              Chime workflows. Get started by selecting a workflow template.
+              Create Automated Operations Procedures (AOPS) to streamline your{" "}
+              {content.builderDescription}
             </p>
             <button
               onClick={next}
