@@ -359,14 +359,16 @@ export function AOPBuilderPage() {
       addMessage("system", `Agent "${agentConfig.name}" saved successfully!`);
       setMessages((prev) => prev.filter((msg) => msg.id !== "save-button"));
       setTimeout(() => {
-        // Navigate to active runs instead of run history
+        // Navigate to active runs with the agent configuration
         navigate("/aop/active-runs", {
           state: {
+            id: agentConfig.id,
+            name: agentConfig.name,
             workflow: agentConfig.workflow,
             dataSources: agentConfig.dataSources,
             actions: agentConfig.actions,
             llm: agentConfig.llm,
-            id: agentConfig.id,
+            fromBuilder: true
           },
         });
       }, 1500);

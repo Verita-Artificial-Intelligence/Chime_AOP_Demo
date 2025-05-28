@@ -218,7 +218,7 @@ export default function AOPRunPage() {
         )}
         <div className="mt-8 text-center">
           <button
-            className="px-6 py-2 bg-brand-primary text-brand-dark rounded-md hover:bg-brand-hover focus:outline-none focus:ring-2 focus:ring-brand-primary focus:ring-opacity-50 transition-all duration-200"
+            className="px-6 py-2 bg-brand-primary text-brand-dark rounded-md hover:bg-brand-hover focus:outline-none focus:ring-2 focus:ring-brand-primary focus:ring-opacity-50 transition-all duration-200 font-semibold"
             onClick={() => navigate("/aop/run")} // Navigate back to the run history list
           >
             Back to Run History

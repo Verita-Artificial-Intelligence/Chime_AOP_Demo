@@ -44,6 +44,7 @@ export function AIAgentExecutionSimulation({ workflow, dataSources, actions, llm
   const [currentStep, setCurrentStep] = useState(0);
   const [executionComplete, setExecutionComplete] = useState(false);
   const [mockData, setMockData] = useState<any>(null);
+  const [runStartTime] = useState(new Date().toISOString());
 
   // Build the step sequence: init, data sources, actions, complete
   const stepSequence = [
@@ -66,8 +67,69 @@ export function AIAgentExecutionSimulation({ workflow, dataSources, actions, llm
       return () => clearTimeout(timer);
     } else if (currentStep === stepSequence.length - 1 && !executionComplete) {
       setExecutionComplete(true);
+      // Save the completed run to localStorage
+      saveCompletedRun();
     }
   }, [currentStep, stepSequence.length, mockData, executionComplete]);
+
+  const saveCompletedRun = () => {
+    const workflowDetails = mockData?.workflows?.find((wf: any) => wf.id === workflow);
+    const completedRun = {
+      id: `run-${workflow}-${Date.now()}`,
+      name: workflowDetails?.name || workflow,
+      description: workflowDetails?.description || `Automated workflow execution for ${workflow}`,
+      category: workflowDetails?.category || 'General',
+      status: 'Completed',
+      lastRun: new Date().toISOString(),
+      runHistory: [
+        {
+          timestamp: runStartTime,
+          status: 'Started',
+          details: 'AOP workflow execution started'
+        },
+        ...dataSources.map((ds, index) => ({
+          timestamp: new Date(new Date(runStartTime).getTime() + (index + 1) * 2000).toISOString(),
+          status: 'Success',
+          details: `Analyzed data source: ${ds}`
+        })),
+        ...actions.map((action, index) => ({
+          timestamp: new Date(new Date(runStartTime).getTime() + (dataSources.length + index + 1) * 2000).toISOString(),
+          status: 'Success',
+          details: `Executed action: ${action}`
+        })),
+        {
+          timestamp: new Date().toISOString(),
+          status: 'Success',
+          details: 'AOP workflow completed successfully'
+        }
+      ],
+      metrics: {
+        dataSourcesAnalyzed: String(dataSources.length),
+        actionsExecuted: String(actions.length),
+        totalSteps: String(stepSequence.length - 1),
+        executionTime: `${Math.round((new Date().getTime() - new Date(runStartTime).getTime()) / 1000)}s`
+      }
+    };
+
+    // Get existing run history from localStorage
+    const existingHistory = localStorage.getItem('aopRunHistory');
+    let runHistory = [];
+    
+    if (existingHistory) {
+      try {
+        runHistory = JSON.parse(existingHistory);
+      } catch (e) {
+        console.error('Error parsing existing run history:', e);
+        runHistory = [];
+      }
+    }
+
+    // Add the new completed run
+    runHistory.push(completedRun);
+    
+    // Save back to localStorage
+    localStorage.setItem('aopRunHistory', JSON.stringify(runHistory));
+  };
 
   // Auto-scroll to the current step card
   useEffect(() => {
