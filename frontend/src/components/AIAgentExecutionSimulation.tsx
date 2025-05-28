@@ -74,11 +74,13 @@ export function AIAgentExecutionSimulation({ workflow, dataSources, actions, llm
 
   const saveCompletedRun = () => {
     const workflowDetails = mockData?.workflows?.find((wf: any) => wf.id === workflow);
+    const isCustomWorkflow = workflow === 'custom-workflow';
+    
     const completedRun = {
       id: `run-${workflow}-${Date.now()}`,
-      name: workflowDetails?.name || workflow,
-      description: workflowDetails?.description || `Automated workflow execution for ${workflow}`,
-      category: workflowDetails?.category || 'General',
+      name: workflowDetails?.name || (isCustomWorkflow ? 'Custom Workflow' : workflow),
+      description: workflowDetails?.description || (isCustomWorkflow ? 'A dynamically generated workflow based on user requirements' : `Automated workflow execution for ${workflow}`),
+      category: workflowDetails?.category || (isCustomWorkflow ? 'Custom' : 'General'),
       status: 'Completed',
       lastRun: new Date().toISOString(),
       runHistory: [
@@ -152,6 +154,11 @@ export function AIAgentExecutionSimulation({ workflow, dataSources, actions, llm
   const getDataSourceSummary = (ds: string) => {
     if (!mockData) return null;
 
+    // For custom workflows, generate appropriate mock data
+    if (workflow === 'custom-workflow') {
+      return getCustomDataSourceSummary(ds);
+    }
+
     // Attempt to fetch from the new dataSourceSamples section first
     if (mockData.dataSourceSamples && mockData.dataSourceSamples[ds]) {
       const sampleData = mockData.dataSourceSamples[ds];
@@ -193,9 +200,54 @@ export function AIAgentExecutionSimulation({ workflow, dataSources, actions, llm
     return <div className="text-brand-muted">No specific sample data configured for this source.</div>;
   };
 
+  // Helper for custom workflow data sources
+  const getCustomDataSourceSummary = (ds: string) => {
+    const dsLower = ds.toLowerCase();
+    
+    // Generate contextual mock data based on data source name
+    if (dsLower.includes('invoice') || dsLower.includes('billing')) {
+      return <SimpleTable data={[
+        { invoiceId: 'INV-2024-001', vendor: 'Acme Corp', amount: 5000, status: 'Pending' },
+        { invoiceId: 'INV-2024-002', vendor: 'Tech Solutions', amount: 3500, status: 'Approved' },
+        { invoiceId: 'INV-2024-003', vendor: 'Global Services', amount: 7200, status: 'Processing' }
+      ]} />;
+    } else if (dsLower.includes('employee') || dsLower.includes('hr')) {
+      return <SimpleTable data={[
+        { employeeId: 'EMP-001', name: 'John Doe', department: 'Engineering', status: 'Active' },
+        { employeeId: 'EMP-002', name: 'Jane Smith', department: 'Marketing', status: 'Onboarding' },
+        { employeeId: 'EMP-003', name: 'Bob Johnson', department: 'Sales', status: 'Active' }
+      ]} />;
+    } else if (dsLower.includes('customer') || dsLower.includes('client')) {
+      return <SimpleTable data={[
+        { customerId: 'CUST-001', name: 'Alpha Industries', tier: 'Premium', lastContact: '2024-07-15' },
+        { customerId: 'CUST-002', name: 'Beta Corp', tier: 'Standard', lastContact: '2024-07-18' },
+        { customerId: 'CUST-003', name: 'Gamma LLC', tier: 'Premium', lastContact: '2024-07-19' }
+      ]} />;
+    } else if (dsLower.includes('api') || dsLower.includes('gateway')) {
+      return <SimpleTable data={[
+        { endpoint: '/api/v1/process', method: 'POST', status: 200, responseTime: '125ms' },
+        { endpoint: '/api/v1/validate', method: 'GET', status: 200, responseTime: '45ms' },
+        { endpoint: '/api/v1/submit', method: 'PUT', status: 201, responseTime: '230ms' }
+      ]} />;
+    } else {
+      // Generic data for unrecognized data sources
+      return <SimpleTable data={[
+        { id: 'REC-001', type: 'Data Entry', status: 'Processed', timestamp: new Date().toISOString() },
+        { id: 'REC-002', type: 'Data Entry', status: 'Pending', timestamp: new Date().toISOString() },
+        { id: 'REC-003', type: 'Data Entry', status: 'Processed', timestamp: new Date().toISOString() }
+      ]} />;
+    }
+  };
+
   // Helper to get a human-readable summary/result for each action
   const getActionSummary = (action: string) => {
     if (!mockData) return null;
+
+    // For custom workflows, generate appropriate action results
+    if (workflow === 'custom-workflow') {
+      return getCustomActionSummary(action);
+    }
+
     if (action.toLowerCase().includes('invoice')) {
       return <SimpleTable data={mockData.receivablesTableData?.slice(0, 3) || []} />;
     }
@@ -256,6 +308,61 @@ export function AIAgentExecutionSimulation({ workflow, dataSources, actions, llm
       return <SimpleTable data={actionResult.results} />;
     }
     return <div className="text-brand-muted">No summary available for this action.</div>;
+  };
+
+  // Helper for custom workflow actions
+  const getCustomActionSummary = (action: string) => {
+    const actionLower = action.toLowerCase();
+    
+    // Generate contextual results based on action name
+    if (actionLower.includes('validate') || actionLower.includes('verify')) {
+      return (
+        <div className="text-sm text-brand-muted">
+          <div className="mb-2 font-semibold text-brand-success">✓ Validation Successful</div>
+          <div>• All required fields present</div>
+          <div>• Data format verified</div>
+          <div>• Business rules passed</div>
+        </div>
+      );
+    } else if (actionLower.includes('send') || actionLower.includes('notify')) {
+      return (
+        <div className="text-sm text-brand-muted">
+          <div className="mb-2 font-semibold text-brand-success">✓ Notifications Sent</div>
+          <div>• Email notifications: 3 recipients</div>
+          <div>• SMS alerts: 1 recipient</div>
+          <div>• System logs updated</div>
+        </div>
+      );
+    } else if (actionLower.includes('generate') || actionLower.includes('create')) {
+      return (
+        <div className="text-sm text-brand-muted">
+          <div className="mb-2 font-semibold text-brand-success">✓ Generation Complete</div>
+          <div>• Document ID: DOC-{Date.now()}</div>
+          <div>• Format: PDF</div>
+          <div>• Size: 2.3 MB</div>
+          <div>• Status: Ready for download</div>
+        </div>
+      );
+    } else if (actionLower.includes('update') || actionLower.includes('save')) {
+      return (
+        <div className="text-sm text-brand-muted">
+          <div className="mb-2 font-semibold text-brand-success">✓ Update Successful</div>
+          <div>• Records updated: 15</div>
+          <div>• Database: Primary</div>
+          <div>• Timestamp: {new Date().toLocaleTimeString()}</div>
+        </div>
+      );
+    } else {
+      // Generic success message for other actions
+      return (
+        <div className="text-sm text-brand-muted">
+          <div className="mb-2 font-semibold text-brand-success">✓ Action Completed</div>
+          <div>• Execution time: {Math.floor(Math.random() * 500) + 100}ms</div>
+          <div>• Status: Success</div>
+          <div>• Next step: Ready</div>
+        </div>
+      );
+    }
   };
 
   // Stepper steps for all steps

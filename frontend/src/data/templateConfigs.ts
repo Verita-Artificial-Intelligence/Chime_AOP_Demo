@@ -1,4 +1,12 @@
-const templateConfigsData = {
+interface TemplateConfig {
+  name: string;
+  workflow: string;
+  dataSources: string[];
+  actions: string[];
+  llm: string;
+}
+
+const templateConfigs: Record<string, TemplateConfig> = {
   "fraud-investigation": {
     name: "Automating the discovery process for fraud investigation",
     workflow: "fraud-investigation",
@@ -106,4 +114,4 @@ const templateConfigsData = {
   },
 };
 
-export default templateConfigsData;
+export default templateConfigs;

@@ -442,6 +442,14 @@
       "category": "Compliance",
       "requiredDataSources": ["System Activity Logs", "User Access Database", "Transaction Records"],
       "compatibleDataSources": []
+    },
+    {
+      "id": "custom-workflow",
+      "name": "Custom Workflow",
+      "description": "A dynamically generated workflow based on user requirements.",
+      "category": "Custom",
+      "requiredDataSources": [],
+      "compatibleDataSources": ["Primary Database", "API Gateway", "Document Store", "Email System", "Notification Service", "Analytics Platform", "Custom Data Source"]
     }
   ]
 } 

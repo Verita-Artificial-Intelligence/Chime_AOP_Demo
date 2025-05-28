@@ -2,6 +2,7 @@ import React, { useState, useEffect, useRef } from "react";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import mockData from "../data/mockData.json"; // Assuming mockData is accessible
 import { SparklesIcon } from "@heroicons/react/24/outline";
+import { llmService } from "../services/llmService";
 
 interface AgentConfig {
   id: string;
@@ -310,17 +311,18 @@ export function AOPBuilderPage() {
     setIsBuilding(false);
   };
 
-  const handleChatSubmit = (e: React.FormEvent) => {
+  const handleChatSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!chatInput.trim() || isBuilding) return;
 
     const userMessage = chatInput.trim();
     setChatInput("");
+    setShowAISuggestions(false);
 
     // Check for keywords and trigger appropriate workflow
     const lowerCaseMessage = userMessage.toLowerCase();
 
-    if (lowerCaseMessage.includes("fraud")) {
+    if (lowerCaseMessage.includes("fraud") && !lowerCaseMessage.includes("not") && !lowerCaseMessage.includes("except")) {
       // Trigger fraud investigation workflow
       const fraudPrompt = AI_SUGGESTIONS.find(
         (s) => s.id === "ai-fraud-investigation"
@@ -328,7 +330,7 @@ export function AOPBuilderPage() {
       if (fraudPrompt) {
         handlePromptSelect(fraudPrompt);
       }
-    } else if (lowerCaseMessage.includes("compliance")) {
+    } else if (lowerCaseMessage.includes("compliance") && !lowerCaseMessage.includes("not") && !lowerCaseMessage.includes("except")) {
       // Trigger compliance audit workflow
       const compliancePrompt = AI_SUGGESTIONS.find(
         (s) => s.id === "ai-compliance-audit"
@@ -337,13 +339,100 @@ export function AOPBuilderPage() {
         handlePromptSelect(compliancePrompt);
       }
     } else {
-      // For other messages, just add them to the chat
+      // For any other input, use LLM to generate workflow
       addMessage("user", userMessage);
-      addMessage(
-        "agent",
-        "I understand you're looking for help with automation. Try mentioning 'fraud' for fraud investigation workflows or 'compliance' for audit trail automation."
-      );
+      setIsBuilding(true);
+      
+      addMessage("agent", "Let me analyze your request and create a custom AOP workflow for you...");
+      
+      try {
+        // Call LLM service to generate workflow
+        const llmResponse = await llmService.generateWorkflow(userMessage);
+        
+        if ('error' in llmResponse) {
+          // Handle error response
+          addMessage("agent", `I encountered an issue: ${llmResponse.message}. Let me use a template approach instead.`);
+          
+          // Fallback to a generic workflow
+          const fallbackPrompt: MockPrompt = {
+            id: "llm-generated",
+            title: userMessage,
+            description: "Custom workflow based on your request",
+            config: {
+              workflow: "custom-workflow",
+              dataSources: ["Primary Database", "API Gateway", "Document Store"],
+              actions: ["Initialize process", "Analyze data", "Execute automation", "Generate report"],
+              llm: "general-purpose-llm"
+            }
+          };
+          
+          await handlePromptSelect(fallbackPrompt);
+        } else {
+          // Successfully generated workflow
+          const generatedPrompt: MockPrompt = {
+            id: "llm-generated-" + Date.now(),
+            title: llmResponse.name,
+            description: llmResponse.description,
+            config: {
+              workflow: llmResponse.workflow,
+              dataSources: llmResponse.dataSources,
+              actions: llmResponse.actions,
+              llm: llmResponse.llm
+            }
+          };
+          
+          // Process the generated workflow
+          await handleLLMGeneratedPrompt(generatedPrompt, llmResponse.category);
+        }
+      } catch (error) {
+        console.error("Error generating workflow:", error);
+        addMessage("agent", "I encountered an unexpected error. Please try again or be more specific about your automation needs.");
+        setIsBuilding(false);
+      }
     }
+  };
+
+  const handleLLMGeneratedPrompt = async (prompt: MockPrompt, category: string) => {
+    // Similar to handlePromptSelect but for LLM-generated workflows
+    addMessage("agent", `I've created a custom workflow: "${prompt.title}"`);
+    await new Promise((resolve) => setTimeout(resolve, 1000));
+
+    addMessage("agent", `Category: ${category}`);
+    addMessage("agent", prompt.description);
+    await new Promise((resolve) => setTimeout(resolve, 1500));
+
+    addMessage("agent", "Setting up data sources:");
+    for (const ds of prompt.config.dataSources) {
+      addMessage("agent", `• ${ds}`);
+      await new Promise((resolve) => setTimeout(resolve, 500));
+    }
+
+    addMessage("agent", "Configuring automation actions:");
+    for (const action of prompt.config.actions) {
+      addMessage("agent", `• ${action}`);
+      await new Promise((resolve) => setTimeout(resolve, 500));
+    }
+
+    addMessage("agent", `Using LLM: ${prompt.config.llm === 'general-purpose-llm' ? 'OpenAI GPT-4o' : prompt.config.llm}`);
+    await new Promise((resolve) => setTimeout(resolve, 1000));
+
+    const finalAgentConfig: AgentConfig = {
+      id: prompt.config.workflow + "-" + Date.now(),
+      name: prompt.title,
+      workflow: prompt.config.workflow,
+      dataSources: prompt.config.dataSources,
+      actions: prompt.config.actions,
+      llm: prompt.config.llm,
+      createdAt: new Date().toISOString(),
+    };
+
+    addMessage(
+      "system",
+      `Your custom AOP "${prompt.title}" is ready!`,
+      finalAgentConfig
+    );
+
+    setIsBuilding(false);
   };
 
   const saveAgent = (agentConfig: AgentConfig) => {
