@@ -28,8 +28,8 @@ const content: ContentConfig = {
   pageTitleSuffix: "Workflows Demo",
 
   // Welcome messages
-  welcomeMessage: "Welcome to the Chime AOPS Platform",
-  builderWelcomeMessage: "Welcome to the Chime AOPS Builder",
+  welcomeMessage: "Chime AOP Platform",
+  builderWelcomeMessage: "Chime AOPS Builder",
   builderDescription:
     "Chime workflows. Get started by selecting a workflow template.",
 

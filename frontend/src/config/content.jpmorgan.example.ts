@@ -13,8 +13,8 @@ const content: ContentConfig = {
   pageTitleSuffix: "Automation Platform",
 
   // Welcome messages
-  welcomeMessage: "Welcome to the JP Morgan AOPS Platform",
-  builderWelcomeMessage: "Welcome to the JP Morgan AOPS Builder",
+  welcomeMessage: "JP Morgan AOPS Platform",
+  builderWelcomeMessage: "JP Morgan AOPS Builder",
   builderDescription:
     "JP Morgan workflows. Get started by selecting a workflow template.",
 
