@@ -1,7 +1,11 @@
 import React, { useState, useEffect, useRef } from "react";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import mockData from "../data/mockData.json"; // Assuming mockData is accessible
-import { SparklesIcon, PaperClipIcon, XMarkIcon } from "@heroicons/react/24/outline";
+import {
+  SparklesIcon,
+  PaperClipIcon,
+  XMarkIcon,
+} from "@heroicons/react/24/outline";
 import { llmService } from "../services/llmService";
 
 interface AgentConfig {
@@ -26,7 +30,7 @@ interface ChatMessage {
 interface UploadedFile {
   id: string;
   file: File;
-  type: 'image' | 'video';
+  type: "image" | "video";
   url: string;
 }
 
@@ -160,12 +164,14 @@ export function AOPBuilderPage() {
       const template = TEMPLATE_CONFIGS[templateId];
       setShowAISuggestions(false);
       // Only add the initial user message
-      setMessages([{
-        id: Date.now().toString(),
-        sender: "user",
-        text: `I want to: ${template.title}`,
-        timestamp: new Date().toISOString(),
-      }]);
+      setMessages([
+        {
+          id: Date.now().toString(),
+          sender: "user",
+          text: `I want to: ${template.title}`,
+          timestamp: new Date().toISOString(),
+        },
+      ]);
       // Then trigger the build process after a short delay
       setTimeout(() => {
         handlePromptSelectFromTemplate(template);
@@ -201,7 +207,7 @@ export function AOPBuilderPage() {
   const handlePromptSelectFromTemplate = async (prompt: MockPrompt) => {
     if (isBuilding) return;
     setIsBuilding(true);
-    
+
     // Don't add user message as it's already added in the template initialization
     addMessage("agent", `Okay, let's build an AOP for: "${prompt.title}".`);
     await new Promise((resolve) => setTimeout(resolve, 1000));
@@ -328,38 +334,67 @@ export function AOPBuilderPage() {
     if (!files || files.length === 0) return;
 
     const newFiles: UploadedFile[] = [];
-    
+    const errors: string[] = [];
+    const MAX_FILE_SIZE = 50 * 1024 * 1024; // 50MB limit
+    const MAX_TOTAL_FILES = 3; // Maximum 3 files at once
+
+    // Check total file limit
+    if (uploadedFiles.length + files.length > MAX_TOTAL_FILES) {
+      addMessage(
+        "system",
+        `You can only upload up to ${MAX_TOTAL_FILES} files at once. Currently have ${uploadedFiles.length} file(s).`
+      );
+      return;
+    }
+
     for (let i = 0; i < files.length; i++) {
       const file = files[i];
-      const fileType = file.type.startsWith('image/') ? 'image' : 
-                      file.type.startsWith('video/') ? 'video' : null;
-      
+
+      // Check file size
+      if (file.size > MAX_FILE_SIZE) {
+        errors.push(`${file.name} exceeds the 10MB size limit`);
+        continue;
+      }
+
+      const fileType = file.type.startsWith("image/")
+        ? "image"
+        : file.type.startsWith("video/")
+        ? "video"
+        : null;
+
       if (fileType) {
         const url = URL.createObjectURL(file);
         newFiles.push({
-          id: Date.now().toString() + '-' + i,
+          id: Date.now().toString() + "-" + i,
           file,
           type: fileType,
-          url
+          url,
         });
+      } else {
+        errors.push(`${file.name} is not a supported image or video format`);
       }
     }
-    
-    setUploadedFiles(prev => [...prev, ...newFiles]);
-    
+
+    // Show errors if any
+    if (errors.length > 0) {
+      addMessage("system", `File upload issues: ${errors.join(", ")}`);
+    }
+
+    setUploadedFiles((prev) => [...prev, ...newFiles]);
+
     // Reset file input
     if (fileInputRef.current) {
-      fileInputRef.current.value = '';
+      fileInputRef.current.value = "";
     }
   };
 
   const removeFile = (fileId: string) => {
-    setUploadedFiles(prev => {
-      const file = prev.find(f => f.id === fileId);
+    setUploadedFiles((prev) => {
+      const file = prev.find((f) => f.id === fileId);
       if (file) {
         URL.revokeObjectURL(file.url);
       }
-      return prev.filter(f => f.id !== fileId);
+      return prev.filter((f) => f.id !== fileId);
     });
   };
 
@@ -376,7 +411,11 @@ export function AOPBuilderPage() {
     // Check for keywords and trigger appropriate workflow
     const lowerCaseMessage = userMessage.toLowerCase();
 
-    if (lowerCaseMessage.includes("fraud") && !lowerCaseMessage.includes("not") && !lowerCaseMessage.includes("except")) {
+    if (
+      lowerCaseMessage.includes("fraud") &&
+      !lowerCaseMessage.includes("not") &&
+      !lowerCaseMessage.includes("except")
+    ) {
       // Trigger fraud investigation workflow
       const fraudPrompt = AI_SUGGESTIONS.find(
         (s) => s.id === "ai-fraud-investigation"
@@ -384,7 +423,11 @@ export function AOPBuilderPage() {
       if (fraudPrompt) {
         handlePromptSelect(fraudPrompt);
       }
-    } else if (lowerCaseMessage.includes("compliance") && !lowerCaseMessage.includes("not") && !lowerCaseMessage.includes("except")) {
+    } else if (
+      lowerCaseMessage.includes("compliance") &&
+      !lowerCaseMessage.includes("not") &&
+      !lowerCaseMessage.includes("except")
+    ) {
       // Trigger compliance audit workflow
       const compliancePrompt = AI_SUGGESTIONS.find(
         (s) => s.id === "ai-compliance-audit"
@@ -394,42 +437,61 @@ export function AOPBuilderPage() {
       }
     } else {
       // For any other input, use LLM to generate workflow
-      addMessage("user", userMessage || "Uploaded files for analysis", undefined, attachedFiles);
+      addMessage(
+        "user",
+        userMessage || "Uploaded files for analysis",
+        undefined,
+        attachedFiles
+      );
       setIsBuilding(true);
-      
+
       const hasFiles = attachedFiles.length > 0;
-      const analysisMessage = hasFiles 
+      const analysisMessage = hasFiles
         ? "Let me analyze your request along with the uploaded files to create a custom AOP workflow..."
         : "Let me analyze your request and create a custom AOP workflow for you...";
-        
+
       addMessage("agent", analysisMessage);
-      
+
       try {
         // Call LLM service to generate workflow with visual context
         const llmResponse = await llmService.generateWorkflowWithVisuals(
-          userMessage, 
+          userMessage,
           attachedFiles
         );
-        
-        if ('error' in llmResponse) {
+
+        if ("error" in llmResponse) {
           // Handle error response
-          addMessage("agent", `I encountered an issue: ${llmResponse.message}. Let me use a template approach instead.`);
-          
+          addMessage(
+            "agent",
+            `I encountered an issue: ${llmResponse.message}. Let me use a template approach instead.`
+          );
+
           // Fallback to a generic workflow
           const fallbackPrompt: MockPrompt = {
             id: "llm-generated",
             title: userMessage || "Visual-based workflow",
-            description: hasFiles 
+            description: hasFiles
               ? "Custom workflow based on your uploaded visuals"
               : "Custom workflow based on your request",
             config: {
               workflow: "custom-workflow",
-              dataSources: ["Primary Database", "API Gateway", "Document Store", "Media Storage"],
-              actions: ["Initialize process", "Analyze visual data", "Extract key information", "Execute automation", "Generate report"],
-              llm: "general-purpose-llm"
-            }
+              dataSources: [
+                "Primary Database",
+                "API Gateway",
+                "Document Store",
+                "Media Storage",
+              ],
+              actions: [
+                "Initialize process",
+                "Analyze visual data",
+                "Extract key information",
+                "Execute automation",
+                "Generate report",
+              ],
+              llm: "general-purpose-llm",
+            },
           };
-          
+
           await handlePromptSelect(fallbackPrompt);
         } else {
           // Successfully generated workflow
@@ -441,25 +503,31 @@ export function AOPBuilderPage() {
               workflow: llmResponse.workflow,
               dataSources: llmResponse.dataSources,
               actions: llmResponse.actions,
-              llm: llmResponse.llm
-            }
+              llm: llmResponse.llm,
+            },
           };
-          
+
           // Process the generated workflow
           await handleLLMGeneratedPrompt(generatedPrompt, llmResponse.category);
         }
       } catch (error) {
         console.error("Error generating workflow:", error);
-        addMessage("agent", "I encountered an unexpected error. Please try again or be more specific about your automation needs.");
+        addMessage(
+          "agent",
+          "I encountered an unexpected error. Please try again or be more specific about your automation needs."
+        );
         setIsBuilding(false);
       }
     }
-    
+
     // Clean up file URLs
-    attachedFiles.forEach(file => URL.revokeObjectURL(file.url));
+    attachedFiles.forEach((file) => URL.revokeObjectURL(file.url));
   };
 
-  const handleLLMGeneratedPrompt = async (prompt: MockPrompt, category: string) => {
+  const handleLLMGeneratedPrompt = async (
+    prompt: MockPrompt,
+    category: string
+  ) => {
     // Similar to handlePromptSelect but for LLM-generated workflows
     addMessage("agent", `I've created a custom workflow: "${prompt.title}"`);
     await new Promise((resolve) => setTimeout(resolve, 1000));
@@ -480,7 +548,14 @@ export function AOPBuilderPage() {
       await new Promise((resolve) => setTimeout(resolve, 500));
     }
 
-    addMessage("agent", `Using LLM: ${prompt.config.llm === 'general-purpose-llm' ? 'OpenAI GPT-4o' : prompt.config.llm}`);
+    addMessage(
+      "agent",
+      `Using LLM: ${
+        prompt.config.llm === "general-purpose-llm"
+          ? "OpenAI GPT-4o"
+          : prompt.config.llm
+      }`
+    );
     await new Promise((resolve) => setTimeout(resolve, 1000));
 
     const finalAgentConfig: AgentConfig = {
@@ -524,7 +599,7 @@ export function AOPBuilderPage() {
             dataSources: agentConfig.dataSources,
             actions: agentConfig.actions,
             llm: agentConfig.llm,
-            fromBuilder: true
+            fromBuilder: true,
           },
         });
       }, 1500);
@@ -564,21 +639,26 @@ export function AOPBuilderPage() {
               {msg.files && msg.files.length > 0 && (
                 <div className="mt-2 space-y-2">
                   {msg.files.map((file) => (
-                    <div key={file.id} className="border border-white/20 rounded p-2">
-                      {file.type === 'image' ? (
-                        <img 
-                          src={file.url} 
+                    <div
+                      key={file.id}
+                      className="border border-white/20 rounded p-2"
+                    >
+                      {file.type === "image" ? (
+                        <img
+                          src={file.url}
                           alt={file.file.name}
                           className="max-w-full h-auto max-h-48 rounded"
                         />
                       ) : (
-                        <video 
+                        <video
                           src={file.url}
                           controls
                           className="max-w-full h-auto max-h-48 rounded"
                         />
                       )}
-                      <p className="text-xs mt-1 opacity-80">{file.file.name}</p>
+                      <p className="text-xs mt-1 opacity-80">
+                        {file.file.name}
+                      </p>
                     </div>
                   ))}
                 </div>
@@ -634,9 +714,9 @@ export function AOPBuilderPage() {
           <div className="flex flex-wrap gap-2">
             {uploadedFiles.map((file) => (
               <div key={file.id} className="relative group">
-                {file.type === 'image' ? (
-                  <img 
-                    src={file.url} 
+                {file.type === "image" ? (
+                  <img
+                    src={file.url}
                     alt={file.file.name}
                     className="h-20 w-20 object-cover rounded border border-brand-border"
                   />
@@ -688,7 +768,9 @@ export function AOPBuilderPage() {
           </button>
           <button
             type="submit"
-            disabled={isBuilding || (!chatInput.trim() && uploadedFiles.length === 0)}
+            disabled={
+              isBuilding || (!chatInput.trim() && uploadedFiles.length === 0)
+            }
             className="px-4 py-3 bg-brand-primary text-white rounded-md hover:bg-brand-hover focus:outline-none focus:ring-2 focus:ring-brand-primary disabled:bg-gray-300 disabled:cursor-not-allowed transition-colors font-medium"
           >
             Send

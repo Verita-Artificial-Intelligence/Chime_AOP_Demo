@@ -1,3 +1,5 @@
+/// <reference types="vite/client" />
+
 // LLM Service for generating AOP workflows
 // This service will handle communication with the LLM API
 
@@ -47,6 +49,52 @@ const EXAMPLE_OUTPUT_FORMAT = {
   category: "Finance & Accounting",
 };
 
+// Schema for structured output
+const WORKFLOW_RESPONSE_SCHEMA = {
+  type: "object",
+  properties: {
+    name: { type: "string" },
+    description: { type: "string" },
+    workflow: { type: "string" },
+    dataSources: {
+      type: "array",
+      items: { type: "string" },
+      minItems: 3,
+      maxItems: 6,
+    },
+    actions: {
+      type: "array",
+      items: { type: "string" },
+      minItems: 4,
+      maxItems: 8,
+    },
+    llm: { type: "string" },
+    category: {
+      type: "string",
+      enum: [
+        "Finance & Accounting",
+        "HR & Payroll",
+        "Operations",
+        "Customer Service",
+        "IT & Security",
+        "Sales & Marketing",
+        "Supply Chain",
+        "General",
+      ],
+    },
+  },
+  required: [
+    "name",
+    "description",
+    "workflow",
+    "dataSources",
+    "actions",
+    "llm",
+    "category",
+  ],
+  additionalProperties: false,
+};
+
 class LLMService {
   private apiKey: string;
   private apiEndpoint: string;
@@ -78,17 +126,12 @@ class LLMService {
   ): Promise<LLMWorkflowResponse | LLMError> {
     const systemPrompt = `You are an expert AOP (Automated Operations Procedure) builder specialist. Your task is to analyze user requests along with any provided images or videos to generate structured workflow configurations for automation.
 
-IMPORTANT: You must respond with ONLY valid JSON that matches the exact structure shown in the example below. Do not include any explanatory text before or after the JSON.
-
 When analyzing images or videos:
 1. Look for UI elements, forms, screens, workflows, or processes shown
 2. Identify tools, systems, or applications visible
 3. Extract any text, labels, or data fields shown
 4. Understand the sequence of steps or actions demonstrated
 5. Map visual elements to appropriate data sources and actions
-
-Example output format:
-${JSON.stringify(EXAMPLE_OUTPUT_FORMAT, null, 2)}
 
 Guidelines:
 1. The "name" should be a clear, concise title for the workflow based on what you see
@@ -97,9 +140,7 @@ Guidelines:
 4. "dataSources" should list 3-6 relevant data sources, including any systems shown in the visuals
 5. "actions" should list 4-8 specific actions that would be performed, matching the steps shown in images/videos
 6. "llm" should be "general-purpose-llm" for most cases, or "vision-llm" if visual analysis is critical
-7. "category" should be one of: "Finance & Accounting", "HR & Payroll", "Operations", "Customer Service", "IT & Security", "Sales & Marketing", "Supply Chain", "General"
-
-Remember: Return ONLY the JSON object, no other text.`;
+7. "category" should be one of: "Finance & Accounting", "HR & Payroll", "Operations", "Customer Service", "IT & Security", "Sales & Marketing", "Supply Chain", "General"`;
 
     const userPrompt =
       userQuery ||
@@ -153,6 +194,14 @@ Remember: Return ONLY the JSON object, no other text.`;
           ],
           temperature: 0.7,
           max_tokens: 1000,
+          response_format: {
+            type: "json_schema",
+            json_schema: {
+              name: "workflow_response",
+              schema: WORKFLOW_RESPONSE_SCHEMA,
+              strict: true,
+            },
+          },
         }),
       });
 
@@ -168,7 +217,7 @@ Remember: Return ONLY the JSON object, no other text.`;
 
       if (data.choices && data.choices[0] && data.choices[0].message) {
         try {
-          const content = data.choices[0].message.content.trim();
+          const content = data.choices[0].message.content;
           const parsedResponse = JSON.parse(content);
 
           // Validate the response structure
@@ -179,6 +228,7 @@ Remember: Return ONLY the JSON object, no other text.`;
           }
         } catch (parseError) {
           console.error("Error parsing LLM response:", parseError);
+          console.error("Raw content:", data.choices[0].message.content);
           return {
             error: "parse_error",
             message:
@@ -203,11 +253,6 @@ Remember: Return ONLY the JSON object, no other text.`;
   ): Promise<LLMWorkflowResponse | LLMError> {
     const systemPrompt = `You are an expert AOP (Automated Operations Procedure) builder specialist. Your task is to analyze user requests and generate structured workflow configurations for automation.
 
-IMPORTANT: You must respond with ONLY valid JSON that matches the exact structure shown in the example below. Do not include any explanatory text before or after the JSON.
-
-Example output format:
-${JSON.stringify(EXAMPLE_OUTPUT_FORMAT, null, 2)}
-
 Guidelines:
 1. The "name" should be a clear, concise title for the workflow
 2. The "description" should explain what the workflow does in 1-2 sentences
@@ -215,9 +260,7 @@ Guidelines:
 4. "dataSources" should list 3-6 relevant data sources that would be needed
 5. "actions" should list 4-8 specific actions that would be performed in sequence
 6. "llm" should be "general-purpose-llm" for most cases
-7. "category" should be one of: "Finance & Accounting", "HR & Payroll", "Operations", "Customer Service", "IT & Security", "Sales & Marketing", "Supply Chain", "General"
-
-Remember: Return ONLY the JSON object, no other text.`;
+7. "category" should be one of: "Finance & Accounting", "HR & Payroll", "Operations", "Customer Service", "IT & Security", "Sales & Marketing", "Supply Chain", "General"`;
 
     const userPrompt = `Create an AOP workflow for the following request: "${userQuery}"`;
 
@@ -242,6 +285,14 @@ Remember: Return ONLY the JSON object, no other text.`;
           ],
           temperature: 0.7,
           max_tokens: 1000,
+          response_format: {
+            type: "json_schema",
+            json_schema: {
+              name: "workflow_response",
+              schema: WORKFLOW_RESPONSE_SCHEMA,
+              strict: true,
+            },
+          },
         }),
       });
 
@@ -257,7 +308,7 @@ Remember: Return ONLY the JSON object, no other text.`;
 
       if (data.choices && data.choices[0] && data.choices[0].message) {
         try {
-          const content = data.choices[0].message.content.trim();
+          const content = data.choices[0].message.content;
           const parsedResponse = JSON.parse(content);
 
           // Validate the response structure
@@ -268,6 +319,7 @@ Remember: Return ONLY the JSON object, no other text.`;
           }
         } catch (parseError) {
           console.error("Error parsing LLM response:", parseError);
+          console.error("Raw content:", data.choices[0].message.content);
           return {
             error: "parse_error",
             message:
