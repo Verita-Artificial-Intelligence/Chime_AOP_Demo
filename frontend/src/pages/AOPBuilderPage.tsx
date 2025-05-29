@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef } from "react";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import mockData from "../data/mockData.json"; // Assuming mockData is accessible
-import { SparklesIcon } from "@heroicons/react/24/outline";
+import { SparklesIcon, PaperClipIcon, XMarkIcon } from "@heroicons/react/24/outline";
 import { llmService } from "../services/llmService";
 
 interface AgentConfig {
@@ -20,6 +20,14 @@ interface ChatMessage {
   text: string;
   timestamp: string;
   config?: AgentConfig; // Optional: only for system messages that offer saving
+  files?: UploadedFile[]; // Add support for file attachments
+}
+
+interface UploadedFile {
+  id: string;
+  file: File;
+  type: 'image' | 'video';
+  url: string;
 }
 
 interface MockPrompt {
@@ -138,9 +146,11 @@ export function AOPBuilderPage() {
   const [isBuilding, setIsBuilding] = useState(false);
   const [showAISuggestions, setShowAISuggestions] = useState(true);
   const [chatInput, setChatInput] = useState("");
+  const [uploadedFiles, setUploadedFiles] = useState<UploadedFile[]>([]);
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
   const chatEndRef = useRef<null | HTMLDivElement>(null);
+  const fileInputRef = useRef<HTMLInputElement>(null);
 
   // Check if we're loading from a template
   useEffect(() => {
@@ -172,7 +182,8 @@ export function AOPBuilderPage() {
   const addMessage = (
     sender: ChatMessage["sender"],
     text: string,
-    config?: AgentConfig
+    config?: AgentConfig,
+    files?: UploadedFile[]
   ) => {
     setMessages((prev) => [
       ...prev,
@@ -182,6 +193,7 @@ export function AOPBuilderPage() {
         text,
         timestamp: new Date().toISOString(),
         config,
+        files,
       },
     ]);
   };
@@ -311,12 +323,54 @@ export function AOPBuilderPage() {
     setIsBuilding(false);
   };
 
+  const handleFileSelect = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const files = e.target.files;
+    if (!files || files.length === 0) return;
+
+    const newFiles: UploadedFile[] = [];
+    
+    for (let i = 0; i < files.length; i++) {
+      const file = files[i];
+      const fileType = file.type.startsWith('image/') ? 'image' : 
+                      file.type.startsWith('video/') ? 'video' : null;
+      
+      if (fileType) {
+        const url = URL.createObjectURL(file);
+        newFiles.push({
+          id: Date.now().toString() + '-' + i,
+          file,
+          type: fileType,
+          url
+        });
+      }
+    }
+    
+    setUploadedFiles(prev => [...prev, ...newFiles]);
+    
+    // Reset file input
+    if (fileInputRef.current) {
+      fileInputRef.current.value = '';
+    }
+  };
+
+  const removeFile = (fileId: string) => {
+    setUploadedFiles(prev => {
+      const file = prev.find(f => f.id === fileId);
+      if (file) {
+        URL.revokeObjectURL(file.url);
+      }
+      return prev.filter(f => f.id !== fileId);
+    });
+  };
+
   const handleChatSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!chatInput.trim() || isBuilding) return;
+    if ((!chatInput.trim() && uploadedFiles.length === 0) || isBuilding) return;
 
     const userMessage = chatInput.trim();
+    const attachedFiles = [...uploadedFiles];
     setChatInput("");
+    setUploadedFiles([]);
     setShowAISuggestions(false);
 
     // Check for keywords and trigger appropriate workflow
@@ -340,14 +394,22 @@ export function AOPBuilderPage() {
       }
     } else {
       // For any other input, use LLM to generate workflow
-      addMessage("user", userMessage);
+      addMessage("user", userMessage || "Uploaded files for analysis", undefined, attachedFiles);
       setIsBuilding(true);
       
-      addMessage("agent", "Let me analyze your request and create a custom AOP workflow for you...");
+      const hasFiles = attachedFiles.length > 0;
+      const analysisMessage = hasFiles 
+        ? "Let me analyze your request along with the uploaded files to create a custom AOP workflow..."
+        : "Let me analyze your request and create a custom AOP workflow for you...";
+        
+      addMessage("agent", analysisMessage);
       
       try {
-        // Call LLM service to generate workflow
-        const llmResponse = await llmService.generateWorkflow(userMessage);
+        // Call LLM service to generate workflow with visual context
+        const llmResponse = await llmService.generateWorkflowWithVisuals(
+          userMessage, 
+          attachedFiles
+        );
         
         if ('error' in llmResponse) {
           // Handle error response
@@ -356,12 +418,14 @@ export function AOPBuilderPage() {
           // Fallback to a generic workflow
           const fallbackPrompt: MockPrompt = {
             id: "llm-generated",
-            title: userMessage,
-            description: "Custom workflow based on your request",
+            title: userMessage || "Visual-based workflow",
+            description: hasFiles 
+              ? "Custom workflow based on your uploaded visuals"
+              : "Custom workflow based on your request",
             config: {
               workflow: "custom-workflow",
-              dataSources: ["Primary Database", "API Gateway", "Document Store"],
-              actions: ["Initialize process", "Analyze data", "Execute automation", "Generate report"],
+              dataSources: ["Primary Database", "API Gateway", "Document Store", "Media Storage"],
+              actions: ["Initialize process", "Analyze visual data", "Extract key information", "Execute automation", "Generate report"],
               llm: "general-purpose-llm"
             }
           };
@@ -390,6 +454,9 @@ export function AOPBuilderPage() {
         setIsBuilding(false);
       }
     }
+    
+    // Clean up file URLs
+    attachedFiles.forEach(file => URL.revokeObjectURL(file.url));
   };
 
   const handleLLMGeneratedPrompt = async (prompt: MockPrompt, category: string) => {
@@ -494,6 +561,28 @@ export function AOPBuilderPage() {
               }`}
             >
               {msg.text}
+              {msg.files && msg.files.length > 0 && (
+                <div className="mt-2 space-y-2">
+                  {msg.files.map((file) => (
+                    <div key={file.id} className="border border-white/20 rounded p-2">
+                      {file.type === 'image' ? (
+                        <img 
+                          src={file.url} 
+                          alt={file.file.name}
+                          className="max-w-full h-auto max-h-48 rounded"
+                        />
+                      ) : (
+                        <video 
+                          src={file.url}
+                          controls
+                          className="max-w-full h-auto max-h-48 rounded"
+                        />
+                      )}
+                      <p className="text-xs mt-1 opacity-80">{file.file.name}</p>
+                    </div>
+                  ))}
+                </div>
+              )}
               {msg.id === "save-button" && msg.config && (
                 <button
                   onClick={() => saveAgent(msg.config as AgentConfig)}
@@ -539,18 +628,72 @@ export function AOPBuilderPage() {
         </div>
       )}
 
+      {/* File preview section */}
+      {uploadedFiles.length > 0 && (
+        <div className="mb-2 p-3 bg-brand-light rounded-lg">
+          <div className="flex flex-wrap gap-2">
+            {uploadedFiles.map((file) => (
+              <div key={file.id} className="relative group">
+                {file.type === 'image' ? (
+                  <img 
+                    src={file.url} 
+                    alt={file.file.name}
+                    className="h-20 w-20 object-cover rounded border border-brand-border"
+                  />
+                ) : (
+                  <div className="h-20 w-20 bg-gray-200 rounded border border-brand-border flex items-center justify-center">
+                    <span className="text-xs text-gray-600">Video</span>
+                  </div>
+                )}
+                <button
+                  onClick={() => removeFile(file.id)}
+                  className="absolute -top-2 -right-2 bg-red-500 text-white rounded-full p-1 opacity-0 group-hover:opacity-100 transition-opacity"
+                >
+                  <XMarkIcon className="h-3 w-3" />
+                </button>
+              </div>
+            ))}
+          </div>
+        </div>
+      )}
+
       <form
         onSubmit={handleChatSubmit}
         className="mt-auto p-4 bg-brand-card border-t border-brand-border rounded-b-lg"
       >
-        <input
-          type="text"
-          placeholder="Type your AOP request..."
-          value={chatInput}
-          onChange={(e) => setChatInput(e.target.value)}
-          disabled={isBuilding}
-          className="w-full p-3 border border-brand-border rounded-md bg-white focus:outline-none focus:ring-2 focus:ring-brand-primary disabled:bg-gray-100 disabled:cursor-not-allowed"
-        />
+        <div className="flex items-center gap-2">
+          <input
+            type="text"
+            placeholder="Type your AOP request or upload files..."
+            value={chatInput}
+            onChange={(e) => setChatInput(e.target.value)}
+            disabled={isBuilding}
+            className="flex-1 p-3 border border-brand-border rounded-md bg-white focus:outline-none focus:ring-2 focus:ring-brand-primary disabled:bg-gray-100 disabled:cursor-not-allowed"
+          />
+          <input
+            ref={fileInputRef}
+            type="file"
+            accept="image/*,video/*"
+            multiple
+            onChange={handleFileSelect}
+            className="hidden"
+          />
+          <button
+            type="button"
+            onClick={() => fileInputRef.current?.click()}
+            disabled={isBuilding}
+            className="p-3 border border-brand-border rounded-md bg-white hover:bg-brand-light focus:outline-none focus:ring-2 focus:ring-brand-primary disabled:bg-gray-100 disabled:cursor-not-allowed transition-colors"
+          >
+            <PaperClipIcon className="h-5 w-5 text-brand-dark" />
+          </button>
+          <button
+            type="submit"
+            disabled={isBuilding || (!chatInput.trim() && uploadedFiles.length === 0)}
+            className="px-4 py-3 bg-brand-primary text-white rounded-md hover:bg-brand-hover focus:outline-none focus:ring-2 focus:ring-brand-primary disabled:bg-gray-300 disabled:cursor-not-allowed transition-colors font-medium"
+          >
+            Send
+          </button>
+        </div>
       </form>
     </div>
   );
