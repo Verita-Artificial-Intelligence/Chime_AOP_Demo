@@ -16,6 +16,13 @@ interface LLMError {
   message: string;
 }
 
+interface UploadedFile {
+  id: string;
+  file: File;
+  type: "image" | "video";
+  url: string;
+}
+
 // Example output format for the LLM to follow
 const EXAMPLE_OUTPUT_FORMAT = {
   name: "Example: Automated Invoice Processing",
@@ -48,6 +55,147 @@ class LLMService {
     // Use environment variables or fallback to empty string
     this.apiKey = import.meta.env.VITE_OPENAI_API_KEY || "";
     this.apiEndpoint = "https://api.openai.com/v1/chat/completions";
+  }
+
+  // Convert file to base64
+  private async fileToBase64(file: File): Promise<string> {
+    return new Promise((resolve, reject) => {
+      const reader = new FileReader();
+      reader.readAsDataURL(file);
+      reader.onload = () => {
+        const base64 = reader.result as string;
+        // Remove the data URL prefix to get just the base64 string
+        const base64Data = base64.split(",")[1];
+        resolve(base64Data);
+      };
+      reader.onerror = (error) => reject(error);
+    });
+  }
+
+  async generateWorkflowWithVisuals(
+    userQuery: string,
+    files: UploadedFile[]
+  ): Promise<LLMWorkflowResponse | LLMError> {
+    const systemPrompt = `You are an expert AOP (Automated Operations Procedure) builder specialist. Your task is to analyze user requests along with any provided images or videos to generate structured workflow configurations for automation.
+
+IMPORTANT: You must respond with ONLY valid JSON that matches the exact structure shown in the example below. Do not include any explanatory text before or after the JSON.
+
+When analyzing images or videos:
+1. Look for UI elements, forms, screens, workflows, or processes shown
+2. Identify tools, systems, or applications visible
+3. Extract any text, labels, or data fields shown
+4. Understand the sequence of steps or actions demonstrated
+5. Map visual elements to appropriate data sources and actions
+
+Example output format:
+${JSON.stringify(EXAMPLE_OUTPUT_FORMAT, null, 2)}
+
+Guidelines:
+1. The "name" should be a clear, concise title for the workflow based on what you see
+2. The "description" should explain what the workflow does, referencing visual elements if applicable
+3. The "workflow" should be "custom-workflow" for all custom requests
+4. "dataSources" should list 3-6 relevant data sources, including any systems shown in the visuals
+5. "actions" should list 4-8 specific actions that would be performed, matching the steps shown in images/videos
+6. "llm" should be "general-purpose-llm" for most cases, or "vision-llm" if visual analysis is critical
+7. "category" should be one of: "Finance & Accounting", "HR & Payroll", "Operations", "Customer Service", "IT & Security", "Sales & Marketing", "Supply Chain", "General"
+
+Remember: Return ONLY the JSON object, no other text.`;
+
+    const userPrompt =
+      userQuery ||
+      "Analyze the provided images/videos and create an appropriate AOP workflow based on what you see.";
+
+    try {
+      // Check if API key is available
+      if (!this.apiKey) {
+        console.warn("OpenAI API key not found, using mock response");
+        return this.getVisualMockResponse(userQuery, files.length > 0);
+      }
+
+      // Prepare message content with images
+      const messageContent: any[] = [{ type: "text", text: userPrompt }];
+
+      // Add images to the message
+      for (const file of files) {
+        if (file.type === "image") {
+          try {
+            const base64Data = await this.fileToBase64(file.file);
+            messageContent.push({
+              type: "image_url",
+              image_url: {
+                url: `data:${file.file.type};base64,${base64Data}`,
+                detail: "high", // Use high detail for better analysis
+              },
+            });
+          } catch (error) {
+            console.error(`Error processing image ${file.file.name}:`, error);
+          }
+        } else if (file.type === "video") {
+          // For videos, we'll add a note that video analysis isn't directly supported
+          messageContent.push({
+            type: "text",
+            text: `[Note: Video file "${file.file.name}" was provided. Please base the workflow on the description and any video context provided in the text.]`,
+          });
+        }
+      }
+
+      const response = await fetch(this.apiEndpoint, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${this.apiKey}`,
+        },
+        body: JSON.stringify({
+          model: "gpt-4o",
+          messages: [
+            { role: "system", content: systemPrompt },
+            { role: "user", content: messageContent },
+          ],
+          temperature: 0.7,
+          max_tokens: 1000,
+        }),
+      });
+
+      if (!response.ok) {
+        console.error(
+          `OpenAI API error: ${response.status} ${response.statusText}`
+        );
+        // Return visual mock response on API error
+        return this.getVisualMockResponse(userQuery, files.length > 0);
+      }
+
+      const data = await response.json();
+
+      if (data.choices && data.choices[0] && data.choices[0].message) {
+        try {
+          const content = data.choices[0].message.content.trim();
+          const parsedResponse = JSON.parse(content);
+
+          // Validate the response structure
+          if (this.validateWorkflowResponse(parsedResponse)) {
+            return parsedResponse as LLMWorkflowResponse;
+          } else {
+            throw new Error("Invalid response structure from LLM");
+          }
+        } catch (parseError) {
+          console.error("Error parsing LLM response:", parseError);
+          return {
+            error: "parse_error",
+            message:
+              "Failed to parse LLM response. The response was not valid JSON.",
+          };
+        }
+      }
+
+      return {
+        error: "invalid_response",
+        message: "Invalid response from LLM API",
+      };
+    } catch (error) {
+      console.error("LLM Service error:", error);
+      // Return visual mock response on error
+      return this.getVisualMockResponse(userQuery, files.length > 0);
+    }
   }
 
   async generateWorkflow(
@@ -261,6 +409,42 @@ Remember: Return ONLY the JSON object, no other text.`;
         category: "General",
       };
     }
+  }
+
+  // Mock response for visual inputs
+  private getVisualMockResponse(
+    userQuery: string,
+    hasVisuals: boolean
+  ): LLMWorkflowResponse {
+    if (hasVisuals) {
+      return {
+        name: "Visual Process Automation Workflow",
+        description:
+          "Automate the process captured in the uploaded visuals, extracting key steps and mapping them to automated actions.",
+        workflow: "custom-workflow",
+        dataSources: [
+          "Visual Recognition System",
+          "Process Database",
+          "UI Automation Platform",
+          "Document Management System",
+          "Workflow Engine",
+        ],
+        actions: [
+          "Analyze visual content for UI elements and workflows",
+          "Extract text and data fields from images",
+          "Map visual steps to automation sequences",
+          "Configure UI automation for identified screens",
+          "Set up data extraction and validation rules",
+          "Create automated workflow based on visual process",
+          "Generate documentation from visual analysis",
+        ],
+        llm: "vision-llm",
+        category: "Operations",
+      };
+    }
+
+    // Fall back to the existing mock response logic
+    return this.getMockResponse(userQuery);
   }
 }
 
