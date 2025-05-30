@@ -200,7 +200,7 @@ export const IntegrationsPage: React.FC = () => {
                 onClick={() => handleConnectClick(integration)}
                 className={`px-4 py-2 text-sm font-medium rounded-md transition-all ${
                   integration.connected
-                    ? 'bg-green-100 text-green-700 hover:bg-green-200'
+                    ? 'bg-blue-100 text-blue-700 hover:bg-blue-200'
                     : 'bg-brand-primary text-brand-dark hover:bg-brand-hover'
                 }`}
               >

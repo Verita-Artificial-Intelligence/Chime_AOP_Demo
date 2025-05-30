@@ -118,7 +118,7 @@ const ProgressTracker: React.FC<ProgressTrackerProps> = ({
                   className={`flex items-center justify-center rounded-full font-bold border-2 transition-all duration-300
                     ${
                       idx < currentStep
-                        ? "w-10 h-10 bg-green-500 border-green-500 text-white"
+                        ? "w-10 h-10 bg-blue-500 border-blue-500 text-white"
                         : idx === currentStep
                         ? "w-12 h-12 bg-brand-primary border-brand-primary text-white shadow-lg animate-pulse"
                         : "w-10 h-10 bg-gray-100 border-gray-300 text-gray-400"
@@ -154,7 +154,7 @@ const ProgressTracker: React.FC<ProgressTrackerProps> = ({
                   <div
                     className={`h-1 transition-all duration-300 ${
                       idx < currentStep 
-                        ? 'bg-green-500 w-16' 
+                        ? 'bg-blue-500 w-16' 
                         : 'bg-gray-300 w-16'
                     }`}
                   />
