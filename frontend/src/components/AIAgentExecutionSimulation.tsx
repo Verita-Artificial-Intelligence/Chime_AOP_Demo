@@ -651,10 +651,10 @@ export function AIAgentExecutionSimulation({
       // Apply inline styles to ensure colors are captured correctly
       // Brand colors from Tailwind config
       const brandColors = {
-        "text-brand-primary": "#1EC677",
-        "text-brand-heading": "#0D4029",
-        "text-brand-muted": "#0D4029",
-        "text-brand-success": "#1EC677",
+        "text-brand-primary": "#117ACA",
+        "text-brand-heading": "#1F4E79",
+        "text-brand-muted": "#333333",
+        "text-brand-success": "#4A90A4",
         "bg-brand-card": "#FFFFFF",
         "bg-brand-background": "#FFFFFF",
         "border-brand-border": "#E5E7EB",
@@ -678,13 +678,13 @@ export function AIAgentExecutionSimulation({
       // Also handle text color for specific elements
       const headings = clonedElement.querySelectorAll("h1, h2, h3, h4, h5, h6");
       headings.forEach((heading) => {
-        (heading as HTMLElement).style.color = "#0D4029"; // Deep green for headings
+        (heading as HTMLElement).style.color = "#1F4E79"; // Navy blue for headings
       });
 
       const mutedTexts = clonedElement.querySelectorAll(".text-xs, .text-sm");
       mutedTexts.forEach((text) => {
         if (!(text as HTMLElement).style.color) {
-          (text as HTMLElement).style.color = "#0D4029"; // Deep green for small text
+          (text as HTMLElement).style.color = "#333333"; // Dark gray for small text
         }
       });
 
@@ -805,7 +805,7 @@ export function AIAgentExecutionSimulation({
 
           // Add page number
           pdf.setFontSize(10);
-          pdf.setTextColor(13, 64, 41); // Chime green
+          pdf.setTextColor(17, 122, 202); // JP Morgan blue
           pdf.text(
             `Page ${page + 1} of ${totalPages}`,
             pageWidth / 2,

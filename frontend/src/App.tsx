@@ -6,7 +6,7 @@ import {
   Navigate,
 } from "react-router-dom";
 import "./App.css";
-import content, { applyThemeColors } from "./config/content";
+import content from "./config/content";
 
 import { Layout } from "./components/Layout";
 // Page Components
@@ -24,8 +24,6 @@ export function App() {
   // Update document title based on configuration
   React.useEffect(() => {
     document.title = `${content.clientName} ${content.pageTitleSuffix}`;
-    // Apply theme colors as CSS variables
-    applyThemeColors();
   }, []);
 
   return (

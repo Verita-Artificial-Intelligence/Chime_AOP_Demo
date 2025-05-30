@@ -4,11 +4,11 @@ This directory contains configuration files for customizing the application for 
 
 ## Overview
 
-The `content.ts` file contains all client-specific text, branding, and color configurations that can be easily modified when white-labeling the application for different clients.
+The `content.ts` file contains all client-specific text and branding content that can be easily modified when white-labeling the application for different clients. Visual styling (colors, fonts, etc.) is handled directly in the Tailwind configuration and other relevant files.
 
 ## Configuration Structure
 
-### Text Content
+### Text Content (in content.ts)
 - `clientName`: The client's company name (e.g., "Chime", "JP Morgan")
 - `platformName`: The platform name (e.g., "AOPS")
 - `platformFullName`: Full platform name for display
@@ -18,16 +18,17 @@ The `content.ts` file contains all client-specific text, branding, and color con
 - `builderDescription`: Description text in the builder
 - `footerText`: Copyright text in the footer
 
-### Colors
-- `primary`: Primary brand color
-- `primaryHover`: Hover state for primary color
-- `secondary`: Secondary color for accents
-- `background`: Main background color
+### Visual Styling (in tailwind.config.js)
+- Brand colors
+- Font families
+- Border radius values
+- Shadow styles
+- Other visual properties
 
 ## How to Customize for a New Client
 
-1. Open `src/config/content.ts`
-2. Update the values in the `content` object:
+### 1. Update Text Content
+Edit `src/config/content.ts`:
 
 ```typescript
 const content: ContentConfig = {
@@ -36,21 +37,44 @@ const content: ContentConfig = {
   platformName: "AOPS",
   platformFullName: "JP Morgan AOPS Platform",
   pageTitleSuffix: "Automation Platform",
-  welcomeMessage: "Welcome to the JP Morgan AOPS Platform",
-  builderWelcomeMessage: "Welcome to the JP Morgan AOPS Builder",
+  welcomeMessage: "JP Morgan AOPS Platform",
+  builderWelcomeMessage: "JP Morgan AOPS Builder",
   builderDescription: "JP Morgan workflows. Get started by selecting a workflow template.",
   footerText: "© 2025 JP Morgan AOPS",
-  
-  colors: {
-    primary: "#003087", // JP Morgan blue
-    primaryHover: "#002060", // Darker blue for hover
-    secondary: "#6B7280",
-    background: "#FFFFFF",
-  }
 };
 ```
 
-3. Save the file and restart the development server
+### 2. Update Visual Styling
+Edit `tailwind.config.js` to update colors, fonts, and other visual properties:
+
+```javascript
+colors: {
+  brand: {
+    primary: "#117ACA", // JP Morgan blue
+    primaryDark: "#0E5FA0",
+    // ... other colors
+  }
+}
+```
+
+### 3. Update Custom CSS (if needed)
+Check `src/App.css` for any hardcoded colors that need updating.
+
+## Example Configurations
+
+This directory includes example configurations for different clients:
+
+- `content.chime.example.ts` - Chime text configuration
+- `content.jpmorgan.example.ts` - JP Morgan text configuration
+
+Root directory includes:
+- `tailwind.config.chime.example.js` - Chime visual styling
+- Current `tailwind.config.js` - JP Morgan visual styling
+
+To switch between clients:
+1. Copy the desired content example to `content.ts`
+2. Copy the desired Tailwind config to `tailwind.config.js`
+3. Restart the development server
 
 ## Adding New Configuration Options
 
@@ -67,14 +91,17 @@ import content from "../config/content";
 <h1>{content.yourNewField}</h1>
 ```
 
-## Dynamic Theming
+## Best Practices
 
-The application automatically applies the configured colors as CSS variables when it loads. These can be referenced in Tailwind classes or custom CSS if needed.
+1. Keep all text content in the configuration file
+2. Use Tailwind classes for styling rather than inline styles
+3. Document any client-specific customizations
+4. Test thoroughly when switching between configurations
 
 ## Future Enhancements
 
 Consider these potential improvements:
 - Multiple language support
-- Logo/image configuration
+- Logo/image configuration  
 - Feature flags for client-specific functionality
 - Environment-based configuration loading 

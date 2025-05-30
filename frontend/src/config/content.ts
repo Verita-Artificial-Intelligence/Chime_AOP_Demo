@@ -10,48 +10,25 @@ export interface ContentConfig {
   builderWelcomeMessage: string;
   builderDescription: string;
   footerText: string;
-  colors: {
-    primary: string;
-    primaryHover: string;
-    secondary: string;
-    background: string;
-  };
 }
 
 const content: ContentConfig = {
   // Client branding
-  clientName: "Chime",
+  clientName: "JP Morgan",
   platformName: "AOPS",
-  platformFullName: "Chime AOPS Platform",
+  platformFullName: "JP Morgan AOPS Platform",
 
   // Page titles and metadata
-  pageTitleSuffix: "Workflows Demo",
+  pageTitleSuffix: "Automation Platform",
 
   // Welcome messages
-  welcomeMessage: "Chime AOP Platform",
-  builderWelcomeMessage: "Chime AOPS Builder",
+  welcomeMessage: "JP Morgan AOPS Platform",
+  builderWelcomeMessage: "JP Morgan AOPS Builder",
   builderDescription:
-    "Chime workflows. Get started by selecting a workflow template.",
+    "JP Morgan workflows. Get started by selecting a workflow template.",
 
   // Footer
-  footerText: "© 2025 Chime AOPS",
-
-  // Brand colors
-  colors: {
-    primary: "#1EC677", // Chime's primary green
-    primaryHover: "#17a85f", // Darker shade for hover
-    secondary: "#6B7280", // Gray
-    background: "#FFFFFF", // White background
-  },
+  footerText: "© 2025 JP Morgan AOPS",
 };
-
-// Function to apply colors as CSS variables
-export function applyThemeColors() {
-  const root = document.documentElement;
-  root.style.setProperty("--color-brand-primary", content.colors.primary);
-  root.style.setProperty("--color-brand-hover", content.colors.primaryHover);
-  root.style.setProperty("--color-brand-secondary", content.colors.secondary);
-  root.style.setProperty("--color-brand-background", content.colors.background);
-}
 
 export default content;
