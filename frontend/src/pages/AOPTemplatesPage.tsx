@@ -22,14 +22,14 @@ interface Template {
 
 const templates: Template[] = [
   {
-    id: "fraud-investigation",
-    name: "Automating the discovery process for fraud investigation",
+    id: "fcra-acdv-response",
+    name: "FCRA - Respond to ACDV case, Apply response code, Respond to consumer",
     description:
-      "Streamline fraud detection and investigation workflows by automatically collecting, analyzing, and reporting suspicious activities across multiple data sources.",
-    category: "Fraud & Compliance",
+      "Automate the Fair Credit Reporting Act (FCRA) response process for ACDV cases, including verification, investigation, escalation handling, and consumer communication.",
+    category: "Compliance & Legal",
     icon: ShieldCheckIcon,
-    steps: 10,
-    estimatedTime: "15-20 mins",
+    steps: 13,
+    estimatedTime: "20-25 mins",
   },
   {
     id: "compliance-audit",

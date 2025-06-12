@@ -901,8 +901,8 @@ export function AIAgentExecutionSimulation({
                 Agent workflow completed successfully!
               </span>
               <p className="text-sm text-gray-600 mb-4 text-center">
-                The fraud investigation workflow has been executed and all
-                suspicious activities have been analyzed.
+                The {workflow === 'fcra-acdv-response' ? 'FCRA ACDV response' : workflow} workflow has been executed and all
+                steps have been completed successfully.
               </p>
               <div className="flex justify-center gap-4 mt-2 w-full">
                 <button className="btn-primary w-1/2" onClick={onRestart}>

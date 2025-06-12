@@ -7,24 +7,32 @@ interface TemplateConfig {
 }
 
 const templateConfigs: Record<string, TemplateConfig> = {
-  "fraud-investigation": {
-    name: "Automating the discovery process for fraud investigation",
-    workflow: "fraud-investigation",
+  "fcra-acdv-response": {
+    name: "FCRA - Respond to ACDV case, Apply response code, Respond to consumer",
+    workflow: "fcra-acdv-response",
     dataSources: [
-      "Transaction Database",
-      "Customer Profile System",
-      "External Fraud Database",
-      "Payment Gateway Logs",
+      "ACDV Case Management System",
+      "B-Point Verification Database",
+      "Dispute Code Repository",
+      "Compliance Database",
+      "OSCAR System",
+      "Consumer Communication System",
     ],
     actions: [
-      "Analyze transaction patterns",
-      "Cross-reference with known fraud indicators",
-      "Generate risk score",
-      "Create investigation report",
-      "Flag suspicious accounts",
-      "Notify compliance team",
+      "Receive ACDV case",
+      "Perform B-Point verification",
+      "Investigate dispute code",
+      "Evaluate escalation requirements",
+      "Notify Fraud-Ops",
+      "Notify Legal/Compliance (if escalated)",
+      "Process through AI Agent",
+      "Save case to OSCAR system",
+      "Send member acknowledgment",
+      "Submit final response",
+      "Apply admin notation",
+      "Close case",
     ],
-    llm: "fraud-detection-llm",
+    llm: "compliance-llm",
   },
   "compliance-audit": {
     name: "KYC Compliance Verification",

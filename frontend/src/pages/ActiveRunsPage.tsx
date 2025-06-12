@@ -32,7 +32,7 @@ export const ActiveRunsPage: React.FC = () => {
     if (location.state && location.state.workflow) {
       const newRun: ActiveRun = {
         id: location.state.id || `run-${Date.now()}`,
-        name: location.state.name || "Automating the discovery process for fraud investigation",
+        name: location.state.name || "FCRA - Respond to ACDV case, Apply response code, Respond to consumer",
         startTime: new Date().toLocaleString(),
         currentStep: 1,
         totalSteps: location.state.actions ? location.state.actions.length + location.state.dataSources.length + 2 : 10,
@@ -57,7 +57,7 @@ export const ActiveRunsPage: React.FC = () => {
       id: activeRun?.id || `run-${Date.now()}`,
       name: activeRun?.name || "Unknown Run",
       description: `Automated workflow execution for ${activeRun?.workflow}`,
-      category: activeRun?.workflow === 'fraud-investigation' ? 'Fraud & Compliance' : 'Compliance',
+      category: activeRun?.workflow === 'fcra-acdv-response' ? 'Compliance & Legal' : 'Compliance',
       status: "Completed",
       lastRun: new Date().toISOString(),
       runHistory: [

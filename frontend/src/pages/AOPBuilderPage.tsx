@@ -49,27 +49,35 @@ interface MockPrompt {
 // AI-generated suggestions based on "history"
 const AI_SUGGESTIONS: MockPrompt[] = [
   {
-    id: "ai-fraud-investigation",
-    title: "Automating the discovery process for fraud investigation",
+    id: "ai-fcra-acdv",
+    title: "FCRA - Respond to ACDV case, Apply response code, Respond to consumer",
     description:
-      "Based on your previous searches, streamline fraud detection and investigation workflows by automatically collecting and analyzing suspicious activities.",
+      "Based on your compliance needs, automate the Fair Credit Reporting Act (FCRA) response process for ACDV cases, including verification, investigation, escalation handling, and consumer communication.",
     config: {
-      workflow: "fraud-investigation",
+      workflow: "fcra-acdv-response",
       dataSources: [
-        "Transaction Database",
-        "Customer Profile System",
-        "External Fraud Database",
-        "Payment Gateway Logs",
+        "ACDV Case Management System",
+        "B-Point Verification Database",
+        "Dispute Code Repository",
+        "Compliance Database",
+        "OSCAR System",
+        "Consumer Communication System",
       ],
       actions: [
-        "Analyze transaction patterns",
-        "Cross-reference with known fraud indicators",
-        "Generate risk score",
-        "Create investigation report",
-        "Flag suspicious accounts",
-        "Notify compliance team",
+        "Receive ACDV case",
+        "Perform B-Point verification",
+        "Investigate dispute code",
+        "Evaluate escalation requirements",
+        "Notify Fraud-Ops",
+        "Notify Legal/Compliance",
+        "Process through AI Agent",
+        "Save case to OSCAR system",
+        "Send member acknowledgment",
+        "Submit final response",
+        "Apply admin notation",
+        "Close case",
       ],
-      llm: "fraud-detection-llm",
+      llm: "compliance-llm",
     },
   },
   {
@@ -97,28 +105,36 @@ const AI_SUGGESTIONS: MockPrompt[] = [
 
 // Template configurations
 const TEMPLATE_CONFIGS: { [key: string]: MockPrompt } = {
-  "fraud-investigation": {
-    id: "template-fraud",
-    title: "Automating the discovery process for fraud investigation",
+  "fcra-acdv-response": {
+    id: "template-fcra",
+    title: "FCRA - Respond to ACDV case, Apply response code, Respond to consumer",
     description:
-      "Comprehensive fraud detection and investigation workflow with automated data collection and analysis.",
+      "Comprehensive FCRA compliance workflow for handling ACDV cases with automated verification, investigation, and response processes.",
     config: {
-      workflow: "fraud-investigation",
+      workflow: "fcra-acdv-response",
       dataSources: [
-        "Transaction Database",
-        "Customer Profile System",
-        "External Fraud Database",
-        "Payment Gateway Logs",
+        "ACDV Case Management System",
+        "B-Point Verification Database",
+        "Dispute Code Repository",
+        "Compliance Database",
+        "OSCAR System",
+        "Consumer Communication System",
       ],
       actions: [
-        "Analyze transaction patterns",
-        "Cross-reference with known fraud indicators",
-        "Generate risk score",
-        "Create investigation report",
-        "Flag suspicious accounts",
-        "Notify compliance team",
+        "Receive ACDV case",
+        "Perform B-Point verification",
+        "Investigate dispute code",
+        "Evaluate escalation requirements",
+        "Notify Fraud-Ops (if escalated)",
+        "Notify Legal/Compliance (if escalated)",
+        "Process through AI Agent",
+        "Save case to OSCAR system",
+        "Send member acknowledgment",
+        "Submit final response",
+        "Apply admin notation",
+        "Close case",
       ],
-      llm: "fraud-detection-llm",
+      llm: "compliance-llm",
     },
   },
   // Add other template configurations as needed
@@ -412,16 +428,16 @@ export function AOPBuilderPage() {
     const lowerCaseMessage = userMessage.toLowerCase();
 
     if (
-      lowerCaseMessage.includes("fraud") &&
+      (lowerCaseMessage.includes("fcra") || lowerCaseMessage.includes("acdv") || lowerCaseMessage.includes("credit dispute")) &&
       !lowerCaseMessage.includes("not") &&
       !lowerCaseMessage.includes("except")
     ) {
-      // Trigger fraud investigation workflow
-      const fraudPrompt = AI_SUGGESTIONS.find(
-        (s) => s.id === "ai-fraud-investigation"
+      // Trigger FCRA ACDV response workflow
+      const fcraPrompt = AI_SUGGESTIONS.find(
+        (s) => s.id === "ai-fcra-acdv"
       );
-      if (fraudPrompt) {
-        handlePromptSelect(fraudPrompt);
+      if (fcraPrompt) {
+        handlePromptSelect(fcraPrompt);
       }
     } else if (
       lowerCaseMessage.includes("compliance") &&

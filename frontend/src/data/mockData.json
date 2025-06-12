@@ -276,60 +276,98 @@
       ]
     },
     {
-      "action": "Analyze transaction patterns",
+      "action": "Receive ACDV case",
       "results": [
-        { "analysisId": "ANALYSIS-001", "transactionId": "TXN-001", "pattern": "High-value purchase in new location", "riskScore": 85, "flagged": true },
-        { "analysisId": "ANALYSIS-002", "transactionId": "TXN-003", "pattern": "Multiple high-value transactions within 30 mins", "riskScore": 92, "flagged": true }
+        { "caseId": "ACDV-001", "receivedFrom": "Equifax", "receivedDate": "2024-07-19T09:00:00Z", "disputeCode": "D01", "consumerName": "John Smith", "status": "Received" },
+        { "caseId": "ACDV-002", "receivedFrom": "TransUnion", "receivedDate": "2024-07-18T10:30:00Z", "disputeCode": "D03", "consumerName": "Sarah Johnson", "status": "Received" }
       ]
     },
     {
-      "action": "Cross-reference with known fraud indicators",
+      "action": "Perform B-Point verification",
       "results": [
-        { "matchId": "MATCH-001", "transactionId": "TXN-001", "fraudDatabase": "External", "matchType": "Location + Merchant Category", "confidence": "High" },
-        { "matchId": "MATCH-002", "transactionId": "TXN-003", "fraudDatabase": "External", "matchType": "Amount + Time Pattern", "confidence": "Very High" }
+        { "verificationId": "BPV-001", "caseId": "ACDV-001", "personalInfoMatch": true, "addressMatch": true, "ssnMatch": true, "dobMatch": true, "overallScore": 95, "status": "Verified" },
+        { "verificationId": "BPV-002", "caseId": "ACDV-002", "personalInfoMatch": true, "addressMatch": false, "ssnMatch": true, "dobMatch": true, "overallScore": 60, "status": "Partially Verified" }
       ]
     },
     {
-      "action": "Generate risk score",
+      "action": "Investigate dispute code",
       "results": [
-        { "scoreId": "SCORE-001", "transactionId": "TXN-001", "finalRiskScore": 87, "factors": ["Location", "Amount", "New Device"], "recommendation": "Manual Review" },
-        { "scoreId": "SCORE-002", "transactionId": "TXN-003", "finalRiskScore": 94, "factors": ["Pattern", "Amount", "Velocity"], "recommendation": "Block Transaction" }
+        { "investigationId": "INV-001", "caseId": "ACDV-001", "disputeCode": "D01", "findings": "Account ownership cannot be verified", "requiresEscalation": true, "recommendedAction": "Escalate to Legal" },
+        { "investigationId": "INV-002", "caseId": "ACDV-002", "disputeCode": "D03", "findings": "Payment records confirm zero balance", "requiresEscalation": false, "recommendedAction": "Update credit bureau" }
       ]
     },
     {
-      "action": "Create investigation report",
+      "action": "Evaluate escalation requirements",
       "results": [
-        { "reportId": "REPORT-001", "status": "Generated", "transactions": 2, "totalAmount": 13500, "riskLevel": "High", "assignedTo": "Fraud Team Lead" }
+        { "evaluationId": "ESC-001", "caseId": "ACDV-001", "escalationRequired": true, "reason": "Identity theft suspected", "departments": ["Fraud-Ops", "Legal/Compliance"] },
+        { "evaluationId": "ESC-002", "caseId": "ACDV-002", "escalationRequired": false, "reason": "Standard dispute resolution", "departments": [] }
       ]
     },
     {
-      "action": "Flag suspicious accounts",
+      "action": "Notify Fraud-Ops",
       "results": [
-        { "accountId": "ACCT-001", "customerId": "CUST-002", "status": "Flagged", "reason": "Multiple high-risk transactions", "restrictionsApplied": "Temporary hold" }
+        { "notificationId": "FRD-001", "caseId": "ACDV-001", "sentTo": "fraud-ops@company.com", "priority": "High", "status": "Sent", "timestamp": "2024-07-19T10:00:00Z" }
       ]
     },
     {
-      "action": "Notify compliance team",
+      "action": "Notify Legal/Compliance",
       "results": [
-        { "notificationId": "NOTIFY-001", "recipients": ["compliance@company.com", "fraud-team@company.com"], "priority": "High", "status": "Sent", "timestamp": "2024-07-19T10:45:00Z" }
+        { "notificationId": "LGL-001", "caseId": "ACDV-001", "sentTo": "legal-compliance@company.com", "priority": "High", "status": "Sent", "timestamp": "2024-07-19T10:01:00Z" }
+      ]
+    },
+    {
+      "action": "Process through AI Agent",
+      "results": [
+        { "aiProcessId": "AI-001", "caseId": "ACDV-001", "recommendation": "Delete tradeline", "confidence": "85%", "reasoning": "Identity verification failed", "status": "Processed" },
+        { "aiProcessId": "AI-002", "caseId": "ACDV-002", "recommendation": "Update balance to zero", "confidence": "95%", "reasoning": "Payment verified", "status": "Processed" }
+      ]
+    },
+    {
+      "action": "Save case to OSCAR system",
+      "results": [
+        { "oscarId": "OSC-001", "caseId": "ACDV-001", "responseCode": "R01", "status": "Saved", "timestamp": "2024-07-19T10:30:00Z", "deactivated": true }
+      ]
+    },
+    {
+      "action": "Send member acknowledgment",
+      "results": [
+        { "acknowledgmentId": "ACK-001", "caseId": "ACDV-001", "sentTo": "john.smith@email.com", "type": "Initial Acknowledgment", "status": "Sent", "timestamp": "2024-07-19T10:45:00Z", "deactivated": true }
+      ]
+    },
+    {
+      "action": "Submit final response",
+      "results": [
+        { "responseId": "RSP-001", "caseId": "ACDV-001", "creditBureau": "Equifax", "responseCode": "Delete", "status": "Submitted", "timestamp": "2024-07-19T11:00:00Z", "deactivated": true }
+      ]
+    },
+    {
+      "action": "Apply admin notation",
+      "results": [
+        { "notationId": "NOTE-001", "caseId": "ACDV-001", "notation": "Identity theft confirmed. Account removed from credit report.", "addedBy": "System", "timestamp": "2024-07-19T11:15:00Z" }
+      ]
+    },
+    {
+      "action": "Close case",
+      "results": [
+        { "closeId": "CLS-001", "caseId": "ACDV-001", "closedDate": "2024-07-19T11:30:00Z", "resolution": "Account deleted", "timeToResolve": "2.5 hours", "status": "Closed" }
       ]
     }
   ],
   "aopsInstances": [
     {
       "id": "AOP1",
-      "name": "Automating the discovery process for fraud investigation",
-      "description": "Automating the discovery process for fraud investigation....",
-      "category": "Fraud & Compliance",
+      "name": "FCRA - Respond to ACDV case, Apply response code, Respond to consumer",
+      "description": "Automate the Fair Credit Reporting Act (FCRA) response process for ACDV cases, including verification, investigation, escalation handling, and consumer communication.",
+      "category": "Compliance & Legal",
       "status": "Completed",
       "lastRun": "2024-01-01T00:00:00Z",
       "runHistory": [
-        {"timestamp": "2024-01-02T00:02:00Z", "status": "Warning", "details": "Minor issues detected in data retrieval."},
-        {"timestamp": "2024-01-01T00:06:00Z", "status": "Info", "details": "AOP for fraud investigation successfully completed."}
+        {"timestamp": "2024-01-02T00:02:00Z", "status": "Warning", "details": "Escalation required for high-risk dispute."},
+        {"timestamp": "2024-01-01T00:06:00Z", "status": "Info", "details": "FCRA ACDV response workflow successfully completed."}
       ],
       "metrics": {
         "dataRetrievalStatus": "Done",
-        "reason": "Data retrieval completed successfully."
+        "reason": "ACDV case processed and response sent successfully."
       }
     }
   ],
@@ -361,21 +399,30 @@
     ]
   },
   "dataSourceOptions": [
-    "Transaction Database",
-    "Customer Profile System",
-    "External Fraud Database",
+    "ACDV Case Management System",
+    "B-Point Verification Database",
+    "Dispute Code Repository",
+    "Compliance Database",
+    "OSCAR System",
+    "Consumer Communication System",
     "System Activity Logs",
     "User Access Database",
     "Transaction Records"
   ],
   "actionOptions": {
-    "fraud-investigation": [
-      "Analyze transaction patterns",
-      "Cross-reference with known fraud indicators",
-      "Generate risk score",
-      "Create investigation report",
-      "Flag suspicious accounts",
-      "Notify compliance team"
+    "fcra-acdv-response": [
+      "Receive ACDV case",
+      "Perform B-Point verification",
+      "Investigate dispute code",
+      "Evaluate escalation requirements",
+      "Notify Fraud-Ops",
+      "Notify Legal/Compliance (if escalated)",
+      "Process through AI Agent",
+      "Save case to OSCAR system",
+      "Send member acknowledgment",
+      "Submit final response",
+      "Apply admin notation",
+      "Close case"
     ],
     "compliance-audit": [
       "Collect system activities",
@@ -385,25 +432,35 @@
     ]
   }, 
   "dataSourceSamples": {
-    "Transaction Database": [
-      { "transactionId": "TXN-001", "amount": 5000, "merchant": "Electronics Store", "timestamp": "2024-07-19T10:00:00Z", "cardType": "Credit", "location": "New York", "riskScore": 85 },
-      { "transactionId": "TXN-002", "amount": 150, "merchant": "Gas Station", "timestamp": "2024-07-19T10:15:00Z", "cardType": "Debit", "location": "New York", "riskScore": 15 },
-      { "transactionId": "TXN-003", "amount": 8500, "merchant": "Jewelry Store", "timestamp": "2024-07-19T10:30:00Z", "cardType": "Credit", "location": "Miami", "riskScore": 92 }
+    "ACDV Case Management System": [
+      { "caseId": "ACDV-001", "consumerName": "John Smith", "disputeDate": "2024-07-19", "creditBureau": "Equifax", "accountNumber": "XXXX-1234", "disputeCode": "D01", "status": "New" },
+      { "caseId": "ACDV-002", "consumerName": "Sarah Johnson", "disputeDate": "2024-07-18", "creditBureau": "TransUnion", "accountNumber": "XXXX-5678", "disputeCode": "D03", "status": "In Progress" },
+      { "caseId": "ACDV-003", "consumerName": "Mike Williams", "disputeDate": "2024-07-17", "creditBureau": "Experian", "accountNumber": "XXXX-9012", "disputeCode": "D02", "status": "Escalated" }
     ],
-    "Customer Profile System": [
-      { "customerId": "CUST-001", "name": "John Doe", "accountAge": "5 years", "avgMonthlySpend": 2000, "location": "New York", "fraudHistory": "None" },
-      { "customerId": "CUST-002", "name": "Jane Smith", "accountAge": "2 months", "avgMonthlySpend": 500, "location": "Miami", "fraudHistory": "1 incident" },
-      { "customerId": "CUST-003", "name": "Bob Johnson", "accountAge": "3 years", "avgMonthlySpend": 1500, "location": "Chicago", "fraudHistory": "None" }
+    "B-Point Verification Database": [
+      { "verificationId": "BPV-001", "caseId": "ACDV-001", "accountStatus": "Active", "lastPayment": "2024-06-15", "balanceVerified": true, "personalInfoMatch": true, "verificationScore": 95 },
+      { "verificationId": "BPV-002", "caseId": "ACDV-002", "accountStatus": "Closed", "lastPayment": "2024-01-10", "balanceVerified": false, "personalInfoMatch": true, "verificationScore": 60 },
+      { "verificationId": "BPV-003", "caseId": "ACDV-003", "accountStatus": "Active", "lastPayment": "2024-07-01", "balanceVerified": true, "personalInfoMatch": false, "verificationScore": 40 }
     ],
-    "External Fraud Database": [
-      { "fraudId": "FRAUD-001", "type": "Card Cloning", "reportedDate": "2024-07-18", "location": "Miami", "merchantCategory": "Jewelry", "amount": 7500 },
-      { "fraudId": "FRAUD-002", "type": "Identity Theft", "reportedDate": "2024-07-17", "location": "New York", "merchantCategory": "Electronics", "amount": 4500 },
-      { "fraudId": "FRAUD-003", "type": "Account Takeover", "reportedDate": "2024-07-16", "location": "Los Angeles", "merchantCategory": "Online", "amount": 3200 }
+    "Dispute Code Repository": [
+      { "disputeCode": "D01", "description": "Consumer claims account not theirs", "requiredActions": ["Identity verification", "Account ownership check"], "escalationRequired": true },
+      { "disputeCode": "D02", "description": "Balance incorrect", "requiredActions": ["Balance verification", "Payment history review"], "escalationRequired": false },
+      { "disputeCode": "D03", "description": "Account already paid", "requiredActions": ["Payment record verification", "Zero balance confirmation"], "escalationRequired": false }
     ],
-    "Payment Gateway Logs": [
-      { "logId": "LOG-001", "transactionId": "TXN-001", "status": "Approved", "responseCode": "00", "ipAddress": "192.168.1.100", "deviceId": "DEV-123" },
-      { "logId": "LOG-002", "transactionId": "TXN-002", "status": "Approved", "responseCode": "00", "ipAddress": "10.0.0.50", "deviceId": "DEV-456" },
-      { "logId": "LOG-003", "transactionId": "TXN-003", "status": "Flagged", "responseCode": "05", "ipAddress": "192.168.1.100", "deviceId": "DEV-123" }
+    "Compliance Database": [
+      { "ruleId": "FCRA-001", "ruleName": "30-day response requirement", "description": "Must respond to ACDV within 30 days", "status": "Active" },
+      { "ruleId": "FCRA-002", "ruleName": "Complete investigation requirement", "description": "Must conduct reasonable investigation", "status": "Active" },
+      { "ruleId": "FCRA-003", "ruleName": "Consumer notification requirement", "description": "Must notify consumer of investigation results", "status": "Active" }
+    ],
+    "OSCAR System": [
+      { "oscarId": "OSC-001", "caseId": "ACDV-001", "status": "Saved", "responseCode": "R01", "savedDate": "2024-07-19T10:30:00Z", "deactivated": true },
+      { "oscarId": "OSC-002", "caseId": "ACDV-002", "status": "Pending", "responseCode": "R02", "savedDate": "2024-07-18T14:15:00Z", "deactivated": true },
+      { "oscarId": "OSC-003", "caseId": "ACDV-003", "status": "Error", "responseCode": null, "savedDate": null, "deactivated": true }
+    ],
+    "Consumer Communication System": [
+      { "communicationId": "COMM-001", "caseId": "ACDV-001", "type": "Acknowledgment", "sentDate": "2024-07-19T10:45:00Z", "status": "Delivered", "deactivated": true },
+      { "communicationId": "COMM-002", "caseId": "ACDV-002", "type": "Final Response", "sentDate": "2024-07-18T15:30:00Z", "status": "Delivered", "deactivated": true },
+      { "communicationId": "COMM-003", "caseId": "ACDV-003", "type": "Escalation Notice", "sentDate": null, "status": "Pending", "deactivated": true }
     ],
     "System Activity Logs": [
       { "logId": "LOG-001", "activity": "User login", "timestamp": "2024-07-19T10:00:00Z", "user": "CUST-001" },
@@ -428,11 +485,11 @@
   ],
   "workflows": [
     {
-      "id": "fraud-investigation",
-      "name": "Fraud Investigation Automation",
-      "description": "Automates the discovery process for fraud investigation by analyzing transaction patterns and cross-referencing multiple data sources.",
-      "category": "Fraud & Compliance",
-      "requiredDataSources": ["Transaction Database", "Customer Profile System", "External Fraud Database", "Payment Gateway Logs"],
+      "id": "fcra-acdv-response",
+      "name": "FCRA - Respond to ACDV case",
+      "description": "Automate the Fair Credit Reporting Act (FCRA) response process for ACDV cases, including verification, investigation, escalation handling, and consumer communication.",
+      "category": "Compliance & Legal",
+      "requiredDataSources": ["ACDV Case Management System", "B-Point Verification Database", "Dispute Code Repository", "Compliance Database", "OSCAR System", "Consumer Communication System"],
       "compatibleDataSources": []
     },
     {
