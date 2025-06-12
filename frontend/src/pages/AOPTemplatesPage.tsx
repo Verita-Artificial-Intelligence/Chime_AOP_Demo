@@ -32,14 +32,14 @@ const templates: Template[] = [
     estimatedTime: "20-25 mins",
   },
   {
-    id: "compliance-audit",
-    name: "KYC Compliance Verification",
+    id: "fcra-indirect-dispute",
+    name: "FCRA - Complete an ACDV indirect dispute",
     description:
-      "Automate Know Your Customer (KYC) processes including identity verification, document validation, and risk assessment.",
-    category: "Compliance",
+      "Automate the Fair Credit Reporting Act (FCRA) process for handling indirect disputes, including verification, AI processing, and response generation.",
+    category: "Compliance & Legal",
     icon: UserGroupIcon,
-    steps: 8,
-    estimatedTime: "10-15 mins",
+    steps: 11,
+    estimatedTime: "15-20 mins",
   },
   {
     id: "aml-monitoring",

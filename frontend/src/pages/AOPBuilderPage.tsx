@@ -81,22 +81,36 @@ const AI_SUGGESTIONS: MockPrompt[] = [
     },
   },
   {
-    id: "ai-compliance-audit",
-    title: "Automated Compliance Audit Trail",
+    id: "ai-fcra-indirect",
+    title: "FCRA - Complete an ACDV indirect dispute",
     description:
-      "Based on your compliance workflows, automatically generate comprehensive audit trails for regulatory requirements.",
+      "Based on your compliance needs, automate the Fair Credit Reporting Act (FCRA) process for handling indirect disputes, including verification, AI processing, and response generation.",
     config: {
-      workflow: "compliance-audit",
+      workflow: "fcra-indirect-dispute",
       dataSources: [
-        "System Activity Logs",
-        "User Access Database",
-        "Transaction Records",
+        "Email Communication System",
+        "Dispute Management Database",
+        "Identity Verification System",
+        "Account Information Database",
+        "B-Point Verification System",
+        "Balance & Tradeline Database",
+        "AI Processing Engine",
+        "FCRA Response Templates",
+        "Internal Notes System",
+        "Dispute Status Tracker",
       ],
       actions: [
-        "Collect system activities",
-        "Map user actions to compliance requirements",
-        "Generate audit reports",
-        "Archive for regulatory review",
+        "Check case email status",
+        "Review dispute content",
+        "Verify ID verification",
+        "Verify account info",
+        "Verify B-point",
+        "Balance vs tradeline check",
+        "Process through AI Agent",
+        "Draft FCRA response",
+        "Verify internal notes",
+        "Update dispute status",
+        "Save case",
       ],
       llm: "compliance-llm",
     },
@@ -138,23 +152,37 @@ const TEMPLATE_CONFIGS: { [key: string]: MockPrompt } = {
     },
   },
   // Add other template configurations as needed
-  "compliance-audit": {
-    id: "template-compliance",
-    title: "Automated Compliance Audit Trail",
+  "fcra-indirect-dispute": {
+    id: "template-fcra-indirect",
+    title: "FCRA - Complete an ACDV indirect dispute",
     description:
-      "Comprehensive compliance audit trail with automated data collection and analysis.",
+      "Comprehensive FCRA workflow for handling indirect disputes with automated verification and response generation.",
     config: {
-      workflow: "compliance-audit",
+      workflow: "fcra-indirect-dispute",
       dataSources: [
-        "System Activity Logs",
-        "User Access Database",
-        "Transaction Records",
+        "Email Communication System",
+        "Dispute Management Database",
+        "Identity Verification System",
+        "Account Information Database",
+        "B-Point Verification System",
+        "Balance & Tradeline Database",
+        "AI Processing Engine",
+        "FCRA Response Templates",
+        "Internal Notes System",
+        "Dispute Status Tracker",
       ],
       actions: [
-        "Collect system activities",
-        "Map user actions to compliance requirements",
-        "Generate audit reports",
-        "Archive for regulatory review",
+        "Check case email status",
+        "Review dispute content",
+        "Verify ID verification",
+        "Verify account info",
+        "Verify B-point",
+        "Balance vs tradeline check",
+        "Process through AI Agent",
+        "Draft FCRA response",
+        "Verify internal notes",
+        "Update dispute status",
+        "Save case",
       ],
       llm: "compliance-llm",
     },
@@ -440,16 +468,16 @@ export function AOPBuilderPage() {
         handlePromptSelect(fcraPrompt);
       }
     } else if (
-      lowerCaseMessage.includes("compliance") &&
+      (lowerCaseMessage.includes("indirect") || lowerCaseMessage.includes("email dispute") || lowerCaseMessage.includes("consumer dispute")) &&
       !lowerCaseMessage.includes("not") &&
       !lowerCaseMessage.includes("except")
     ) {
-      // Trigger compliance audit workflow
-      const compliancePrompt = AI_SUGGESTIONS.find(
-        (s) => s.id === "ai-compliance-audit"
+      // Trigger FCRA indirect dispute workflow
+      const indirectPrompt = AI_SUGGESTIONS.find(
+        (s) => s.id === "ai-fcra-indirect"
       );
-      if (compliancePrompt) {
-        handlePromptSelect(compliancePrompt);
+      if (indirectPrompt) {
+        handlePromptSelect(indirectPrompt);
       }
     } else {
       // For any other input, use LLM to generate workflow

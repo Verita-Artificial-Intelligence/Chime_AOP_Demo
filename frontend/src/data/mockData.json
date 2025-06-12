@@ -351,6 +351,83 @@
       "results": [
         { "closeId": "CLS-001", "caseId": "ACDV-001", "closedDate": "2024-07-19T11:30:00Z", "resolution": "Account deleted", "timeToResolve": "2.5 hours", "status": "Closed" }
       ]
+    },
+    {
+      "action": "Check case email status",
+      "results": [
+        { "checkId": "CHK-001", "caseId": "IND-001", "emailStatus": "Sent", "emailId": "EMAIL-001", "timestamp": "2024-07-19T08:30:00Z", "deactivated": true },
+        { "checkId": "CHK-002", "caseId": "IND-002", "emailStatus": "Sent", "emailId": "EMAIL-002", "timestamp": "2024-07-18T15:00:00Z", "deactivated": true }
+      ]
+    },
+    {
+      "action": "Review dispute content",
+      "results": [
+        { "reviewId": "REV-001", "caseId": "IND-001", "disputeType": "Balance Incorrect", "claimedAmount": 5000, "reportedAmount": 5500, "category": "Numerical Discrepancy" },
+        { "reviewId": "REV-002", "caseId": "IND-002", "disputeType": "Account Not Mine", "claimedStatus": "No Relationship", "reportedStatus": "Active Account", "category": "Identity Issue" }
+      ]
+    },
+    {
+      "action": "Verify ID verification",
+      "results": [
+        { "idVerifyId": "IDV-001", "caseId": "IND-001", "ssnVerified": true, "nameMatch": 100, "dobMatch": true, "addressCurrent": true, "overallStatus": "Fully Verified" },
+        { "idVerifyId": "IDV-002", "caseId": "IND-002", "ssnVerified": true, "nameMatch": 75, "dobMatch": true, "addressCurrent": false, "overallStatus": "Partial Match" }
+      ]
+    },
+    {
+      "action": "Verify account info",
+      "results": [
+        { "accountVerifyId": "AV-001", "caseId": "IND-001", "accountExists": true, "ownership": "Confirmed", "status": "Active", "openDate": "2020-01-15", "lastActivity": "2024-07-01" },
+        { "accountVerifyId": "AV-002", "caseId": "IND-002", "accountExists": true, "ownership": "Cannot Confirm", "status": "Active", "openDate": "2019-06-20", "lastActivity": "2023-12-15" }
+      ]
+    },
+    {
+      "action": "Verify B-point",
+      "results": [
+        { "bpointId": "BPV-001", "caseId": "IND-001", "dataPoints": 7, "matchedPoints": 6, "score": 85.7, "status": "Verified", "deactivated": true },
+        { "bpointId": "BPV-002", "caseId": "IND-002", "dataPoints": 7, "matchedPoints": 2, "score": 28.6, "status": "Failed", "deactivated": true }
+      ]
+    },
+    {
+      "action": "Balance vs tradeline check",
+      "results": [
+        { "balanceCheckId": "BC-001", "caseId": "IND-001", "reportedBalance": 5500, "actualBalance": 5000, "variance": 500, "withinTolerance": false, "deactivated": true },
+        { "balanceCheckId": "BC-002", "caseId": "IND-002", "reportedBalance": 1000, "actualBalance": 0, "variance": 1000, "withinTolerance": false, "deactivated": true }
+      ]
+    },
+    {
+      "action": "Process through AI Agent",
+      "results": [
+        { "aiId": "AI-IND-001", "caseId": "IND-001", "recommendation": "Update Balance", "confidence": 94, "factors": ["Balance discrepancy confirmed", "Account ownership verified", "Recent payment activity"], "processingTime": "1.2s" },
+        { "aiId": "AI-IND-002", "caseId": "IND-002", "recommendation": "Delete Tradeline", "confidence": 98, "factors": ["Identity verification failed", "No account relationship", "B-point mismatch"], "processingTime": "0.8s" }
+      ]
+    },
+    {
+      "action": "Draft FCRA response",
+      "results": [
+        { "draftId": "DRAFT-001", "caseId": "IND-001", "templateUsed": "FCRA-TEMP-001", "responseType": "Balance Correction", "draftStatus": "Complete", "requiresReview": false },
+        { "draftId": "DRAFT-002", "caseId": "IND-002", "templateUsed": "FCRA-TEMP-002", "responseType": "Account Deletion", "draftStatus": "Complete", "requiresReview": true }
+      ]
+    },
+    {
+      "action": "Verify internal notes",
+      "results": [
+        { "notesId": "VN-001", "caseId": "IND-001", "notesAdded": true, "noteType": "System Generated", "content": "Balance variance due to pending payment", "deactivated": true },
+        { "notesId": "VN-002", "caseId": "IND-002", "notesAdded": true, "noteType": "AI Generated", "content": "Recommend full account removal - identity not verified", "deactivated": true }
+      ]
+    },
+    {
+      "action": "Update dispute status",
+      "results": [
+        { "updateId": "UPD-001", "caseId": "IND-001", "previousStatus": "AI Processing", "newStatus": "Response Sent", "updatedAt": "2024-07-19T12:00:00Z", "deactivated": true },
+        { "updateId": "UPD-002", "caseId": "IND-002", "previousStatus": "Under Review", "newStatus": "Pending Closure", "updatedAt": "2024-07-18T17:00:00Z", "deactivated": true }
+      ]
+    },
+    {
+      "action": "Save case",
+      "results": [
+        { "saveId": "SAVE-001", "caseId": "IND-001", "savedAt": "2024-07-19T12:15:00Z", "dataArchived": true, "responsesSent": true, "caseStatus": "Completed" },
+        { "saveId": "SAVE-002", "caseId": "IND-002", "savedAt": "2024-07-18T17:15:00Z", "dataArchived": true, "responsesSent": true, "caseStatus": "Completed" }
+      ]
     }
   ],
   "aopsInstances": [
@@ -405,6 +482,16 @@
     "Compliance Database",
     "OSCAR System",
     "Consumer Communication System",
+    "Email Communication System",
+    "Dispute Management Database",
+    "Identity Verification System",
+    "Account Information Database",
+    "B-Point Verification System",
+    "Balance & Tradeline Database",
+    "AI Processing Engine",
+    "FCRA Response Templates",
+    "Internal Notes System",
+    "Dispute Status Tracker",
     "System Activity Logs",
     "User Access Database",
     "Transaction Records"
@@ -424,11 +511,18 @@
       "Apply admin notation",
       "Close case"
     ],
-    "compliance-audit": [
-      "Collect system activities",
-      "Map user actions to compliance requirements",
-      "Generate audit reports",
-      "Archive for regulatory review"
+    "fcra-indirect-dispute": [
+      "Check case email status",
+      "Review dispute content",
+      "Verify ID verification",
+      "Verify account info",
+      "Verify B-point",
+      "Balance vs tradeline check",
+      "Process through AI Agent",
+      "Draft FCRA response",
+      "Verify internal notes",
+      "Update dispute status",
+      "Save case"
     ]
   }, 
   "dataSourceSamples": {
@@ -462,6 +556,56 @@
       { "communicationId": "COMM-002", "caseId": "ACDV-002", "type": "Final Response", "sentDate": "2024-07-18T15:30:00Z", "status": "Delivered", "deactivated": true },
       { "communicationId": "COMM-003", "caseId": "ACDV-003", "type": "Escalation Notice", "sentDate": null, "status": "Pending", "deactivated": true }
     ],
+    "Email Communication System": [
+      { "emailId": "EMAIL-001", "caseId": "IND-001", "subject": "Dispute: Account #1234", "receivedDate": "2024-07-19T08:00:00Z", "status": "Sent", "deactivated": true },
+      { "emailId": "EMAIL-002", "caseId": "IND-002", "subject": "Re: Credit Report Issue", "receivedDate": "2024-07-18T14:30:00Z", "status": "Sent", "deactivated": true },
+      { "emailId": "EMAIL-003", "caseId": "IND-003", "subject": "Incorrect Balance Reporting", "receivedDate": "2024-07-17T10:15:00Z", "status": "Pending", "deactivated": true }
+    ],
+    "Dispute Management Database": [
+      { "disputeId": "DISP-001", "caseId": "IND-001", "type": "Balance Incorrect", "consumerName": "Alice Brown", "accountNumber": "XXXX-1234", "status": "Under Review" },
+      { "disputeId": "DISP-002", "caseId": "IND-002", "type": "Account Not Mine", "consumerName": "Bob Davis", "accountNumber": "XXXX-5678", "status": "Verification Pending" },
+      { "disputeId": "DISP-003", "caseId": "IND-003", "type": "Payment History Error", "consumerName": "Carol White", "accountNumber": "XXXX-9012", "status": "In Progress" }
+    ],
+    "Identity Verification System": [
+      { "verificationId": "IDV-001", "caseId": "IND-001", "ssnMatch": true, "nameMatch": true, "dobMatch": true, "addressMatch": true, "score": 100, "status": "Verified" },
+      { "verificationId": "IDV-002", "caseId": "IND-002", "ssnMatch": true, "nameMatch": false, "dobMatch": true, "addressMatch": true, "score": 75, "status": "Partial Match" },
+      { "verificationId": "IDV-003", "caseId": "IND-003", "ssnMatch": true, "nameMatch": true, "dobMatch": true, "addressMatch": false, "score": 85, "status": "Verified" }
+    ],
+    "Account Information Database": [
+      { "accountId": "ACC-001", "accountNumber": "XXXX-1234", "openDate": "2020-01-15", "currentBalance": 5000, "paymentStatus": "Current", "lastPayment": "2024-07-01" },
+      { "accountId": "ACC-002", "accountNumber": "XXXX-5678", "openDate": "2019-06-20", "currentBalance": 0, "paymentStatus": "Closed", "lastPayment": "2023-12-15" },
+      { "accountId": "ACC-003", "accountNumber": "XXXX-9012", "openDate": "2021-03-10", "currentBalance": 2500, "paymentStatus": "30 Days Late", "lastPayment": "2024-06-15" }
+    ],
+    "B-Point Verification System": [
+      { "bpointId": "BP-001", "caseId": "IND-001", "accountVerified": true, "balanceMatch": false, "historyMatch": true, "score": 80, "deactivated": true },
+      { "bpointId": "BP-002", "caseId": "IND-002", "accountVerified": false, "balanceMatch": false, "historyMatch": false, "score": 0, "deactivated": true },
+      { "bpointId": "BP-003", "caseId": "IND-003", "accountVerified": true, "balanceMatch": true, "historyMatch": false, "score": 60, "deactivated": true }
+    ],
+    "Balance & Tradeline Database": [
+      { "tradelineId": "TL-001", "accountNumber": "XXXX-1234", "reportedBalance": 5500, "actualBalance": 5000, "discrepancy": 500, "deactivated": true },
+      { "tradelineId": "TL-002", "accountNumber": "XXXX-5678", "reportedBalance": 1000, "actualBalance": 0, "discrepancy": 1000, "deactivated": true },
+      { "tradelineId": "TL-003", "accountNumber": "XXXX-9012", "reportedBalance": 2500, "actualBalance": 2500, "discrepancy": 0, "deactivated": true }
+    ],
+    "AI Processing Engine": [
+      { "processingId": "AI-PROC-001", "caseId": "IND-001", "recommendation": "Update balance", "confidence": 92, "reasoning": "Balance discrepancy confirmed" },
+      { "processingId": "AI-PROC-002", "caseId": "IND-002", "recommendation": "Delete tradeline", "confidence": 98, "reasoning": "Identity verification failed" },
+      { "processingId": "AI-PROC-003", "caseId": "IND-003", "recommendation": "Update payment history", "confidence": 87, "reasoning": "Payment records mismatch" }
+    ],
+    "FCRA Response Templates": [
+      { "templateId": "FCRA-TEMP-001", "type": "Balance Update", "content": "After investigation, we have updated the reported balance to accurately reflect the current amount owed." },
+      { "templateId": "FCRA-TEMP-002", "type": "Account Deletion", "content": "Our investigation confirmed this account does not belong to the consumer. We have requested deletion from all credit bureaus." },
+      { "templateId": "FCRA-TEMP-003", "type": "Payment History Correction", "content": "We have corrected the payment history to accurately reflect the consumer's payment record." }
+    ],
+    "Internal Notes System": [
+      { "noteId": "NOTE-001", "caseId": "IND-001", "note": "Balance discrepancy due to pending payment not processed", "addedBy": "System", "timestamp": "2024-07-19T11:00:00Z", "deactivated": true },
+      { "noteId": "NOTE-002", "caseId": "IND-002", "note": "Identity theft confirmed, recommend full account removal", "addedBy": "AI Agent", "timestamp": "2024-07-18T15:45:00Z", "deactivated": true },
+      { "noteId": "NOTE-003", "caseId": "IND-003", "note": "Payment posting delay caused reporting error", "addedBy": "Analyst", "timestamp": "2024-07-17T12:30:00Z", "deactivated": true }
+    ],
+    "Dispute Status Tracker": [
+      { "statusId": "STATUS-001", "caseId": "IND-001", "currentStatus": "Response Drafted", "previousStatus": "Under Investigation", "updatedAt": "2024-07-19T11:30:00Z", "deactivated": true },
+      { "statusId": "STATUS-002", "caseId": "IND-002", "currentStatus": "Pending Closure", "previousStatus": "AI Processing", "updatedAt": "2024-07-18T16:00:00Z", "deactivated": true },
+      { "statusId": "STATUS-003", "caseId": "IND-003", "currentStatus": "In Review", "previousStatus": "Initial Assessment", "updatedAt": "2024-07-17T13:00:00Z", "deactivated": true }
+    ],
     "System Activity Logs": [
       { "logId": "LOG-001", "activity": "User login", "timestamp": "2024-07-19T10:00:00Z", "user": "CUST-001" },
       { "logId": "LOG-002", "activity": "Transaction processed", "timestamp": "2024-07-19T10:15:00Z", "user": "CUST-002" },
@@ -493,11 +637,11 @@
       "compatibleDataSources": []
     },
     {
-      "id": "compliance-audit",
-      "name": "Compliance Audit Trail",
-      "description": "Automatically generates comprehensive audit trails for regulatory compliance requirements.",
-      "category": "Compliance",
-      "requiredDataSources": ["System Activity Logs", "User Access Database", "Transaction Records"],
+      "id": "fcra-indirect-dispute",
+      "name": "FCRA - Complete an ACDV indirect dispute",
+      "description": "Automate the Fair Credit Reporting Act (FCRA) process for handling indirect disputes, including verification, AI processing, and response generation.",
+      "category": "Compliance & Legal",
+      "requiredDataSources": ["Email Communication System", "Dispute Management Database", "Identity Verification System", "Account Information Database", "B-Point Verification System", "Balance & Tradeline Database", "AI Processing Engine", "FCRA Response Templates", "Internal Notes System", "Dispute Status Tracker"],
       "compatibleDataSources": []
     },
     {
