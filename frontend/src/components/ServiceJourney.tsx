@@ -118,7 +118,7 @@ const ServiceJourney: React.FC<ServiceJourneyProps> = ({ steps, currentStep, exe
   const { groupIndex, stepIndex } = getActiveGroupAndStep();
 
   return (
-    <div className="fixed right-4 top-24 w-96 bg-white rounded-xl shadow-2xl border border-gray-100 max-h-[calc(100vh-120px)] overflow-hidden flex flex-col">
+    <div className="fixed right-4 top-10 w-96 bg-white rounded-xl shadow-2xl border border-gray-100 max-h-[calc(90vh)] overflow-hidden flex flex-col">
       {/* Header */}
       <div className="px-6 py-5 border-b border-gray-100">
         <h2 className="text-2xl font-bold text-gray-900">Agent Journey</h2>

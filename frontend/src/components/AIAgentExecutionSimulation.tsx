@@ -22,29 +22,31 @@ function SimpleTable({ data }: { data: any[] }) {
     return <div className="text-brand-muted">No data available.</div>;
   const columns = Object.keys(data[0]);
   return (
-    <div className="w-full overflow-visible">
-      <table className="min-w-full border-collapse text-sm bg-brand-card border border-brand-border rounded-card">
+    <div className="w-full overflow-x-auto rounded-lg border border-brand-border table-scroll">
+      <table className="w-full border-collapse text-sm bg-brand-card min-w-max">
         <thead>
           <tr className="bg-brand-background">
             {columns.map((col) => (
               <th
                 key={col}
-                className="border border-brand-border px-4 py-3 text-left capitalize text-brand-heading bg-brand-background whitespace-nowrap"
+                className="border-b border-r last:border-r-0 border-brand-border px-4 py-3 text-left capitalize text-brand-heading bg-brand-background whitespace-nowrap font-semibold"
               >
-                {col.replace(/([A-Z])/g, " $1")}
+                {col.replace(/([A-Z])/g, " $1").trim()}
               </th>
             ))}
           </tr>
         </thead>
         <tbody>
           {data.map((row, idx) => (
-            <tr key={idx} className="bg-white hover:bg-gray-100">
+            <tr key={idx} className="bg-white hover:bg-gray-50 transition-colors">
               {columns.map((col) => (
                 <td
                   key={col}
-                  className="border border-brand-border px-4 py-3 text-brand-heading whitespace-nowrap"
+                  className="border-b border-r last:border-r-0 border-brand-border px-4 py-3 text-brand-heading"
                 >
-                  {row[col]}
+                  <div className="max-w-[200px] overflow-hidden text-ellipsis whitespace-nowrap" title={String(row[col])}>
+                    {row[col]}
+                  </div>
                 </td>
               ))}
             </tr>
@@ -602,13 +604,13 @@ export function AIAgentExecutionSimulation({
         <div
           key={idx}
           id={`agent-step-card-${idx}`}
-          className="bg-brand-card border border-brand-border rounded-card shadow-card p-card animate-fadeIn mb-8"
+          className="bg-brand-card border border-brand-border rounded-card shadow-card p-card animate-fadeIn mb-8 overflow-hidden"
         >
           <h3 className="text-lg font-semibold text-brand-heading mb-2">
             {step.label}
           </h3>
           {step.type === "datasource" && (
-            <div className="mt-4">
+            <div className="mt-4 overflow-hidden">
               <div className="text-xs text-brand-muted mb-2">
                 Sample data being analyzed:
               </div>
@@ -616,7 +618,7 @@ export function AIAgentExecutionSimulation({
             </div>
           )}
           {step.type === "action" && (
-            <div className="mt-4">
+            <div className="mt-4 overflow-hidden">
               <div className="text-xs text-brand-muted mb-2">Result:</div>
               {getActionSummary((step as any).action)}
             </div>
@@ -838,6 +840,30 @@ export function AIAgentExecutionSimulation({
 
   return (
     <>
+      {/* Add custom scrollbar styles */}
+      <style>{`
+        .table-scroll::-webkit-scrollbar {
+          height: 8px;
+        }
+        .table-scroll::-webkit-scrollbar-track {
+          background: #f3f4f6;
+          border-radius: 4px;
+        }
+        .table-scroll::-webkit-scrollbar-thumb {
+          background: #d1d5db;
+          border-radius: 4px;
+        }
+        .table-scroll::-webkit-scrollbar-thumb:hover {
+          background: #9ca3af;
+        }
+        
+        /* Firefox scrollbar */
+        .table-scroll {
+          scrollbar-width: thin;
+          scrollbar-color: #d1d5db #f3f4f6;
+        }
+      `}</style>
+      
       {/* Service Journey sidebar on the right */}
       <ServiceJourney steps={stepSequence} currentStep={currentStep} executionComplete={executionComplete} />
       

@@ -1,6 +1,6 @@
 import React from "react";
 import { useNavigate } from "react-router-dom";
-import { BuilderProgressTracker } from "../components/ProgressTracker";
+import { BuilderProgressTracker } from "../components/BuilderProgressTracker";
 import mockData from "../data/mockData.json";
 import content from "../config/content";
 
