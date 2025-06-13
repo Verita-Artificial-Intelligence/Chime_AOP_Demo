@@ -22,14 +22,14 @@ function SimpleTable({ data }: { data: any[] }) {
     return <div className="text-brand-muted">No data available.</div>;
   const columns = Object.keys(data[0]);
   return (
-    <div className="overflow-x-auto">
-      <table className="w-full border-collapse text-xs bg-brand-card border border-brand-border rounded-card">
+    <div className="w-full overflow-visible">
+      <table className="min-w-full border-collapse text-sm bg-brand-card border border-brand-border rounded-card">
         <thead>
           <tr className="bg-brand-background">
             {columns.map((col) => (
               <th
                 key={col}
-                className="border border-brand-border p-2 text-left capitalize text-brand-heading bg-brand-background"
+                className="border border-brand-border px-4 py-3 text-left capitalize text-brand-heading bg-brand-background whitespace-nowrap"
               >
                 {col.replace(/([A-Z])/g, " $1")}
               </th>
@@ -42,7 +42,7 @@ function SimpleTable({ data }: { data: any[] }) {
               {columns.map((col) => (
                 <td
                   key={col}
-                  className="border border-brand-border p-2 text-brand-heading"
+                  className="border border-brand-border px-4 py-3 text-brand-heading whitespace-nowrap"
                 >
                   {row[col]}
                 </td>
@@ -839,10 +839,10 @@ export function AIAgentExecutionSimulation({
   return (
     <>
       {/* Service Journey sidebar on the right */}
-      <ServiceJourney steps={stepSequence} currentStep={currentStep} />
+      <ServiceJourney steps={stepSequence} currentStep={currentStep} executionComplete={executionComplete} />
       
       {/* Main content area with margin to accommodate the sidebar */}
-      <div className="max-w-3xl mx-auto py-8 px-4 pr-96">
+      <div className="w-full max-w-7xl mx-auto py-8 px-4 pr-[420px]">
         <div id="agent-simulation-content">
           {/* Modern summary card with pills/badges */}
           <div className="bg-brand-card border border-brand-border rounded-card shadow-card p-6 flex flex-col gap-4 items-center mb-8 text-white">

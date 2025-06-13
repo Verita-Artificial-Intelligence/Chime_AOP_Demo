@@ -1,329 +1,245 @@
 import React from "react";
 import { 
-  DocumentMagnifyingGlassIcon, 
-  UserIcon, 
-  GiftIcon,
-  BookOpenIcon,
-  ArrowLeftCircleIcon
+  ServerStackIcon,
+  CpuChipIcon,
+  PlayCircleIcon,
+  CheckCircleIcon,
+  ClockIcon
 } from "@heroicons/react/24/outline";
 
 interface ServiceJourneyProps {
   steps: { type: string; label: string; ds?: string; action?: string }[];
   currentStep: number;
+  executionComplete: boolean;
 }
 
-interface JourneyStep {
-  type: "systems_integration" | "knowledge_engine" | "journey";
-  name: string;
-  icon?: any;
-}
-
-interface Journey {
+interface StepGroup {
   id: string;
-  name: string;
-  steps: JourneyStep[];
+  title: string;
+  icon: any;
+  steps: Array<{
+    name: string;
+    originalIndex: number;
+    type: string;
+  }>;
 }
 
-const ServiceJourney: React.FC<ServiceJourneyProps> = ({ steps, currentStep }) => {
-  // Map the workflow steps to journey structure
-  const mapStepsToJourneys = (): Journey[] => {
-    const journeys: Journey[] = [];
+const ServiceJourney: React.FC<ServiceJourneyProps> = ({ steps, currentStep, executionComplete }) => {
+  // Group steps dynamically based on their type
+  const groupSteps = (): StepGroup[] => {
+    const groups: StepGroup[] = [];
+    let stepIndex = 0;
     
-    // Welcome Journey (initialization)
-    if (steps.some(s => s.type === "init")) {
-      journeys.push({
-        id: "welcome",
-        name: "Welcome",
-        steps: []
+    // Add initialization group if present
+    const initSteps = steps.filter(s => s.type === "init");
+    if (initSteps.length > 0) {
+      groups.push({
+        id: "initialization",
+        title: "Initializing Workflow",
+        icon: PlayCircleIcon,
+        steps: initSteps.map((step, idx) => ({
+          name: step.label.replace(/^Initializing workflow for /, ''),
+          originalIndex: stepIndex++,
+          type: step.type
+        }))
       });
     }
-
-    // Determine journey structure based on workflow steps
+    
+    // Add data sources group
     const dataSourceSteps = steps.filter(s => s.type === "datasource");
+    if (dataSourceSteps.length > 0) {
+      groups.push({
+        id: "datasources",
+        title: "Analyzing Data Sources",
+        icon: ServerStackIcon,
+        steps: dataSourceSteps.map((step) => ({
+          name: step.ds || step.label.replace(/^Analyzing data source: /, ''),
+          originalIndex: stepIndex++,
+          type: step.type
+        }))
+      });
+    }
+    
+    // Add actions group
     const actionSteps = steps.filter(s => s.type === "action");
+    if (actionSteps.length > 0) {
+      groups.push({
+        id: "actions",
+        title: "Executing Actions",
+        icon: CpuChipIcon,
+        steps: actionSteps.map((step) => ({
+          name: step.action || step.label.replace(/^Executing action: /, ''),
+          originalIndex: stepIndex++,
+          type: step.type
+        }))
+      });
+    }
     
-    // For FCRA workflows, use specific journey names
-    const isFCRAWorkflow = steps.some(s => 
-      s.label?.toLowerCase().includes("fcra") || 
-      s.label?.toLowerCase().includes("acdv") ||
-      s.ds?.toLowerCase().includes("acdv") ||
-      s.ds?.toLowerCase().includes("verification")
-    );
+    // Add completion group if workflow is complete
+    if (executionComplete || steps.some(s => s.type === "complete")) {
+      groups.push({
+        id: "completion",
+        title: "Workflow Complete",
+        icon: CheckCircleIcon,
+        steps: [{
+          name: "All steps completed successfully",
+          originalIndex: stepIndex++,
+          type: "complete"
+        }]
+      });
+    }
     
-    if (isFCRAWorkflow) {
-      // Track Order Journey (for FCRA data sources)
-      if (dataSourceSteps.length > 0) {
-        const trackOrderSteps: JourneyStep[] = dataSourceSteps.map(step => {
-          let name = step.ds || "Data Source";
-          // Map data source names to more user-friendly names
-          if (name.includes("ACDV")) name = "Order Lookup";
-          else if (name.includes("B-Point") || name.includes("Verification")) name = "Find Products";
-          
-          return {
-            type: "systems_integration" as const,
-            name,
-            icon: DocumentMagnifyingGlassIcon
-          };
-        });
-        
-        journeys.push({
-          id: "track-order",
-          name: "Track Order",
-          steps: trackOrderSteps
-        });
-      }
+    return groups;
+  };
 
-      // Product Recommendation Journey (for FCRA actions)
-      if (actionSteps.length > 0) {
-        const recommendationSteps: JourneyStep[] = [];
-        
-        actionSteps.forEach(step => {
-          const actionName = step.action || "Action";
-          
-          // Map action names to journey steps
-          if (actionName.toLowerCase().includes("verify") || 
-              actionName.toLowerCase().includes("validate")) {
-            recommendationSteps.push({
-              type: "systems_integration",
-              name: "Lookup Customer",
-              icon: UserIcon
-            });
-          } else if (actionName.toLowerCase().includes("generate") ||
-                     actionName.toLowerCase().includes("create")) {
-            recommendationSteps.push({
-              type: "systems_integration",
-              name: "Get Available Offers",
-              icon: GiftIcon
-            });
-            recommendationSteps.push({
-              type: "knowledge_engine",
-              name: "Offer Details",
-              icon: BookOpenIcon
-            });
-          }
-        });
-        
-        if (recommendationSteps.length > 0) {
-          journeys.push({
-            id: "product-recommendation",
-            name: "Product Recommendation",
-            steps: recommendationSteps
-          });
+  const groups = groupSteps();
+  
+  // Get current active group and step within that group
+  const getActiveGroupAndStep = () => {
+    // Handle completion state
+    if (executionComplete) {
+      const completionGroup = groups.findIndex(g => g.id === "completion");
+      return { groupIndex: completionGroup, stepIndex: 0 };
+    }
+    
+    // Find which group contains the current step
+    for (let i = 0; i < groups.length; i++) {
+      const group = groups[i];
+      for (let j = 0; j < group.steps.length; j++) {
+        if (group.steps[j].originalIndex === currentStep) {
+          return { groupIndex: i, stepIndex: j };
         }
       }
-    } else {
-      // Generic journey structure for non-FCRA workflows
-      if (dataSourceSteps.length > 0) {
-        const trackOrderSteps: JourneyStep[] = dataSourceSteps.map(step => ({
-          type: "systems_integration" as const,
-          name: step.ds || "Data Source",
-          icon: DocumentMagnifyingGlassIcon
-        }));
-        
-        journeys.push({
-          id: "track-order",
-          name: "Track Order",
-          steps: trackOrderSteps
-        });
-      }
-
-      if (actionSteps.length > 0) {
-        const recommendationSteps: JourneyStep[] = actionSteps.map(step => {
-          const isKnowledgeEngine = step.action?.toLowerCase().includes("details") || 
-                                   step.action?.toLowerCase().includes("generate");
-          
-          return {
-            type: isKnowledgeEngine ? "knowledge_engine" : "systems_integration",
-            name: step.action || "Action",
-            icon: isKnowledgeEngine ? BookOpenIcon : GiftIcon
-          };
-        });
-        
-        journeys.push({
-          id: "product-recommendation",
-          name: "Product Recommendation",
-          steps: recommendationSteps
-        });
-      }
     }
-
-    // Add enrollment journey if workflow is complete or has update actions
-    const hasUpdateAction = actionSteps.some(s => 
-      s.action?.toLowerCase().includes("update") || 
-      s.action?.toLowerCase().includes("enroll")
-    );
     
-    if (steps.some(s => s.type === "complete") || hasUpdateAction) {
-      journeys.push({
-        id: "enrollment",
-        name: "Enroll in Auto-Delivery",
-        steps: [
-          {
-            type: "systems_integration",
-            name: "Lookup Customer",
-            icon: UserIcon
-          },
-          {
-            type: "systems_integration",
-            name: "Update Enrollment",
-            icon: ArrowLeftCircleIcon
-          }
-        ]
-      });
-    }
-
-    return journeys;
+    return { groupIndex: -1, stepIndex: -1 };
   };
 
-  const journeys = mapStepsToJourneys();
-  
-  // Calculate which journey and step we're currently on
-  const getCurrentJourneyAndStep = () => {
-    let stepCount = 0;
-    const currentStepType = steps[currentStep]?.type;
-    
-    // Special handling for init step
-    if (currentStepType === "init") {
-      return { journeyIndex: 0, stepIndex: -1 };
-    }
-    
-    // Count through actual workflow steps
-    let dsCount = 0;
-    let actionCount = 0;
-    
-    for (let i = 0; i <= currentStep; i++) {
-      if (steps[i].type === "datasource") dsCount++;
-      else if (steps[i].type === "action") actionCount++;
-    }
-    
-    // Determine which journey we're in
-    for (let i = 0; i < journeys.length; i++) {
-      const journey = journeys[i];
-      
-      if (journey.id === "welcome" && currentStepType === "init") {
-        return { journeyIndex: i, stepIndex: -1 };
-      } else if (journey.id === "track-order" && currentStepType === "datasource") {
-        // Find which data source step we're on
-        const dsSteps = steps.filter(s => s.type === "datasource");
-        const currentDsIndex = dsSteps.findIndex(s => s === steps[currentStep]);
-        return { journeyIndex: i, stepIndex: Math.min(currentDsIndex, journey.steps.length - 1) };
-      } else if (journey.id === "product-recommendation" && currentStepType === "action") {
-        // Find which action step we're on
-        const actionSteps = steps.filter(s => s.type === "action");
-        const currentActionIndex = actionSteps.findIndex(s => s === steps[currentStep]);
-        return { journeyIndex: i, stepIndex: Math.min(currentActionIndex, journey.steps.length - 1) };
-      } else if (journey.id === "enrollment" && currentStepType === "complete") {
-        return { journeyIndex: i, stepIndex: journey.steps.length - 1 };
-      }
-    }
-    
-    return { journeyIndex: -1, stepIndex: -1 };
-  };
-
-  const { journeyIndex, stepIndex } = getCurrentJourneyAndStep();
+  const { groupIndex, stepIndex } = getActiveGroupAndStep();
 
   return (
-    <div className="fixed right-4 top-24 w-96 bg-gray-50 rounded-lg shadow-xl border border-gray-200 p-6 max-h-[calc(100vh-120px)] overflow-y-auto">
-      <h2 className="text-2xl font-bold text-gray-800 mb-8">
-        Service Journey
-      </h2>
+    <div className="fixed right-4 top-24 w-96 bg-white rounded-xl shadow-2xl border border-gray-100 max-h-[calc(100vh-120px)] overflow-hidden flex flex-col">
+      {/* Header */}
+      <div className="px-6 py-5 border-b border-gray-100">
+        <h2 className="text-2xl font-bold text-gray-900">Agent Journey</h2>
+        {!executionComplete && currentStep > 0 && (
+          <p className="text-sm text-blue-600 mt-1 flex items-center">
+            <ClockIcon className="w-4 h-4 mr-1" />
+            Workflow executing...
+          </p>
+        )}
+      </div>
       
-      <div className="space-y-8">
-        {journeys.map((journey, jIdx) => (
-          <div key={journey.id} className="relative">
-            {/* Journey title */}
-            <div className="flex items-center mb-2">
-              <div className={`w-3 h-3 rounded-full mr-3 ${
-                jIdx < journeyIndex || (jIdx === journeyIndex && journey.steps.length === 0) 
-                  ? "bg-green-500" 
-                  : jIdx === journeyIndex 
-                  ? "bg-blue-600" 
-                  : "bg-gray-300"
-              }`} />
-              <h3 className={`text-sm uppercase tracking-wide font-semibold ${
-                jIdx <= journeyIndex ? "text-gray-600" : "text-gray-400"
-              }`}>
-                Journey
-              </h3>
-            </div>
-            <div className={`ml-6 text-xl font-bold mb-4 ${
-              jIdx <= journeyIndex ? "text-gray-800" : "text-gray-400"
-            }`}>
-              {journey.name}
-            </div>
-
-            {/* Journey steps */}
-            {journey.steps.length > 0 && (
-              <div className="ml-6 space-y-2">
-                {journey.steps.map((step, sIdx) => {
-                  const isActive = jIdx === journeyIndex && sIdx === stepIndex;
-                  const isComplete = jIdx < journeyIndex || (jIdx === journeyIndex && sIdx < stepIndex);
-                  
-                  return (
-                    <div key={sIdx} className={`flex items-start p-3 rounded-md transition-all ${
-                      isActive ? "bg-white shadow-md border-l-4 border-blue-600" : 
-                      isComplete ? "bg-white shadow-sm" : "bg-gray-100"
+      {/* Steps container */}
+      <div className="flex-1 overflow-y-auto px-6 py-4">
+        <div className="space-y-6">
+          {groups.map((group, gIdx) => {
+            const isCurrentGroup = gIdx === groupIndex;
+            const isPastGroup = gIdx < groupIndex;
+            const isFutureGroup = gIdx > groupIndex;
+            
+            // Calculate if all steps in this group are complete
+            const allStepsComplete = group.steps.every(step => 
+              step.originalIndex < currentStep || executionComplete
+            );
+            
+            const Icon = group.icon;
+            
+            return (
+              <div key={group.id} className="relative">
+                {/* Group header */}
+                <div className="flex items-start mb-3">
+                  <div className={`p-2 rounded-lg mr-3 transition-all duration-300 ${
+                    allStepsComplete 
+                      ? "bg-green-100" 
+                      : isCurrentGroup 
+                      ? "bg-blue-100" 
+                      : "bg-gray-100"
+                  }`}>
+                    <Icon className={`w-5 h-5 transition-all duration-300 ${
+                      allStepsComplete 
+                        ? "text-green-600" 
+                        : isCurrentGroup 
+                        ? "text-blue-600" 
+                        : "text-gray-400"
+                    }`} />
+                  </div>
+                  <div className="flex-1">
+                    <h3 className={`text-lg font-semibold transition-all duration-300 ${
+                      isPastGroup || isCurrentGroup ? "text-gray-900" : "text-gray-400"
                     }`}>
-                      <div className="mr-3 mt-0.5 flex-shrink-0">
-                        {step.type === "systems_integration" ? (
-                          <div className={`p-1.5 rounded ${
-                            isComplete ? "bg-green-100" : 
-                            isActive ? "bg-blue-100" : "bg-gray-200"
+                      {group.title}
+                    </h3>
+                  </div>
+                  {allStepsComplete && (
+                    <CheckCircleIcon className="w-5 h-5 text-green-600 mt-0.5" />
+                  )}
+                </div>
+
+                {/* Group steps */}
+                <div className="ml-11 space-y-2">
+                  {group.steps.map((step, sIdx) => {
+                    const isActiveStep = gIdx === groupIndex && sIdx === stepIndex;
+                    const isCompleteStep = step.originalIndex < currentStep || executionComplete;
+                    const isPendingStep = step.originalIndex > currentStep && !executionComplete;
+                    
+                    return (
+                      <div 
+                        key={sIdx} 
+                        className={`
+                          relative flex items-center p-3 rounded-lg transition-all duration-300
+                          ${isActiveStep 
+                            ? "bg-blue-50 border border-blue-200 shadow-sm" 
+                            : isCompleteStep 
+                            ? "bg-green-50 border border-green-100" 
+                            : "bg-gray-50 border border-gray-100"
+                          }
+                        `}
+                      >
+                        <div className="flex-1">
+                          <p className={`text-sm font-medium transition-all duration-300 ${
+                            isCompleteStep 
+                              ? "text-gray-900" 
+                              : isActiveStep
+                              ? "text-blue-900"
+                              : "text-gray-500"
                           }`}>
-                            <DocumentMagnifyingGlassIcon className={`w-4 h-4 ${
-                              isComplete ? "text-green-600" : 
-                              isActive ? "text-blue-600" : "text-gray-500"
-                            }`} />
+                            {step.name}
+                          </p>
+                        </div>
+                        
+                        {/* Status indicator */}
+                        {isActiveStep && !executionComplete && (
+                          <div className="ml-3 flex items-center">
+                            <div className="w-2 h-2 bg-blue-600 rounded-full animate-pulse" />
                           </div>
-                        ) : (
-                          <div className={`p-1.5 rounded ${
-                            isComplete ? "bg-green-100" : 
-                            isActive ? "bg-blue-100" : "bg-gray-200"
-                          }`}>
-                            <BookOpenIcon className={`w-4 h-4 ${
-                              isComplete ? "text-green-600" : 
-                              isActive ? "text-blue-600" : "text-gray-500"
-                            }`} />
+                        )}
+                        {isCompleteStep && (
+                          <div className="ml-3">
+                            <CheckCircleIcon className="w-5 h-5 text-green-600" />
+                          </div>
+                        )}
+                        {isPendingStep && (
+                          <div className="ml-3">
+                            <div className="w-5 h-5 rounded-full border-2 border-gray-300" />
                           </div>
                         )}
                       </div>
-                      <div className="flex-1">
-                        <div className={`text-xs font-medium ${
-                          isComplete ? "text-gray-600" : 
-                          isActive ? "text-gray-600" : "text-gray-400"
-                        }`}>
-                          {step.type === "systems_integration" ? "Systems integration" : "Knowledge Engine"}
-                        </div>
-                        <div className={`text-base font-semibold mt-0.5 ${
-                          isComplete || isActive ? "text-gray-800" : "text-gray-500"
-                        }`}>
-                          {step.name}
-                        </div>
-                      </div>
-                      {isActive && (
-                        <div className="ml-2 flex items-center">
-                          <div className="w-2 h-2 bg-blue-600 rounded-full animate-pulse" />
-                        </div>
-                      )}
-                      {isComplete && (
-                        <div className="ml-2 flex items-center">
-                          <svg className="w-5 h-5 text-green-600" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
-                            <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
-                          </svg>
-                        </div>
-                      )}
-                    </div>
-                  );
-                })}
-              </div>
-            )}
+                    );
+                  })}
+                </div>
 
-            {/* Connector line */}
-            {jIdx < journeys.length - 1 && (
-              <div className="absolute left-2.5 top-14 bottom-0 w-0.5 bg-gray-300" />
-            )}
-          </div>
-        ))}
+                {/* Connector line between groups */}
+                {gIdx < groups.length - 1 && (
+                  <div className={`
+                    absolute left-5 top-16 bottom-0 w-0.5 transition-all duration-300
+                    ${isPastGroup ? "bg-green-400" : "bg-gray-200"}
+                  `} />
+                )}
+              </div>
+            );
+          })}
+        </div>
       </div>
     </div>
   );
