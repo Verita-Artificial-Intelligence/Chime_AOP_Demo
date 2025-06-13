@@ -279,154 +279,182 @@
       "action": "Receive ACDV case",
       "results": [
         { "caseId": "ACDV-001", "receivedFrom": "Equifax", "receivedDate": "2024-07-19T09:00:00Z", "disputeCode": "D01", "consumerName": "John Smith", "status": "Received" },
-        { "caseId": "ACDV-002", "receivedFrom": "TransUnion", "receivedDate": "2024-07-18T10:30:00Z", "disputeCode": "D03", "consumerName": "Sarah Johnson", "status": "Received" }
+        { "caseId": "ACDV-002", "receivedFrom": "TransUnion", "receivedDate": "2024-07-18T10:30:00Z", "disputeCode": "D03", "consumerName": "Sarah Johnson", "status": "Received" },
+        { "caseId": "ACDV-003", "receivedFrom": "Experian", "receivedDate": "2024-07-17T09:00:00Z", "disputeCode": "D02", "consumerName": "Mike Williams", "status": "Received" }
       ]
     },
     {
       "action": "Perform B-Point verification",
       "results": [
-        { "verificationId": "BPV-001", "caseId": "ACDV-001", "personalInfoMatch": true, "addressMatch": true, "ssnMatch": true, "dobMatch": true, "overallScore": 95, "status": "Verified" },
-        { "verificationId": "BPV-002", "caseId": "ACDV-002", "personalInfoMatch": true, "addressMatch": false, "ssnMatch": true, "dobMatch": true, "overallScore": 60, "status": "Partially Verified" }
+        { "verificationId": "BPV-001", "caseId": "ACDV-001", "personalInfoMatch": "Yes", "addressMatch": "Yes", "ssnMatch": "Yes", "dobMatch": "Yes", "overallScore": 95, "status": "Verified" },
+        { "verificationId": "BPV-002", "caseId": "ACDV-002", "personalInfoMatch": "Yes", "addressMatch": "No", "ssnMatch": "Yes", "dobMatch": "Yes", "overallScore": 60, "status": "Partially Verified" },
+        { "verificationId": "BPV-003", "caseId": "ACDV-003", "personalInfoMatch": "No", "addressMatch": "No", "ssnMatch": "Yes", "dobMatch": "No", "overallScore": 25, "status": "Failed" }
       ]
     },
     {
       "action": "Investigate dispute code",
       "results": [
-        { "investigationId": "INV-001", "caseId": "ACDV-001", "disputeCode": "D01", "findings": "Account ownership cannot be verified", "requiresEscalation": true, "recommendedAction": "Escalate to Legal" },
-        { "investigationId": "INV-002", "caseId": "ACDV-002", "disputeCode": "D03", "findings": "Payment records confirm zero balance", "requiresEscalation": false, "recommendedAction": "Update credit bureau" }
+        { "investigationId": "INV-001", "caseId": "ACDV-001", "disputeCode": "D01", "findings": "Account ownership cannot be verified", "requiresEscalation": "Yes", "recommendedAction": "Escalate to Legal" },
+        { "investigationId": "INV-002", "caseId": "ACDV-002", "disputeCode": "D03", "findings": "Payment records confirm zero balance", "requiresEscalation": "No", "recommendedAction": "Update credit bureau" },
+        { "investigationId": "INV-003", "caseId": "ACDV-003", "disputeCode": "D02", "findings": "Balance discrepancy with B-point failure", "requiresEscalation": "Yes", "recommendedAction": "Escalate to Fraud-Ops" }
       ]
     },
     {
       "action": "Evaluate escalation requirements",
       "results": [
-        { "evaluationId": "ESC-001", "caseId": "ACDV-001", "escalationRequired": true, "reason": "Identity theft suspected", "departments": ["Fraud-Ops", "Legal/Compliance"] },
-        { "evaluationId": "ESC-002", "caseId": "ACDV-002", "escalationRequired": false, "reason": "Standard dispute resolution", "departments": [] }
+        { "evaluationId": "ESC-001", "caseId": "ACDV-001", "escalationRequired": "Yes", "reason": "Identity theft suspected", "departments": ["Fraud-Ops", "Legal/Compliance"] },
+        { "evaluationId": "ESC-002", "caseId": "ACDV-002", "escalationRequired": "No", "reason": "Standard dispute resolution", "departments": [] },
+        { "evaluationId": "ESC-003", "caseId": "ACDV-003", "escalationRequired": "Yes", "reason": "B-point verification failed", "departments": ["Fraud-Ops", "Legal/Compliance"] }
       ]
     },
     {
-      "action": "Notify Fraud-Ops",
+      "action": "Notify Fraud-Ops (if escalated)",
       "results": [
-        { "notificationId": "FRD-001", "caseId": "ACDV-001", "sentTo": "fraud-ops@company.com", "priority": "High", "status": "Sent", "timestamp": "2024-07-19T10:00:00Z" }
+        { "notificationId": "FRD-001", "caseId": "ACDV-001", "sentTo": "fraud-ops@company.com", "priority": "High", "status": "Sent", "timestamp": "2024-07-19T10:00:00Z", "escalationReason": "Identity theft suspected" },
+        { "notificationId": "FRD-002", "caseId": "ACDV-003", "sentTo": "fraud-ops@company.com", "priority": "Medium", "status": "Sent", "timestamp": "2024-07-17T10:45:00Z", "escalationReason": "B-point verification failed" }
       ]
     },
     {
-      "action": "Notify Legal/Compliance",
+      "action": "Notify Legal/Compliance (if escalated)",
       "results": [
-        { "notificationId": "LGL-001", "caseId": "ACDV-001", "sentTo": "legal-compliance@company.com", "priority": "High", "status": "Sent", "timestamp": "2024-07-19T10:01:00Z" }
+        { "notificationId": "LGL-001", "caseId": "ACDV-001", "sentTo": "legal-compliance@company.com", "priority": "High", "status": "Sent", "timestamp": "2024-07-19T10:01:00Z", "escalationReason": "Account ownership dispute" },
+        { "notificationId": "LGL-002", "caseId": "ACDV-003", "sentTo": "legal-compliance@company.com", "priority": "Medium", "status": "Sent", "timestamp": "2024-07-17T10:46:00Z", "escalationReason": "Regulatory compliance review needed" }
       ]
     },
     {
       "action": "Process through AI Agent",
       "results": [
         { "aiProcessId": "AI-001", "caseId": "ACDV-001", "recommendation": "Delete tradeline", "confidence": "85%", "reasoning": "Identity verification failed", "status": "Processed" },
-        { "aiProcessId": "AI-002", "caseId": "ACDV-002", "recommendation": "Update balance to zero", "confidence": "95%", "reasoning": "Payment verified", "status": "Processed" }
+        { "aiProcessId": "AI-002", "caseId": "ACDV-002", "recommendation": "Update balance to zero", "confidence": "95%", "reasoning": "Payment verified", "status": "Processed" },
+        { "aiProcessId": "AI-003", "caseId": "ACDV-003", "recommendation": "Manual review required", "confidence": "40%", "reasoning": "Multiple verification failures", "status": "Escalated" }
       ]
     },
     {
       "action": "Save case to OSCAR system",
       "results": [
-        { "oscarId": "OSC-001", "caseId": "ACDV-001", "responseCode": "R01", "status": "Saved", "timestamp": "2024-07-19T10:30:00Z", "deactivated": true }
+        { "oscarId": "OSC-001", "caseId": "ACDV-001", "responseCode": "R01", "status": "Saved", "timestamp": "2024-07-19T10:30:00Z", "deactivated": "Yes" },
+        { "oscarId": "OSC-002", "caseId": "ACDV-002", "responseCode": "R02", "status": "Saved", "timestamp": "2024-07-18T14:30:00Z", "deactivated": "Yes" },
+        { "oscarId": "OSC-003", "caseId": "ACDV-003", "responseCode": "R99", "status": "Error", "timestamp": "2024-07-17T11:00:00Z", "deactivated": "Yes" }
       ]
     },
     {
       "action": "Send member acknowledgment",
       "results": [
-        { "acknowledgmentId": "ACK-001", "caseId": "ACDV-001", "sentTo": "john.smith@email.com", "type": "Initial Acknowledgment", "status": "Sent", "timestamp": "2024-07-19T10:45:00Z", "deactivated": true }
+        { "acknowledgmentId": "ACK-001", "caseId": "ACDV-001", "sentTo": "john.smith@email.com", "type": "Initial Acknowledgment", "status": "Sent", "timestamp": "2024-07-19T10:45:00Z", "deactivated": "Yes" },
+        { "acknowledgmentId": "ACK-002", "caseId": "ACDV-002", "sentTo": "sarah.johnson@email.com", "type": "Initial Acknowledgment", "status": "Sent", "timestamp": "2024-07-18T14:45:00Z", "deactivated": "Yes" },
+        { "acknowledgmentId": "ACK-003", "caseId": "ACDV-003", "sentTo": "mike.williams@email.com", "type": "Escalation Acknowledgment", "status": "Sent", "timestamp": "2024-07-17T11:15:00Z", "deactivated": "Yes" }
       ]
     },
     {
       "action": "Submit final response",
       "results": [
-        { "responseId": "RSP-001", "caseId": "ACDV-001", "creditBureau": "Equifax", "responseCode": "Delete", "status": "Submitted", "timestamp": "2024-07-19T11:00:00Z", "deactivated": true }
+        { "responseId": "RSP-001", "caseId": "ACDV-001", "creditBureau": "Equifax", "responseCode": "Delete", "status": "Submitted", "timestamp": "2024-07-19T11:00:00Z", "deactivated": "Yes" },
+        { "responseId": "RSP-002", "caseId": "ACDV-002", "creditBureau": "TransUnion", "responseCode": "Update", "status": "Submitted", "timestamp": "2024-07-18T15:00:00Z", "deactivated": "Yes" },
+        { "responseId": "RSP-003", "caseId": "ACDV-003", "creditBureau": "Experian", "responseCode": "Pending", "status": "On Hold", "timestamp": "2024-07-17T11:30:00Z", "deactivated": "Yes" }
       ]
     },
     {
       "action": "Apply admin notation",
       "results": [
-        { "notationId": "NOTE-001", "caseId": "ACDV-001", "notation": "Identity theft confirmed. Account removed from credit report.", "addedBy": "System", "timestamp": "2024-07-19T11:15:00Z" }
+        { "notationId": "NOTE-001", "caseId": "ACDV-001", "notation": "Identity theft confirmed. Account removed from credit report.", "addedBy": "System", "timestamp": "2024-07-19T11:15:00Z" },
+        { "notationId": "NOTE-002", "caseId": "ACDV-002", "notation": "Balance updated to zero as per payment verification.", "addedBy": "AI Agent", "timestamp": "2024-07-18T15:15:00Z" },
+        { "notationId": "NOTE-003", "caseId": "ACDV-003", "notation": "Case escalated due to verification failure. Pending manual review.", "addedBy": "System", "timestamp": "2024-07-17T11:45:00Z" }
       ]
     },
     {
       "action": "Close case",
       "results": [
-        { "closeId": "CLS-001", "caseId": "ACDV-001", "closedDate": "2024-07-19T11:30:00Z", "resolution": "Account deleted", "timeToResolve": "2.5 hours", "status": "Closed" }
+        { "closeId": "CLS-001", "caseId": "ACDV-001", "closedDate": "2024-07-19T11:30:00Z", "resolution": "Account deleted", "timeToResolve": "2.5 hours", "status": "Closed" },
+        { "closeId": "CLS-002", "caseId": "ACDV-002", "closedDate": "2024-07-18T15:30:00Z", "resolution": "Balance corrected", "timeToResolve": "5 hours", "status": "Closed" },
+        { "closeId": "CLS-003", "caseId": "ACDV-003", "closedDate": "2024-07-17T16:00:00Z", "resolution": "Escalated for review", "timeToResolve": "7 hours", "status": "Pending" }
       ]
     },
     {
       "action": "Check case email status",
       "results": [
-        { "checkId": "CHK-001", "caseId": "IND-001", "emailStatus": "Sent", "emailId": "EMAIL-001", "timestamp": "2024-07-19T08:30:00Z", "deactivated": true },
-        { "checkId": "CHK-002", "caseId": "IND-002", "emailStatus": "Sent", "emailId": "EMAIL-002", "timestamp": "2024-07-18T15:00:00Z", "deactivated": true }
+        { "checkId": "CHK-001", "caseId": "IND-001", "emailStatus": "Sent", "emailId": "EMAIL-001", "timestamp": "2024-07-19T08:30:00Z", "deactivated": "Yes" },
+        { "checkId": "CHK-002", "caseId": "IND-002", "emailStatus": "Sent", "emailId": "EMAIL-002", "timestamp": "2024-07-18T15:00:00Z", "deactivated": "Yes" },
+        { "checkId": "CHK-003", "caseId": "IND-003", "emailStatus": "Pending", "emailId": "EMAIL-003", "timestamp": "2024-07-17T10:30:00Z", "deactivated": "Yes" }
       ]
     },
     {
       "action": "Review dispute content",
       "results": [
         { "reviewId": "REV-001", "caseId": "IND-001", "disputeType": "Balance Incorrect", "claimedAmount": 5000, "reportedAmount": 5500, "category": "Numerical Discrepancy" },
-        { "reviewId": "REV-002", "caseId": "IND-002", "disputeType": "Account Not Mine", "claimedStatus": "No Relationship", "reportedStatus": "Active Account", "category": "Identity Issue" }
+        { "reviewId": "REV-002", "caseId": "IND-002", "disputeType": "Account Not Mine", "claimedStatus": "No Relationship", "reportedStatus": "Active Account", "category": "Identity Issue" },
+        { "reviewId": "REV-003", "caseId": "IND-003", "disputeType": "Payment History Error", "claimedStatus": "Never Late", "reportedStatus": "30 Days Late", "category": "Payment Dispute" }
       ]
     },
     {
       "action": "Verify ID verification",
       "results": [
-        { "idVerifyId": "IDV-001", "caseId": "IND-001", "ssnVerified": true, "nameMatch": 100, "dobMatch": true, "addressCurrent": true, "overallStatus": "Fully Verified" },
-        { "idVerifyId": "IDV-002", "caseId": "IND-002", "ssnVerified": true, "nameMatch": 75, "dobMatch": true, "addressCurrent": false, "overallStatus": "Partial Match" }
+        { "idVerifyId": "IDV-001", "caseId": "IND-001", "ssnVerified": "Yes", "nameMatch": 100, "dobMatch": "Yes", "addressCurrent": "Yes", "overallStatus": "Fully Verified" },
+        { "idVerifyId": "IDV-002", "caseId": "IND-002", "ssnVerified": "Yes", "nameMatch": 75, "dobMatch": "Yes", "addressCurrent": "No", "overallStatus": "Partial Match" },
+        { "idVerifyId": "IDV-003", "caseId": "IND-003", "ssnVerified": "Yes", "nameMatch": 100, "dobMatch": "Yes", "addressCurrent": "Yes", "overallStatus": "Fully Verified" }
       ]
     },
     {
       "action": "Verify account info",
       "results": [
-        { "accountVerifyId": "AV-001", "caseId": "IND-001", "accountExists": true, "ownership": "Confirmed", "status": "Active", "openDate": "2020-01-15", "lastActivity": "2024-07-01" },
-        { "accountVerifyId": "AV-002", "caseId": "IND-002", "accountExists": true, "ownership": "Cannot Confirm", "status": "Active", "openDate": "2019-06-20", "lastActivity": "2023-12-15" }
+        { "accountVerifyId": "AV-001", "caseId": "IND-001", "accountExists": "Yes", "ownership": "Confirmed", "status": "Active", "openDate": "2020-01-15", "lastActivity": "2024-07-01" },
+        { "accountVerifyId": "AV-002", "caseId": "IND-002", "accountExists": "Yes", "ownership": "Cannot Confirm", "status": "Active", "openDate": "2019-06-20", "lastActivity": "2023-12-15" },
+        { "accountVerifyId": "AV-003", "caseId": "IND-003", "accountExists": "Yes", "ownership": "Confirmed", "status": "Active", "openDate": "2021-03-10", "lastActivity": "2024-06-15" }
       ]
     },
     {
       "action": "Verify B-point",
       "results": [
-        { "bpointId": "BPV-001", "caseId": "IND-001", "dataPoints": 7, "matchedPoints": 6, "score": 85.7, "status": "Verified", "deactivated": true },
-        { "bpointId": "BPV-002", "caseId": "IND-002", "dataPoints": 7, "matchedPoints": 2, "score": 28.6, "status": "Failed", "deactivated": true }
+        { "bpointId": "BPV-001", "caseId": "IND-001", "dataPoints": 7, "matchedPoints": 6, "score": 85.7, "status": "Verified", "deactivated": "Yes" },
+        { "bpointId": "BPV-002", "caseId": "IND-002", "dataPoints": 7, "matchedPoints": 2, "score": 28.6, "status": "Failed", "deactivated": "Yes" },
+        { "bpointId": "BPV-003", "caseId": "IND-003", "dataPoints": 7, "matchedPoints": 5, "score": 71.4, "status": "Verified", "deactivated": "Yes" }
       ]
     },
     {
       "action": "Balance vs tradeline check",
       "results": [
-        { "balanceCheckId": "BC-001", "caseId": "IND-001", "reportedBalance": 5500, "actualBalance": 5000, "variance": 500, "withinTolerance": false, "deactivated": true },
-        { "balanceCheckId": "BC-002", "caseId": "IND-002", "reportedBalance": 1000, "actualBalance": 0, "variance": 1000, "withinTolerance": false, "deactivated": true }
+        { "balanceCheckId": "BC-001", "caseId": "IND-001", "reportedBalance": 5500, "actualBalance": 5000, "variance": 500, "withinTolerance": "No", "deactivated": "Yes" },
+        { "balanceCheckId": "BC-002", "caseId": "IND-002", "reportedBalance": 1000, "actualBalance": 0, "variance": 1000, "withinTolerance": "No", "deactivated": "Yes" },
+        { "balanceCheckId": "BC-003", "caseId": "IND-003", "reportedBalance": 2500, "actualBalance": 2500, "variance": 0, "withinTolerance": "Yes", "deactivated": "Yes" }
       ]
     },
     {
       "action": "Process through AI Agent",
       "results": [
         { "aiId": "AI-IND-001", "caseId": "IND-001", "recommendation": "Update Balance", "confidence": 94, "factors": ["Balance discrepancy confirmed", "Account ownership verified", "Recent payment activity"], "processingTime": "1.2s" },
-        { "aiId": "AI-IND-002", "caseId": "IND-002", "recommendation": "Delete Tradeline", "confidence": 98, "factors": ["Identity verification failed", "No account relationship", "B-point mismatch"], "processingTime": "0.8s" }
+        { "aiId": "AI-IND-002", "caseId": "IND-002", "recommendation": "Delete Tradeline", "confidence": 98, "factors": ["Identity verification failed", "No account relationship", "B-point mismatch"], "processingTime": "0.8s" },
+        { "aiId": "AI-IND-003", "caseId": "IND-003", "recommendation": "Update Payment History", "confidence": 88, "factors": ["Account verified", "Payment records show on-time", "Reporting error identified"], "processingTime": "1.0s" }
       ]
     },
     {
       "action": "Draft FCRA response",
       "results": [
-        { "draftId": "DRAFT-001", "caseId": "IND-001", "templateUsed": "FCRA-TEMP-001", "responseType": "Balance Correction", "draftStatus": "Complete", "requiresReview": false },
-        { "draftId": "DRAFT-002", "caseId": "IND-002", "templateUsed": "FCRA-TEMP-002", "responseType": "Account Deletion", "draftStatus": "Complete", "requiresReview": true }
+        { "draftId": "DRAFT-001", "caseId": "IND-001", "templateUsed": "FCRA-TEMP-001", "responseType": "Balance Correction", "draftStatus": "Complete", "requiresReview": "No" },
+        { "draftId": "DRAFT-002", "caseId": "IND-002", "templateUsed": "FCRA-TEMP-002", "responseType": "Account Deletion", "draftStatus": "Complete", "requiresReview": "Yes" },
+        { "draftId": "DRAFT-003", "caseId": "IND-003", "templateUsed": "FCRA-TEMP-003", "responseType": "Payment History Correction", "draftStatus": "Complete", "requiresReview": "No" }
       ]
     },
     {
       "action": "Verify internal notes",
       "results": [
-        { "notesId": "VN-001", "caseId": "IND-001", "notesAdded": true, "noteType": "System Generated", "content": "Balance variance due to pending payment", "deactivated": true },
-        { "notesId": "VN-002", "caseId": "IND-002", "notesAdded": true, "noteType": "AI Generated", "content": "Recommend full account removal - identity not verified", "deactivated": true }
+        { "notesId": "VN-001", "caseId": "IND-001", "notesAdded": "Yes", "noteType": "System Generated", "content": "Balance variance due to pending payment", "deactivated": "Yes" },
+        { "notesId": "VN-002", "caseId": "IND-002", "notesAdded": "Yes", "noteType": "AI Generated", "content": "Recommend full account removal - identity not verified", "deactivated": "Yes" },
+        { "notesId": "VN-003", "caseId": "IND-003", "notesAdded": "Yes", "noteType": "System Generated", "content": "Payment history correction required - system delay confirmed", "deactivated": "Yes" }
       ]
     },
     {
       "action": "Update dispute status",
       "results": [
-        { "updateId": "UPD-001", "caseId": "IND-001", "previousStatus": "AI Processing", "newStatus": "Response Sent", "updatedAt": "2024-07-19T12:00:00Z", "deactivated": true },
-        { "updateId": "UPD-002", "caseId": "IND-002", "previousStatus": "Under Review", "newStatus": "Pending Closure", "updatedAt": "2024-07-18T17:00:00Z", "deactivated": true }
+        { "updateId": "UPD-001", "caseId": "IND-001", "previousStatus": "AI Processing", "newStatus": "Response Sent", "updatedAt": "2024-07-19T12:00:00Z", "deactivated": "Yes" },
+        { "updateId": "UPD-002", "caseId": "IND-002", "previousStatus": "Under Review", "newStatus": "Pending Closure", "updatedAt": "2024-07-18T17:00:00Z", "deactivated": "Yes" },
+        { "updateId": "UPD-003", "caseId": "IND-003", "previousStatus": "In Progress", "newStatus": "Resolved", "updatedAt": "2024-07-17T13:30:00Z", "deactivated": "Yes" }
       ]
     },
     {
       "action": "Save case",
       "results": [
-        { "saveId": "SAVE-001", "caseId": "IND-001", "savedAt": "2024-07-19T12:15:00Z", "dataArchived": true, "responsesSent": true, "caseStatus": "Completed" },
-        { "saveId": "SAVE-002", "caseId": "IND-002", "savedAt": "2024-07-18T17:15:00Z", "dataArchived": true, "responsesSent": true, "caseStatus": "Completed" }
+        { "saveId": "SAVE-001", "caseId": "IND-001", "savedAt": "2024-07-19T12:15:00Z", "dataArchived": "Yes", "responsesSent": "Yes", "caseStatus": "Completed" },
+        { "saveId": "SAVE-002", "caseId": "IND-002", "savedAt": "2024-07-18T17:15:00Z", "dataArchived": "Yes", "responsesSent": "Yes", "caseStatus": "Completed" },
+        { "saveId": "SAVE-003", "caseId": "IND-003", "savedAt": "2024-07-17T13:45:00Z", "dataArchived": "Yes", "responsesSent": "Yes", "caseStatus": "Completed" }
       ]
     }
   ],
@@ -502,7 +530,7 @@
       "Perform B-Point verification",
       "Investigate dispute code",
       "Evaluate escalation requirements",
-      "Notify Fraud-Ops",
+      "Notify Fraud-Ops (if escalated)",
       "Notify Legal/Compliance (if escalated)",
       "Process through AI Agent",
       "Save case to OSCAR system",
@@ -532,14 +560,14 @@
       { "caseId": "ACDV-003", "consumerName": "Mike Williams", "disputeDate": "2024-07-17", "creditBureau": "Experian", "accountNumber": "XXXX-9012", "disputeCode": "D02", "status": "Escalated" }
     ],
     "B-Point Verification Database": [
-      { "verificationId": "BPV-001", "caseId": "ACDV-001", "accountStatus": "Active", "lastPayment": "2024-06-15", "balanceVerified": true, "personalInfoMatch": true, "verificationScore": 95 },
-      { "verificationId": "BPV-002", "caseId": "ACDV-002", "accountStatus": "Closed", "lastPayment": "2024-01-10", "balanceVerified": false, "personalInfoMatch": true, "verificationScore": 60 },
-      { "verificationId": "BPV-003", "caseId": "ACDV-003", "accountStatus": "Active", "lastPayment": "2024-07-01", "balanceVerified": true, "personalInfoMatch": false, "verificationScore": 40 }
+      { "verificationId": "BPV-001", "caseId": "ACDV-001", "accountStatus": "Active", "lastPayment": "2024-06-15", "balanceVerified": "Yes", "personalInfoMatch": "Yes", "verificationScore": 95 },
+      { "verificationId": "BPV-002", "caseId": "ACDV-002", "accountStatus": "Closed", "lastPayment": "2024-01-10", "balanceVerified": "No", "personalInfoMatch": "Yes", "verificationScore": 60 },
+      { "verificationId": "BPV-003", "caseId": "ACDV-003", "accountStatus": "Active", "lastPayment": "2024-07-01", "balanceVerified": "Yes", "personalInfoMatch": "No", "verificationScore": 40 }
     ],
     "Dispute Code Repository": [
-      { "disputeCode": "D01", "description": "Consumer claims account not theirs", "requiredActions": ["Identity verification", "Account ownership check"], "escalationRequired": true },
-      { "disputeCode": "D02", "description": "Balance incorrect", "requiredActions": ["Balance verification", "Payment history review"], "escalationRequired": false },
-      { "disputeCode": "D03", "description": "Account already paid", "requiredActions": ["Payment record verification", "Zero balance confirmation"], "escalationRequired": false }
+      { "disputeCode": "D01", "description": "Consumer claims account not theirs", "requiredActions": ["Identity verification", "Account ownership check"], "escalationRequired": "Yes" },
+      { "disputeCode": "D02", "description": "Balance incorrect", "requiredActions": ["Balance verification", "Payment history review"], "escalationRequired": "No" },
+      { "disputeCode": "D03", "description": "Account already paid", "requiredActions": ["Payment record verification", "Zero balance confirmation"], "escalationRequired": "No" }
     ],
     "Compliance Database": [
       { "ruleId": "FCRA-001", "ruleName": "30-day response requirement", "description": "Must respond to ACDV within 30 days", "status": "Active" },
@@ -547,19 +575,19 @@
       { "ruleId": "FCRA-003", "ruleName": "Consumer notification requirement", "description": "Must notify consumer of investigation results", "status": "Active" }
     ],
     "OSCAR System": [
-      { "oscarId": "OSC-001", "caseId": "ACDV-001", "status": "Saved", "responseCode": "R01", "savedDate": "2024-07-19T10:30:00Z", "deactivated": true },
-      { "oscarId": "OSC-002", "caseId": "ACDV-002", "status": "Pending", "responseCode": "R02", "savedDate": "2024-07-18T14:15:00Z", "deactivated": true },
-      { "oscarId": "OSC-003", "caseId": "ACDV-003", "status": "Error", "responseCode": null, "savedDate": null, "deactivated": true }
+      { "oscarId": "OSC-001", "caseId": "ACDV-001", "status": "Saved", "responseCode": "R01", "savedDate": "2024-07-19T10:30:00Z", "deactivated": "Yes" },
+      { "oscarId": "OSC-002", "caseId": "ACDV-002", "status": "Pending", "responseCode": "R02", "savedDate": "2024-07-18T14:15:00Z", "deactivated": "Yes" },
+      { "oscarId": "OSC-003", "caseId": "ACDV-003", "status": "Error", "responseCode": "R99", "savedDate": "2024-07-17T11:00:00Z", "deactivated": "Yes" }
     ],
     "Consumer Communication System": [
-      { "communicationId": "COMM-001", "caseId": "ACDV-001", "type": "Acknowledgment", "sentDate": "2024-07-19T10:45:00Z", "status": "Delivered", "deactivated": true },
-      { "communicationId": "COMM-002", "caseId": "ACDV-002", "type": "Final Response", "sentDate": "2024-07-18T15:30:00Z", "status": "Delivered", "deactivated": true },
-      { "communicationId": "COMM-003", "caseId": "ACDV-003", "type": "Escalation Notice", "sentDate": null, "status": "Pending", "deactivated": true }
+      { "communicationId": "COMM-001", "caseId": "ACDV-001", "type": "Acknowledgment", "sentDate": "2024-07-19T10:45:00Z", "status": "Delivered", "deactivated": "Yes" },
+      { "communicationId": "COMM-002", "caseId": "ACDV-002", "type": "Final Response", "sentDate": "2024-07-18T15:30:00Z", "status": "Delivered", "deactivated": "Yes" },
+      { "communicationId": "COMM-003", "caseId": "ACDV-003", "type": "Escalation Notice", "sentDate": "2024-07-17T11:15:00Z", "status": "Pending", "deactivated": "Yes" }
     ],
     "Email Communication System": [
-      { "emailId": "EMAIL-001", "caseId": "IND-001", "subject": "Dispute: Account #1234", "receivedDate": "2024-07-19T08:00:00Z", "status": "Sent", "deactivated": true },
-      { "emailId": "EMAIL-002", "caseId": "IND-002", "subject": "Re: Credit Report Issue", "receivedDate": "2024-07-18T14:30:00Z", "status": "Sent", "deactivated": true },
-      { "emailId": "EMAIL-003", "caseId": "IND-003", "subject": "Incorrect Balance Reporting", "receivedDate": "2024-07-17T10:15:00Z", "status": "Pending", "deactivated": true }
+      { "emailId": "EMAIL-001", "caseId": "IND-001", "subject": "Dispute: Account #1234", "receivedDate": "2024-07-19T08:00:00Z", "status": "Sent", "deactivated": "Yes" },
+      { "emailId": "EMAIL-002", "caseId": "IND-002", "subject": "Re: Credit Report Issue", "receivedDate": "2024-07-18T14:30:00Z", "status": "Sent", "deactivated": "Yes" },
+      { "emailId": "EMAIL-003", "caseId": "IND-003", "subject": "Incorrect Balance Reporting", "receivedDate": "2024-07-17T10:15:00Z", "status": "Pending", "deactivated": "Yes" }
     ],
     "Dispute Management Database": [
       { "disputeId": "DISP-001", "caseId": "IND-001", "type": "Balance Incorrect", "consumerName": "Alice Brown", "accountNumber": "XXXX-1234", "status": "Under Review" },
@@ -567,9 +595,9 @@
       { "disputeId": "DISP-003", "caseId": "IND-003", "type": "Payment History Error", "consumerName": "Carol White", "accountNumber": "XXXX-9012", "status": "In Progress" }
     ],
     "Identity Verification System": [
-      { "verificationId": "IDV-001", "caseId": "IND-001", "ssnMatch": true, "nameMatch": true, "dobMatch": true, "addressMatch": true, "score": 100, "status": "Verified" },
-      { "verificationId": "IDV-002", "caseId": "IND-002", "ssnMatch": true, "nameMatch": false, "dobMatch": true, "addressMatch": true, "score": 75, "status": "Partial Match" },
-      { "verificationId": "IDV-003", "caseId": "IND-003", "ssnMatch": true, "nameMatch": true, "dobMatch": true, "addressMatch": false, "score": 85, "status": "Verified" }
+      { "verificationId": "IDV-001", "caseId": "IND-001", "ssnMatch": "Yes", "nameMatch": "100%", "dobMatch": "Yes", "addressMatch": "Yes", "score": 100, "status": "Verified" },
+      { "verificationId": "IDV-002", "caseId": "IND-002", "ssnMatch": "Yes", "nameMatch": "75%", "dobMatch": "Yes", "addressMatch": "No", "score": 75, "status": "Partial Match" },
+      { "verificationId": "IDV-003", "caseId": "IND-003", "ssnMatch": "Yes", "nameMatch": "100%", "dobMatch": "Yes", "addressMatch": "No", "score": 85, "status": "Verified" }
     ],
     "Account Information Database": [
       { "accountId": "ACC-001", "accountNumber": "XXXX-1234", "openDate": "2020-01-15", "currentBalance": 5000, "paymentStatus": "Current", "lastPayment": "2024-07-01" },
@@ -577,14 +605,14 @@
       { "accountId": "ACC-003", "accountNumber": "XXXX-9012", "openDate": "2021-03-10", "currentBalance": 2500, "paymentStatus": "30 Days Late", "lastPayment": "2024-06-15" }
     ],
     "B-Point Verification System": [
-      { "bpointId": "BP-001", "caseId": "IND-001", "accountVerified": true, "balanceMatch": false, "historyMatch": true, "score": 80, "deactivated": true },
-      { "bpointId": "BP-002", "caseId": "IND-002", "accountVerified": false, "balanceMatch": false, "historyMatch": false, "score": 0, "deactivated": true },
-      { "bpointId": "BP-003", "caseId": "IND-003", "accountVerified": true, "balanceMatch": true, "historyMatch": false, "score": 60, "deactivated": true }
+      { "bpointId": "BP-001", "caseId": "IND-001", "accountVerified": "Yes", "balanceMatch": "No", "historyMatch": "Yes", "score": 80, "deactivated": "Yes" },
+      { "bpointId": "BP-002", "caseId": "IND-002", "accountVerified": "No", "balanceMatch": "No", "historyMatch": "No", "score": 0, "deactivated": "Yes" },
+      { "bpointId": "BP-003", "caseId": "IND-003", "accountVerified": "Yes", "balanceMatch": "Yes", "historyMatch": "No", "score": 60, "deactivated": "Yes" }
     ],
     "Balance & Tradeline Database": [
-      { "tradelineId": "TL-001", "accountNumber": "XXXX-1234", "reportedBalance": 5500, "actualBalance": 5000, "discrepancy": 500, "deactivated": true },
-      { "tradelineId": "TL-002", "accountNumber": "XXXX-5678", "reportedBalance": 1000, "actualBalance": 0, "discrepancy": 1000, "deactivated": true },
-      { "tradelineId": "TL-003", "accountNumber": "XXXX-9012", "reportedBalance": 2500, "actualBalance": 2500, "discrepancy": 0, "deactivated": true }
+      { "tradelineId": "TL-001", "accountNumber": "XXXX-1234", "reportedBalance": 5500, "actualBalance": 5000, "discrepancy": 500, "deactivated": "Yes" },
+      { "tradelineId": "TL-002", "accountNumber": "XXXX-5678", "reportedBalance": 1000, "actualBalance": 0, "discrepancy": 1000, "deactivated": "Yes" },
+      { "tradelineId": "TL-003", "accountNumber": "XXXX-9012", "reportedBalance": 2500, "actualBalance": 2500, "discrepancy": 0, "deactivated": "Yes" }
     ],
     "AI Processing Engine": [
       { "processingId": "AI-PROC-001", "caseId": "IND-001", "recommendation": "Update balance", "confidence": 92, "reasoning": "Balance discrepancy confirmed" },
@@ -597,14 +625,14 @@
       { "templateId": "FCRA-TEMP-003", "type": "Payment History Correction", "content": "We have corrected the payment history to accurately reflect the consumer's payment record." }
     ],
     "Internal Notes System": [
-      { "noteId": "NOTE-001", "caseId": "IND-001", "note": "Balance discrepancy due to pending payment not processed", "addedBy": "System", "timestamp": "2024-07-19T11:00:00Z", "deactivated": true },
-      { "noteId": "NOTE-002", "caseId": "IND-002", "note": "Identity theft confirmed, recommend full account removal", "addedBy": "AI Agent", "timestamp": "2024-07-18T15:45:00Z", "deactivated": true },
-      { "noteId": "NOTE-003", "caseId": "IND-003", "note": "Payment posting delay caused reporting error", "addedBy": "Analyst", "timestamp": "2024-07-17T12:30:00Z", "deactivated": true }
+      { "noteId": "NOTE-001", "caseId": "IND-001", "note": "Balance discrepancy due to pending payment not processed", "addedBy": "System", "timestamp": "2024-07-19T11:00:00Z", "deactivated": "Yes" },
+      { "noteId": "NOTE-002", "caseId": "IND-002", "note": "Identity theft confirmed, recommend full account removal", "addedBy": "AI Agent", "timestamp": "2024-07-18T15:45:00Z", "deactivated": "Yes" },
+      { "noteId": "NOTE-003", "caseId": "IND-003", "note": "Payment posting delay caused reporting error", "addedBy": "Analyst", "timestamp": "2024-07-17T12:30:00Z", "deactivated": "Yes" }
     ],
     "Dispute Status Tracker": [
-      { "statusId": "STATUS-001", "caseId": "IND-001", "currentStatus": "Response Drafted", "previousStatus": "Under Investigation", "updatedAt": "2024-07-19T11:30:00Z", "deactivated": true },
-      { "statusId": "STATUS-002", "caseId": "IND-002", "currentStatus": "Pending Closure", "previousStatus": "AI Processing", "updatedAt": "2024-07-18T16:00:00Z", "deactivated": true },
-      { "statusId": "STATUS-003", "caseId": "IND-003", "currentStatus": "In Review", "previousStatus": "Initial Assessment", "updatedAt": "2024-07-17T13:00:00Z", "deactivated": true }
+      { "statusId": "STATUS-001", "caseId": "IND-001", "currentStatus": "Response Drafted", "previousStatus": "Under Investigation", "updatedAt": "2024-07-19T11:30:00Z", "deactivated": "Yes" },
+      { "statusId": "STATUS-002", "caseId": "IND-002", "currentStatus": "Pending Closure", "previousStatus": "AI Processing", "updatedAt": "2024-07-18T16:00:00Z", "deactivated": "Yes" },
+      { "statusId": "STATUS-003", "caseId": "IND-003", "currentStatus": "In Review", "previousStatus": "Initial Assessment", "updatedAt": "2024-07-17T13:00:00Z", "deactivated": "Yes" }
     ],
     "System Activity Logs": [
       { "logId": "LOG-001", "activity": "User login", "timestamp": "2024-07-19T10:00:00Z", "user": "CUST-001" },
