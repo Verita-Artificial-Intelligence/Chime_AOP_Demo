@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import ProgressTracker from "./ProgressTracker";
+import ServiceJourney from "./ServiceJourney";
 import jsPDF from "jspdf";
 import html2canvas from "html2canvas";
 import {
@@ -837,89 +837,91 @@ export function AIAgentExecutionSimulation({
   };
 
   return (
-    <div className="max-w-3xl mx-auto py-8 px-4">
-      {/* Horizontal progress bar at the top */}
-      <div className="mb-8">
-        <ProgressTracker steps={stepperSteps} currentStep={currentStep} />
-      </div>
-      <div id="agent-simulation-content">
-        {/* Modern summary card with pills/badges */}
-        <div className="bg-brand-card border border-brand-border rounded-card shadow-card p-6 flex flex-col gap-4 items-center mb-8 text-white">
-          <div className="flex flex-wrap gap-3 justify-center">
-            <span className="inline-flex items-center justify-start px-3 py-1 rounded-full text-brand-primary font-semibold text-sm">
-              <BriefcaseIcon className="w-4 h-4 mr-1" /> {workflow}
-            </span>
-            {dataSources.map((ds, i) => (
-              <span
-                key={ds + i}
-                className="inline-flex items-center justify-start px-3 py-1 rounded-full text-brand-primary font-semibold text-sm"
-              >
-                <ServerStackIcon className="w-4 h-4 mr-1" /> {ds}
+    <>
+      {/* Service Journey sidebar on the right */}
+      <ServiceJourney steps={stepSequence} currentStep={currentStep} />
+      
+      {/* Main content area with margin to accommodate the sidebar */}
+      <div className="max-w-3xl mx-auto py-8 px-4 pr-96">
+        <div id="agent-simulation-content">
+          {/* Modern summary card with pills/badges */}
+          <div className="bg-brand-card border border-brand-border rounded-card shadow-card p-6 flex flex-col gap-4 items-center mb-8 text-white">
+            <div className="flex flex-wrap gap-3 justify-center">
+              <span className="inline-flex items-center justify-start px-3 py-1 rounded-full text-brand-primary font-semibold text-sm">
+                <BriefcaseIcon className="w-4 h-4 mr-1" /> {workflow}
               </span>
-            ))}
-            <span className="inline-flex items-center justify-start px-3 py-1 rounded-full text-brand-primary font-semibold text-sm">
-              <SparklesIcon className="w-4 h-4 mr-1" /> {llm}
-            </span>
-          </div>
-        </div>
-        {/* Timeline of steps */}
-        {renderedSteps}
-        {/* Loader and Completion */}
-        {!executionComplete && (
-          <div className="text-center mt-10">
-            <div className="loader ease-linear rounded-full border-4 border-t-4 border-brand-primary h-12 w-12 mb-4 mx-auto"></div>
-            <p className="text-lg text-brand-muted">
-              {stepSequence[currentStep].label}...
-            </p>
-          </div>
-        )}
-        {executionComplete && (
-          <div className="flex flex-col items-center justify-center mt-20 mb-12">
-            <div className="bg-brand-card border border-brand-border rounded-card shadow-card px-8 py-6 flex flex-col items-center w-full max-w-md">
-              <span className="inline-flex items-center text-brand-success text-base font-semibold gap-2 mb-4">
-                <svg
-                  className="w-5 h-5 text-brand-success"
-                  fill="none"
-                  stroke="currentColor"
-                  strokeWidth="3"
-                  viewBox="0 0 24 24"
+              {dataSources.map((ds, i) => (
+                <span
+                  key={ds + i}
+                  className="inline-flex items-center justify-start px-3 py-1 rounded-full text-brand-primary font-semibold text-sm"
                 >
-                  <circle
-                    cx="12"
-                    cy="12"
-                    r="10"
-                    stroke="currentColor"
-                    strokeWidth="2"
-                    fill="none"
-                  />
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    d="M8 12l2.5 2.5L16 9"
-                  />
-                </svg>
-                Agent workflow completed successfully!
+                  <ServerStackIcon className="w-4 h-4 mr-1" /> {ds}
+                </span>
+              ))}
+              <span className="inline-flex items-center justify-start px-3 py-1 rounded-full text-brand-primary font-semibold text-sm">
+                <SparklesIcon className="w-4 h-4 mr-1" /> {llm}
               </span>
-              <p className="text-sm text-gray-600 mb-4 text-center">
-                The {workflow === 'fcra-acdv-response' ? 'FCRA ACDV response' : workflow} workflow has been executed and all
-                steps have been completed successfully.
-              </p>
-              <div className="flex justify-center gap-4 mt-2 w-full">
-                <button className="btn-primary w-1/2" onClick={onRestart}>
-                  New Agent
-                </button>
-                <button
-                  className="btn-primary w-1/2"
-                  onClick={handleDownloadPDF}
-                >
-                  Download Report
-                </button>
-              </div>
             </div>
           </div>
-        )}
+          {/* Timeline of steps */}
+          {renderedSteps}
+          {/* Loader and Completion */}
+          {!executionComplete && (
+            <div className="text-center mt-10">
+              <div className="loader ease-linear rounded-full border-4 border-t-4 border-brand-primary h-12 w-12 mb-4 mx-auto"></div>
+              <p className="text-lg text-brand-muted">
+                {stepSequence[currentStep].label}...
+              </p>
+            </div>
+          )}
+          {executionComplete && (
+            <div className="flex flex-col items-center justify-center mt-20 mb-12">
+              <div className="bg-brand-card border border-brand-border rounded-card shadow-card px-8 py-6 flex flex-col items-center w-full max-w-md">
+                <span className="inline-flex items-center text-brand-success text-base font-semibold gap-2 mb-4">
+                  <svg
+                    className="w-5 h-5 text-brand-success"
+                    fill="none"
+                    stroke="currentColor"
+                    strokeWidth="3"
+                    viewBox="0 0 24 24"
+                  >
+                    <circle
+                      cx="12"
+                      cy="12"
+                      r="10"
+                      stroke="currentColor"
+                      strokeWidth="2"
+                      fill="none"
+                    />
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      d="M8 12l2.5 2.5L16 9"
+                    />
+                  </svg>
+                  Agent workflow completed successfully!
+                </span>
+                <p className="text-sm text-gray-600 mb-4 text-center">
+                  The {workflow === 'fcra-acdv-response' ? 'FCRA ACDV response' : workflow} workflow has been executed and all
+                  steps have been completed successfully.
+                </p>
+                <div className="flex justify-center gap-4 mt-2 w-full">
+                  <button className="btn-primary w-1/2" onClick={onRestart}>
+                    New Agent
+                  </button>
+                  <button
+                    className="btn-primary w-1/2"
+                    onClick={handleDownloadPDF}
+                  >
+                    Download Report
+                  </button>
+                </div>
+              </div>
+            </div>
+          )}
+        </div>
       </div>
-    </div>
+    </>
   );
 }
 
