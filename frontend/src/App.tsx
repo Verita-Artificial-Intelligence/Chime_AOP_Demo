@@ -19,6 +19,7 @@ import { HomePage } from "./pages/HomePage";
 import { AOPTemplatesPage } from "./pages/AOPTemplatesPage";
 import { ActiveRunsPage } from "./pages/ActiveRunsPage";
 import { SecurityPage } from "./pages/SecurityPage";
+import { SOPToAOPPage } from "./pages/SOPToAOPPage";
 
 export function App() {
   // Update document title based on configuration
@@ -39,6 +40,7 @@ export function App() {
         <Route path="/aop/builder" element={<AOPBuilderPage />} />
         <Route path="/aop/templates" element={<AOPTemplatesPage />} />
         <Route path="/aop/active-runs" element={<ActiveRunsPage />} />
+        <Route path="/aop/sop-to-aop" element={<SOPToAOPPage />} />
         <Route path="/security" element={<SecurityPage />} />
         <Route path="*" element={<Navigate to="/" replace />} />
       </Routes>
