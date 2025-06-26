@@ -32,6 +32,7 @@ const navItems: NavItem[] = [
       { name: "AOP Templates", href: "/aop/templates" },
       { name: "AOP Run History", href: "/aop/run" },
       { name: "Active Runs", href: "/aop/active-runs" },
+      { name: "SOP to AOP", href: "/aop/sop-to-aop" },
     ],
   },
   { name: "Integrations", href: "/integrations", icon: CircleStackIcon },
