@@ -1,0 +1,15 @@
+[{
+  "step": 34,
+  "action": "type",
+  "element_description": "The 'Actual Payment Amount' input field on the ACDV form.",
+  "element_type": "textfield",
+  "value": "39"
+},
+{
+  "step": 35,
+  "action": "type",
+  "element_description": "The 'Date of Last Payment' input field on the ACDV form.",
+  "element_type": "textfield",
+  "value": "04/12/2025"
+}
+]

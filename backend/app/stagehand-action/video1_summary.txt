@@ -1,0 +1,5 @@
+The user filled out two fields on the ACDV form:
+
+Entered "39" in the 'Actual Payment Amount' field.
+
+Entered "04/12/2025" in the 'Date of Last Payment' field.
