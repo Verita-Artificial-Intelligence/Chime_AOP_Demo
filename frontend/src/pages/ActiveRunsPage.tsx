@@ -45,9 +45,9 @@ interface ActiveRun {
 
 // Verification options with icons
 const verificationOptions = [
-  { value: 'optional', label: 'No Verification', icon: FaSquare },
-  { value: 'default', label: 'Simple Verification', icon: FaCircle },
-  { value: 'gmail', label: 'Gmail Verification', icon: SiGmail },
+  { value: 'default', label: 'No Verification', icon: FaSquare },
+  { value: 'simple', label: 'Simple Verification', icon: FaCircle },
+  { value: 'optional', label: 'Gmail Verification', icon: SiGmail },
   { value: 'slack', label: 'Slack Verification', icon: SiSlack },
 ];
 

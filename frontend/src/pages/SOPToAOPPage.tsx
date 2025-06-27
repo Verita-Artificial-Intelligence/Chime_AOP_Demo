@@ -142,7 +142,7 @@ export const SOPToWorkflowPage: React.FC = () => {
           SOP to {content.platformName}
         </h1>
         <p className="text-brand-muted">
-          Upload your Standard Operating Procedure documents to automatically convert them into {content.platformName} workflows
+          Upload your Standard Operating Procedure documents to automatically convert them into {content.platformName}
         </p>
       </div>
 
