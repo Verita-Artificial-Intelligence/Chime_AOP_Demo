@@ -1,0 +1,488 @@
+[
+  {
+    "step": 1,
+    "action": "click",
+    "element_description": "The 'Penny' browser tab.",
+    "element_type": "tab",
+    "heading": "Clicked tab for tab"
+  },
+  {
+    "step": 2,
+    "action": "type",
+    "element_description": "The 'Account Number' input field in the Member Search section.",
+    "element_type": "textfield",
+    "value": "3519657788799128",
+    "heading": "Typed textfield for section"
+  },
+  {
+    "step": 3,
+    "action": "click",
+    "element_description": "The 'Search' button.",
+    "element_type": "button",
+    "heading": "Clicked button for button"
+  },
+  {
+    "step": 4,
+    "action": "click",
+    "element_description": "The data table row for member 'Victoria Lockhart'.",
+    "element_type": "datatable",
+    "heading": "Clicked datatable for Lockhart'"
+  },
+  {
+    "step": 5,
+    "action": "click",
+    "element_description": "The 'ACDV - A-119486397' browser tab.",
+    "element_type": "tab",
+    "heading": "Clicked tab for tab"
+  },
+  {
+    "step": 6,
+    "action": "click",
+    "element_description": "The checkbox labeled 'This is a non-ownership case... Please uncheck the above checkbox to make the page editable.'",
+    "element_type": "checkbox",
+    "heading": "Clicked checkbox for editable.'"
+  },
+  {
+    "step": 7,
+    "action": "select",
+    "element_description": "The 'Verification Indicator' dropdown for 'First Name'.",
+    "element_type": "selector",
+    "value": "Same",
+    "heading": "Selected selector for Name'"
+  },
+  {
+    "step": 8,
+    "action": "select",
+    "element_description": "The 'Verification Indicator' dropdown for 'Last Name'.",
+    "element_type": "selector",
+    "value": "Same",
+    "heading": "Selected selector for Name'"
+  },
+  {
+    "step": 9,
+    "action": "select",
+    "element_description": "The 'Verification Indicator' dropdown for 'Middle Name'.",
+    "element_type": "selector",
+    "value": "Unknown",
+    "heading": "Selected selector for Name'"
+  },
+  {
+    "step": 10,
+    "action": "select",
+    "element_description": "The 'Verification Indicator' dropdown for 'Social Security Number'.",
+    "element_type": "selector",
+    "value": "Same",
+    "heading": "Selected selector for Number'"
+  },
+  {
+    "step": 11,
+    "action": "type",
+    "element_description": "The 'Date of Birth' text field in the 'Response Information' section.",
+    "element_type": "textfield",
+    "value": "08/05/1990",
+    "heading": "Typed textfield for section"
+  },
+  {
+    "step": 12,
+    "action": "select",
+    "element_description": "The 'Verification Indicator' dropdown for 'Date of Birth'.",
+    "element_type": "selector",
+    "value": "Same",
+    "heading": "Selected selector for Birth'"
+  },
+  {
+    "step": 13,
+    "action": "type",
+    "element_description": "The 'Telephone Number' text field in the 'Response Information' section.",
+    "element_type": "textfield",
+    "value": "(252) 259-1251",
+    "heading": "Typed textfield for section"
+  },
+  {
+    "step": 14,
+    "action": "select",
+    "element_description": "The 'Verification Indicator' dropdown for 'Telephone Number'.",
+    "element_type": "selector",
+    "value": "Same",
+    "heading": "Selected selector for Number'"
+  },
+  {
+    "step": 15,
+    "action": "type",
+    "element_description": "The 'Street Address' text field in the 'Address' section.",
+    "element_type": "textfield",
+    "value": "5701 YACHTMAN CT",
+    "heading": "Typed textfield for section"
+  },
+  {
+    "step": 16,
+    "action": "select",
+    "element_description": "The 'Verification Indicator' dropdown for 'Street Address'.",
+    "element_type": "selector",
+    "value": "Same",
+    "heading": "Selected selector for Address'"
+  },
+  {
+    "step": 17,
+    "action": "type",
+    "element_description": "The 'City' text field in the 'Address' section.",
+    "element_type": "textfield",
+    "value": "BROWNS SUMMIT",
+    "heading": "Typed textfield for section"
+  },
+  {
+    "step": 18,
+    "action": "select",
+    "element_description": "The 'Verification Indicator' dropdown for 'City'.",
+    "element_type": "selector",
+    "value": "Same",
+    "heading": "Selected selector for 'City'"
+  },
+  {
+    "step": 19,
+    "action": "select",
+    "element_description": "The 'Verification Indicator' dropdown for 'State / Province'.",
+    "element_type": "selector",
+    "value": "Same",
+    "heading": "Selected selector for Province'"
+  },
+  {
+    "step": 20,
+    "action": "type",
+    "element_description": "The 'ZIP Code' text field in the 'Address' section.",
+    "element_type": "textfield",
+    "value": "27214",
+    "heading": "Typed textfield for section"
+  },
+  {
+    "step": 21,
+    "action": "select",
+    "element_description": "The 'Verification Indicator' dropdown for 'ZIP Code'.",
+    "element_type": "selector",
+    "value": "Same",
+    "heading": "Selected selector for Code'"
+  },
+  {
+    "step": 22,
+    "action": "type",
+    "element_description": "The 'State / Province' text field in the 'Response Information' section.",
+    "element_type": "textfield",
+    "value": "North Carolina",
+    "heading": "Typed textfield for section"
+  },
+  {
+    "step": 23,
+    "action": "click",
+    "element_description": "The 'Continue' button at the bottom of the form.",
+    "element_type": "button",
+    "heading": "Clicked button for form"
+  },
+  {
+    "step": 24,
+    "action": "click",
+    "element_description": "The 'Penny' browser tab.",
+    "element_type": "tab",
+    "heading": "Clicked tab for tab"
+  },
+  {
+    "step": 25,
+    "action": "click",
+    "element_description": "The 'Credit' link in the left-side navigation menu under 'Products'.",
+    "element_type": "link",
+    "heading": "Clicked link for 'Products'"
+  },
+  {
+    "step": 26,
+    "action": "click",
+    "element_description": "The 'Metro2 Staging Data' browser tab.",
+    "element_type": "tab",
+    "heading": "Clicked tab for tab"
+  },
+  {
+    "step": 27,
+    "action": "type",
+    "element_description": "The 'Metro2 Staging Member ID' input field.",
+    "element_type": "textfield",
+    "value": "82151244",
+    "heading": "Typed textfield for field"
+  },
+  {
+    "step": 28,
+    "action": "click",
+    "element_description": "The 'Run' button with a refresh icon.",
+    "element_type": "button",
+    "heading": "Clicked button for icon"
+  },
+  {
+    "step": 29,
+    "action": "click",
+    "element_description": "The 'Transactions' link in the left navigation menu of the Penny application.",
+    "element_type": "link",
+    "heading": "Clicked link for application"
+  },
+  {
+    "step": 30,
+    "action": "click",
+    "element_description": "The 'Credit builder' tab on the Transactions page.",
+    "element_type": "tab",
+    "heading": "Clicked tab for page"
+  },
+  {
+    "step": 31,
+    "action": "click",
+    "element_description": "The 'Filter' button.",
+    "element_type": "button",
+    "heading": "Clicked button for button"
+  },
+  {
+    "step": 32,
+    "action": "type",
+    "element_description": "The 'to' date range input field in the filter modal.",
+    "element_type": "textfield",
+    "value": "05/16/2025",
+    "heading": "Typed textfield for modal"
+  },
+  {
+    "step": 33,
+    "action": "click",
+    "element_description": "The 'Update table' button in the filter modal.",
+    "element_type": "button",
+    "heading": "Clicked button for modal"
+  },
+  {
+    "step": 34,
+    "action": "type",
+    "element_description": "The 'Actual Payment Amount' input field on the ACDV form.",
+    "element_type": "textfield",
+    "value": "39",
+    "heading": "Typed textfield for form"
+  },
+  {
+    "step": 35,
+    "action": "type",
+    "element_description": "The 'Date of Last Payment' input field on the ACDV form.",
+    "element_type": "textfield",
+    "value": "04/12/2025",
+    "heading": "Typed textfield for form"
+  },
+  {
+    "step": 36,
+    "action": "click",
+    "element_description": "The 'Continue' button.",
+    "element_type": "button",
+    "heading": "Clicked button for button"
+  },
+  {
+    "step": 37,
+    "action": "click",
+    "element_description": "The 'Continue' button on the 'Associated Information' screen.",
+    "element_type": "button",
+    "heading": "Clicked button for screen"
+  },
+  {
+    "step": 38,
+    "action": "select",
+    "element_description": "The 'Response Code' dropdown on the 'Review Screen'.",
+    "element_type": "selector",
+    "value": "23 - Disputed information accurate. Updated account information unrelated to the dispute.",
+    "heading": "Selected selector for Screen'"
+  },
+  {
+    "step": 39,
+    "action": "click",
+    "element_description": "The 'Submit' button.",
+    "element_type": "button",
+    "heading": "Clicked button for button"
+  },
+  {
+    "step": 40,
+    "action": "click",
+    "element_description": "The 'Penny' browser tab.",
+    "element_type": "tab",
+    "heading": "Clicked tab for tab"
+  },
+  {
+    "step": 41,
+    "action": "click",
+    "element_description": "The 'Zendesk profile' link under the 'Profile information' section.",
+    "element_type": "link",
+    "heading": "Clicked link for section"
+  },
+  {
+    "step": 42,
+    "action": "click",
+    "element_description": "The 'New ticket' button in Zendesk.",
+    "element_type": "button",
+    "heading": "Clicked button for Zendesk"
+  },
+  {
+    "step": 43,
+    "action": "select",
+    "element_description": "The 'Assignee' dropdown in the new ticket form.",
+    "element_type": "selector",
+    "value": "FCRA-Ops-T2... (Gustavo Gua...)",
+    "heading": "Selected selector for form"
+  },
+  {
+    "step": 44,
+    "action": "select",
+    "element_description": "The 'Form' dropdown in the new ticket form.",
+    "element_type": "selector",
+    "value": "Compliance Ops FCRA",
+    "heading": "Selected selector for form"
+  },
+  {
+    "step": 45,
+    "action": "select",
+    "element_description": "The 'Contact Reason' dropdown, selecting 'Reported Balance'.",
+    "element_type": "selector",
+    "value": "Reported Balance",
+    "heading": "Selected selector for Balance'"
+  },
+  {
+    "step": 46,
+    "action": "select",
+    "element_description": "The 'Disposition' dropdown, selecting 'N/A'.",
+    "element_type": "selector",
+    "value": "N/A",
+    "heading": "Selected selector for 'N/A'"
+  },
+  {
+    "step": 47,
+    "action": "type",
+    "element_description": "The 'Admin Link' text field.",
+    "element_type": "textfield",
+    "value": "https://admin.1debit.com/admin/users/82151244",
+    "heading": "Typed textfield for field"
+  },
+  {
+    "step": 48,
+    "action": "type",
+    "element_description": "The 'ACDV Number' text field.",
+    "element_type": "textfield",
+    "value": "422649495657003",
+    "heading": "Typed textfield for field"
+  },
+  {
+    "step": 49,
+    "action": "select",
+    "element_description": "The 'Credit Reporting Agency (CRA)' dropdown.",
+    "element_type": "selector",
+    "value": "Transunion",
+    "heading": "Selected selector for dropdown"
+  },
+  {
+    "step": 50,
+    "action": "click",
+    "element_description": "The 'Date Received' date picker, selecting 'June 6, 2025'.",
+    "element_type": "datepicker",
+    "heading": "Clicked datepicker for 2025'"
+  },
+  {
+    "step": 51,
+    "action": "select",
+    "element_description": "The 'Verification Letter' dropdown.",
+    "element_type": "selector",
+    "value": "No",
+    "heading": "Selected selector for dropdown"
+  },
+  {
+    "step": 52,
+    "action": "click",
+    "element_description": "The 'Response Due Date' date picker, selecting 'July 2, 2025'.",
+    "element_type": "datepicker",
+    "heading": "Clicked datepicker for 2025'"
+  },
+  {
+    "step": 53,
+    "action": "select",
+    "element_description": "The 'Dispute Code 1' dropdown.",
+    "element_type": "selector",
+    "value": "118: Disputes current balance or amount past due",
+    "heading": "Selected selector for dropdown"
+  },
+  {
+    "step": 54,
+    "action": "select",
+    "element_description": "The 'Response Code' dropdown.",
+    "element_type": "selector",
+    "value": "23: Disputed information accurate",
+    "heading": "Selected selector for dropdown"
+  },
+  {
+    "step": 55,
+    "action": "type",
+    "element_description": "The 'Case Number' text field.",
+    "element_type": "textfield",
+    "value": "119486397",
+    "heading": "Typed textfield for field"
+  },
+  {
+    "step": 56,
+    "action": "type",
+    "element_description": "The 'Comments' text area.",
+    "element_type": "textarea",
+    "value": "Verified Current Balance or Amount Past Due. Updated Actual Payment Amount and Date of Last Payment in e-Oscar. Incorrect Actual Payment Amount and Date of Last Payment in Metro2.",
+    "heading": "Typed textarea for area"
+  },
+  {
+    "step": 57,
+    "action": "type",
+    "element_description": "The 'Looker Link' text field.",
+    "element_type": "textfield",
+    "value": "https://chime.looker.com/looks/9131?toggle=dat,fi,vis",
+    "heading": "Typed textfield for field"
+  },
+  {
+    "step": 58,
+    "action": "select",
+    "element_description": "The 'Apply macro' dropdown, selecting '23 :: Reporting'.",
+    "element_type": "selector",
+    "value": "23 :: Reporting",
+    "heading": "Selected selector for Reporting'"
+  },
+  {
+    "step": 59,
+    "action": "type",
+    "element_description": "The public reply text area, replacing 'Transunion,Experian,Equifax' with 'Transunion'.",
+    "element_type": "textarea",
+    "value": "Transunion",
+    "heading": "Typed textarea for 'Transunion'"
+  },
+  {
+    "step": 60,
+    "action": "click",
+    "element_description": "The 'Submit as Solved' button.",
+    "element_type": "button",
+    "heading": "Clicked button for button"
+  },
+  {
+    "step": 61,
+    "action": "click",
+    "element_description": "The 'Penny' browser tab.",
+    "element_type": "tab",
+    "heading": "Clicked tab for tab"
+  },
+  {
+    "step": 62,
+    "action": "click",
+    "element_description": "The 'Overview' link in the left navigation menu.",
+    "element_type": "link",
+    "heading": "Clicked link for menu"
+  },
+  {
+    "step": 63,
+    "action": "type",
+    "element_description": "The 'Add a new note here' text area.",
+    "element_type": "textarea",
+    "value": "Responded to FCRA Credit Builder Dispute ZD#119486397",
+    "heading": "Typed textarea for area"
+  },
+  {
+    "step": 64,
+    "action": "click",
+    "element_description": "The 'Create' button to add the note.",
+    "element_type": "button",
+    "heading": "Clicked button for note"
+  }
+]
