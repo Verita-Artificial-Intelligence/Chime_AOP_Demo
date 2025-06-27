@@ -1,9 +1,9 @@
-import { useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import mockData from "../data/mockData.json"; // Import mockData
 
-// Interface for an AOP Instance (Run History Item)
-interface AOPInstance {
+// Interface for a Workflow Instance (Run History Item)
+interface WorkflowInstance {
   id: string;
   name: string;
   description?: string;
@@ -25,10 +25,10 @@ interface AOPInstance {
   createdAt?: string; // lastRun could serve a similar purpose or use original createdAt if available
 }
 
-const RUN_HISTORY_STORAGE_KEY = "aopRunHistory"; // New storage key for run instances
+const RUN_HISTORY_STORAGE_KEY = "workflowRunHistory"; // New storage key for run instances
 
 // Function to get stored run history or fallback to mockData
-function getStoredRunHistory(): AOPInstance[] {
+function getStoredRunHistory(): WorkflowInstance[] {
   const stored = localStorage.getItem(RUN_HISTORY_STORAGE_KEY);
   if (stored) {
     try {
@@ -47,13 +47,13 @@ function getStoredRunHistory(): AOPInstance[] {
 }
 
 // Function to save run history (Potentially to be used when new runs occur)
-function saveRunHistory(runInstances: AOPInstance[]) {
+function saveRunHistory(runInstances: WorkflowInstance[]) {
   localStorage.setItem(RUN_HISTORY_STORAGE_KEY, JSON.stringify(runInstances));
 }
 
-export default function AOPRunHistoryPage() {
+export default function WorkflowRunHistoryPage() {
   // Renamed component
-  const [runHistory, setRunHistory] = useState<AOPInstance[]>(
+  const [runHistory, setRunHistory] = useState<WorkflowInstance[]>(
     getStoredRunHistory()
   );
   const navigate = useNavigate();
@@ -77,7 +77,7 @@ export default function AOPRunHistoryPage() {
     JSON.stringify(runHistory) === JSON.stringify(mockData.aopsInstances || []);
 
   // Helper function to get display status
-  const getDisplayStatus = (run: AOPInstance) => {
+  const getDisplayStatus = (run: WorkflowInstance) => {
     if (
       run.status.toLowerCase().includes("active") ||
       run.status.toLowerCase().includes("running")
@@ -101,18 +101,18 @@ export default function AOPRunHistoryPage() {
       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-6">
         <div>
           <h1 className="text-3xl font-bold text-brand-heading">
-            AOP Run History
+            Workflow Run History
           </h1>
           <p className="text-brand-muted opacity-70 mt-1">
             View the execution history of your Automated Operation Procedures.
           </p>
         </div>
-        {/* Button to navigate to AOP builder page */}
+        {/* Button to navigate to Workflow builder page */}
         <button
           className="mt-4 sm:mt-0 px-6 py-2.5 bg-brand-primary text-brand-dark rounded-md text-sm font-semibold hover:bg-brand-hover transition-all duration-200 whitespace-nowrap"
-          onClick={() => navigate("/aop/builder")} // Navigate to the AOP builder
+          onClick={() => navigate("/workflow/builder")} // Navigate to the Workflow builder
         >
-          Build New AOP
+          Build New Workflow
         </button>
       </div>
 
@@ -137,7 +137,7 @@ export default function AOPRunHistoryPage() {
             No Run History Found
           </h3>
           <p className="mt-1 text-sm text-brand-muted opacity-70">
-            Get started by building and running an AOP.
+            Get started by building and running a workflow.
           </p>
         </div>
       )}
@@ -158,7 +158,7 @@ export default function AOPRunHistoryPage() {
                 <div>
                   <h2
                     className="text-xl font-semibold text-brand-heading hover:text-brand-primary cursor-pointer"
-                    onClick={() => navigate(`/aop/run/${run.id}`)}
+                    onClick={() => navigate(`/workflow/run/${run.id}`)}
                   >
                     {run.name}
                   </h2>
@@ -260,7 +260,7 @@ export default function AOPRunHistoryPage() {
                 </button>
                 <button
                   className="px-4 py-1.5 bg-brand-primary text-brand-dark rounded-md text-xs font-semibold hover:bg-brand-hover transition-all duration-200"
-                  onClick={() => navigate(`/aop/run/${run.id}`)} // Navigate to the specific run simulation/details page
+                  onClick={() => navigate(`/workflow/run/${run.id}`)} // Navigate to the specific run simulation/details page
                 >
                   {isActive ? "View Progress" : "View Details"}
                 </button>

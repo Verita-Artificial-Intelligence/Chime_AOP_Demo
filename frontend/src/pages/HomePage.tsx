@@ -11,27 +11,27 @@ import content from "../config/content";
 
 const quickAccessItems = [
   {
-    name: "AOP Templates",
-    href: "/aop/templates",
+    name: "Workflow Templates",
+    href: "/workflow/templates",
     description: "Browse pre-built automation templates for common workflows.",
     icon: BoltIcon,
   },
   {
-    name: "Build an AOP (Legacy)",
-    href: "/aop",
-    description: "Manually configure a new Automated Operation Procedure.",
+    name: "Build a Workflow (Legacy)",
+    href: "/workflow",
+    description: "Manually configure a new automated workflow.",
     icon: BoltIcon,
   },
   {
-    name: "AOP Chat Builder",
-    href: "/aop/builder",
-    description: "Use a chat interface to guide you through building an AOP.",
+    name: "Workflow Chat Builder",
+    href: "/workflow/builder",
+    description: "Use a chat interface to guide you through building a workflow.",
     icon: BoltIcon, // Consider a different icon if you have one for chat/AI
   },
   {
-    name: "View Run History",
-    href: "/aop/run",
-    description: "Check the status and history of your AOP executions.",
+    name: "Active Runs",
+    href: "/workflow/active-runs",
+    description: "Check the status and history of your workflow executions.",
     icon: CircleStackIcon,
   },
   {
@@ -58,7 +58,7 @@ export function HomePage() {
         </h1>
         <p className="text-lg text-brand-dark mb-6">
           Streamline your operations with powerful automation tools. Build,
-          manage, and monitor your Automated Operation Procedures (AOPs) all in
+          manage, and monitor your automated workflows all in
           one place.
         </p>
         <p className="text-brand-muted">

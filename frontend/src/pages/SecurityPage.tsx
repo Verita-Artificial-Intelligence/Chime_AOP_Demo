@@ -200,8 +200,8 @@ export const SecurityPage: React.FC = () => {
                   <div className="space-y-3">
                     {[
                       { role: 'Admin', users: 3, permissions: 'Full access to all features' },
-                      { role: 'Standard', users: 24, permissions: 'Create and manage AOPs' },
-                      { role: 'Read-Only', users: 15, permissions: 'View AOPs and reports only' }
+                      { role: 'Standard', users: 24, permissions: 'Create and manage workflows' },
+                      { role: 'Read-Only', users: 15, permissions: 'View workflows and reports only' }
                     ].map(item => (
                       <div key={item.role} className="border border-gray-200 rounded-lg p-3">
                         <div className="flex items-center justify-between">

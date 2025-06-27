@@ -18,11 +18,11 @@ We have successfully abstracted client-specific text and branding into a central
 The following components were refactored to use the configuration:
 
 #### HomePage.tsx
-- Replaced hardcoded "Welcome to the Chime AOPS Platform" with `content.welcomeMessage`
+- Replaced hardcoded "Welcome to the Chime Workflows Platform" with `content.welcomeMessage`
+- Replaced hardcoded "Chime" with `content.clientName`
 
-#### AOPPage.tsx
-- Replaced "Welcome to the Chime AOPS Builder" with `content.builderWelcomeMessage`
-- Replaced "Chime workflows..." description with `content.builderDescription`
+#### WorkflowPage.tsx
+- Replaced "Welcome to the Chime Workflows Builder" with `content.builderWelcomeMessage`
 
 #### Layout.tsx
 - Header title now uses `{content.clientName} {content.platformName}`
@@ -41,12 +41,12 @@ The following components were refactored to use the configuration:
 
 ### Text Content
 - `clientName`: Client's company name
-- `platformName`: Platform abbreviation (e.g., "AOPS")
-- `platformFullName`: Full platform name
+- `platformName`: Platform abbreviation (e.g., "Workflows")
+- `platformFullName`: Full platform name (e.g., "Chime Workflows Platform")
 - `pageTitleSuffix`: Browser tab title suffix
 - `welcomeMessage`: Home page welcome message
-- `builderWelcomeMessage`: AOP builder welcome message
-- `builderDescription`: AOP builder description
+- `builderWelcomeMessage`: Workflow builder welcome message
+- `builderDescription`: Workflow builder description
 - `footerText`: Footer copyright text
 
 ### Colors
@@ -65,13 +65,13 @@ Example for JP Morgan:
 ```typescript
 const content: ContentConfig = {
   clientName: "JP Morgan",
-  platformName: "AOPS",
-  platformFullName: "JP Morgan AOPS Platform",
+  platformName: "Workflows",
+  platformFullName: "JP Morgan Workflows Platform",
   pageTitleSuffix: "Automation Platform",
-  welcomeMessage: "Welcome to the JP Morgan AOPS Platform",
-  builderWelcomeMessage: "Welcome to the JP Morgan AOPS Builder",
+  welcomeMessage: "Welcome to the JP Morgan Workflows Platform",
+  builderWelcomeMessage: "Welcome to the JP Morgan Workflows Builder",
   builderDescription: "JP Morgan workflows. Get started by selecting a workflow template.",
-  footerText: "© 2025 JP Morgan AOPS",
+  footerText: "© 2025 JP Morgan Workflows",
   colors: {
     primary: "#003087",
     primaryHover: "#002060",

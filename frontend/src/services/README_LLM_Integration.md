@@ -1,7 +1,7 @@
-# LLM Integration for AOP Builder
+# LLM Integration for Workflow Builder
 
 ## Overview
-The AOP Builder now supports dynamic workflow generation using Large Language Models (LLMs). When users input requests that don't match the predefined "fraud" or "compliance" keywords, the system will use an LLM to generate a custom workflow.
+The Workflow Builder now supports dynamic workflow generation using Large Language Models (LLMs). When users input requests that don't match the predefined "fraud" or "compliance" keywords, the system will use an LLM to generate a custom workflow.
 
 ## Setup
 
@@ -24,7 +24,7 @@ REACT_APP_LLM_API_ENDPOINT=https://api.openai.com/v1/chat/completions
    - Otherwise → Calls LLM to generate a custom workflow
 
 2. **LLM Prompt Structure**: The system sends a carefully crafted prompt to the LLM that includes:
-   - System role as an "AOP builder specialist"
+   - System role as a "workflow builder specialist"
    - Example output format (JSON structure)
    - User's raw query
    - Guidelines for generating appropriate workflows
@@ -130,3 +130,8 @@ To test without an API key, simply leave `REACT_APP_LLM_API_KEY` empty or undefi
 3. **Multi-language**: Support for non-English queries
 4. **Workflow Templates**: Save and share custom workflows
 5. **Advanced Validation**: More sophisticated workflow validation 
+
+## Integration Details
+
+### System Prompt
+- System role as a "workflow builder specialist" 

@@ -83,7 +83,7 @@ const templates: Template[] = [
   },
 ];
 
-export const AOPTemplatesPage: React.FC = () => {
+export const WorkflowTemplatesPage: React.FC = () => {
   const navigate = useNavigate();
 
   const handleTemplateClick = (templateId: string) => {
@@ -92,7 +92,7 @@ export const AOPTemplatesPage: React.FC = () => {
 
     if (templateConfig) {
       // Navigate directly to active runs with the template configuration
-      navigate("/aop/active-runs", {
+      navigate("/workflow/active-runs", {
         state: {
           id: `run-${templateId}-${Date.now()}`,
           name: templateConfig.name,
@@ -179,7 +179,7 @@ export const AOPTemplatesPage: React.FC = () => {
           Builder.
         </p>
         <button
-          onClick={() => navigate("/aop/builder")}
+          onClick={() => navigate("/workflow/builder")}
           className="px-4 py-2 bg-brand-primary text-brand-dark rounded-md hover:bg-brand-hover transition-colors font-semibold"
         >
           Create Custom Workflow

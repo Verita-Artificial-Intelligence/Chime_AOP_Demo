@@ -11,15 +11,15 @@ import content, { applyThemeColors } from "./config/content";
 import { Layout } from "./components/Layout";
 // Page Components
 import { IntegrationsPage } from "./pages/IntegrationsPage";
-import { AOPPage } from "./pages/AOPPage";
-import AOPRunPage from "./pages/AOPRunPage";
-import { AOPBuilderPage } from "./pages/AOPBuilderPage";
-import AgentsPage from "./pages/AgentsPage";
+import { WorkflowPage } from "./pages/AOPPage";
+import WorkflowRunPage from "./pages/AOPRunPage";
+import { WorkflowBuilderPage } from "./pages/AOPBuilderPage";
+import WorkflowRunHistoryPage from "./pages/AgentsPage";
 import { HomePage } from "./pages/HomePage";
-import { AOPTemplatesPage } from "./pages/AOPTemplatesPage";
+import { WorkflowTemplatesPage } from "./pages/AOPTemplatesPage";
 import { ActiveRunsPage } from "./pages/ActiveRunsPage";
 import { SecurityPage } from "./pages/SecurityPage";
-import { SOPToAOPPage } from "./pages/SOPToAOPPage";
+import { SOPToWorkflowPage } from "./pages/SOPToAOPPage";
 
 export function App() {
   // Update document title based on configuration
@@ -34,13 +34,13 @@ export function App() {
       <Routes>
         <Route path="/" element={<HomePage />} />
         <Route path="/integrations" element={<IntegrationsPage />} />
-        <Route path="/aop" element={<AOPPage />} />
-        <Route path="/aop/run" element={<AgentsPage />} />
-        <Route path="/aop/run/:id" element={<AOPRunPage />} />
-        <Route path="/aop/builder" element={<AOPBuilderPage />} />
-        <Route path="/aop/templates" element={<AOPTemplatesPage />} />
-        <Route path="/aop/active-runs" element={<ActiveRunsPage />} />
-        <Route path="/aop/sop-to-aop" element={<SOPToAOPPage />} />
+        <Route path="/workflow" element={<WorkflowPage />} />
+        <Route path="/workflow/run" element={<WorkflowRunHistoryPage />} />
+        <Route path="/workflow/run/:id" element={<WorkflowRunPage />} />
+        <Route path="/workflow/builder" element={<WorkflowBuilderPage />} />
+        <Route path="/workflow/templates" element={<WorkflowTemplatesPage />} />
+        <Route path="/workflow/active-runs" element={<ActiveRunsPage />} />
+        <Route path="/workflow/sop-to-workflow" element={<SOPToWorkflowPage />} />
         <Route path="/security" element={<SecurityPage />} />
         <Route path="*" element={<Navigate to="/" replace />} />
       </Routes>

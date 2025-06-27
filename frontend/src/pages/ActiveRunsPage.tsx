@@ -111,7 +111,7 @@ const VerificationDropdown: React.FC<{
   );
 };
   
-interface SOPToAOPStep {
+interface SOPToWorkflowStep {
   step: number;
   action: string;
   element_description: string;
@@ -191,17 +191,17 @@ export const ActiveRunsPage: React.FC = () => {
     return steps;
   };
 
-  const [sopToAopData, setSopToAopData] = useState<SOPToAOPStep[] | null>(null);
+  const [sopToWorkflowData, setSopToWorkflowData] = useState<SOPToWorkflowStep[] | null>(null);
   const [currentStep, setCurrentStep] = useState(0);
 
-  // Check if we're coming from SOP to AOP
+  // Check if we're coming from SOP to Workflow
   useEffect(() => {
     const source = searchParams.get("source");
-    if (source === "sop-to-aop") {
-      const data = sessionStorage.getItem("sopToAopData");
+    if (source === "sop-to-workflow") {
+      const data = sessionStorage.getItem("sopToWorkflowData");
       if (data) {
-        setSopToAopData(JSON.parse(data));
-        sessionStorage.removeItem("sopToAopData");
+        setSopToWorkflowData(JSON.parse(data));
+        sessionStorage.removeItem("sopToWorkflowData");
         // Start the animation
         setTimeout(() => setCurrentStep(1), 500);
       }
@@ -210,15 +210,15 @@ export const ActiveRunsPage: React.FC = () => {
 
   // Animate through steps
   useEffect(() => {
-    if (sopToAopData && currentStep > 0 && currentStep < sopToAopData.length) {
+    if (sopToWorkflowData && currentStep > 0 && currentStep < sopToWorkflowData.length) {
       const timer = setTimeout(() => {
         setCurrentStep(currentStep + 1);
       }, 2000);
       return () => clearTimeout(timer);
     }
-  }, [currentStep, sopToAopData]);
+  }, [currentStep, sopToWorkflowData]);
 
-  // Check if we're coming from the AOP Builder or Templates with a new run
+  // Check if we're coming from the Workflow Builder or Templates with a new run
   useEffect(() => {
     if (location.state && location.state.workflow) {
       const workflowId = location.state.id || `run-${Date.now()}`;
@@ -540,7 +540,7 @@ export const ActiveRunsPage: React.FC = () => {
         {
           timestamp: new Date().toISOString(),
           status: "Success",
-          details: "AOP workflow completed successfully"
+          details: "Workflow completed successfully"
         }
       ],
       metrics: {
@@ -578,8 +578,8 @@ export const ActiveRunsPage: React.FC = () => {
     navigate("/aop/run");
   };
 
-  // If we're showing SOP to AOP data
-  if (sopToAopData) {
+  // If we're showing SOP to Workflow data
+  if (sopToWorkflowData) {
     const getActionIcon = (action: string) => {
       switch (action) {
         case "type":
@@ -609,11 +609,11 @@ export const ActiveRunsPage: React.FC = () => {
     return (
       <div className="max-w-4xl mx-auto">
         <div className="mb-8">
-          <h1 className="text-3xl font-bold text-brand-dark mb-2">
-            SOP to AOP Agent Journey
+          <h1 className="text-2xl font-bold text-gray-800 mb-1">
+            SOP to Workflow Agent Journey
           </h1>
-          <p className="text-brand-muted">
-            AI agent executing automated workflow steps
+          <p className="text-gray-500 text-center">
+            No current workflow is running
           </p>
         </div>
 
@@ -621,24 +621,24 @@ export const ActiveRunsPage: React.FC = () => {
           <div className="mb-6">
             <div className="flex items-center justify-between mb-2">
               <span className="text-sm font-medium text-gray-700">
-                Progress: Step {currentStep} of {sopToAopData.length}
+                Progress: Step {currentStep} of {sopToWorkflowData.length}
               </span>
               <span className="text-sm text-gray-600">
-                {Math.round((currentStep / sopToAopData.length) * 100)}% Complete
+                {Math.round((currentStep / sopToWorkflowData.length) * 100)}% Complete
               </span>
             </div>
             <div className="w-full bg-gray-200 rounded-full h-2">
               <div
                 className="bg-brand-primary h-2 rounded-full transition-all duration-500"
                 style={{
-                  width: `${(currentStep / sopToAopData.length) * 100}%`,
+                  width: `${(currentStep / sopToWorkflowData.length) * 100}%`,
                 }}
               />
             </div>
           </div>
 
           <div className="space-y-4">
-            {sopToAopData.map((step, index) => {
+            {sopToWorkflowData.map((step, index) => {
               const isActive = index < currentStep;
               const isCurrent = index === currentStep - 1;
               
@@ -705,7 +705,7 @@ export const ActiveRunsPage: React.FC = () => {
             })}
           </div>
 
-          {currentStep === sopToAopData.length && (
+          {currentStep === sopToWorkflowData.length && (
             <div className="mt-6 text-center">
               <div className="inline-flex items-center gap-2 px-4 py-2 bg-green-100 text-green-700 rounded-lg">
                 <CheckCircleIcon className="h-5 w-5" />
@@ -765,7 +765,7 @@ export const ActiveRunsPage: React.FC = () => {
             <PlayIcon className="h-8 w-8 text-gray-400" />
           </div>
           <h2 className="text-xl font-semibold text-gray-900 mb-2">
-            No current AOP is running
+            No current workflow is running
           </h2>
           <p className="text-gray-600 mb-6">
             Start a new automation workflow from templates or create your own
@@ -779,9 +779,9 @@ export const ActiveRunsPage: React.FC = () => {
             </button>
             <button
               onClick={() => navigate("/aop/builder")}
-              className="px-4 py-2 border border-brand-primary text-brand-primary rounded-md hover:bg-brand-light transition-colors"
+              className="px-6 py-3 bg-brand-primary text-brand-dark rounded-lg shadow-md hover:bg-brand-hover transition-all duration-200 font-semibold"
             >
-              Create Custom AOP
+              Create Custom Workflow
             </button>
           </div>
         </div>

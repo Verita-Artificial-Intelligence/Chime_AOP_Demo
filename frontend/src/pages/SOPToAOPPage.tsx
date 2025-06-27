@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { ArrowUpTrayIcon, DocumentIcon } from "@heroicons/react/24/outline";
 import content from "../config/content";
 
-export const SOPToAOPPage: React.FC = () => {
+export const SOPToWorkflowPage: React.FC = () => {
   const navigate = useNavigate();
   const [files, setFiles] = useState<File[]>([]);
   const [isDragging, setIsDragging] = useState(false);
@@ -70,7 +70,7 @@ export const SOPToAOPPage: React.FC = () => {
       await new Promise(resolve => setTimeout(resolve, 2000));
       
       // Store the agent journey data in sessionStorage for the active runs page
-      const agentJourneyData = [
+      const steps = [
         {
           "step": 1,
           "action": "type",
@@ -123,10 +123,10 @@ export const SOPToAOPPage: React.FC = () => {
         }
       ];
       
-      sessionStorage.setItem("sopToAopData", JSON.stringify(agentJourneyData));
+      sessionStorage.setItem("sopToWorkflowData", JSON.stringify(steps));
       
-      // Navigate to active runs page
-      navigate("/aop/active-runs?source=sop-to-aop");
+      // Navigate to the active runs page with a parameter
+      navigate("/workflow/active-runs?source=sop-to-workflow");
     } catch (error) {
       console.error("Upload failed:", error);
       // Handle error appropriately

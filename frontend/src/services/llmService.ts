@@ -1,6 +1,6 @@
 /// <reference types="vite/client" />
 
-// LLM Service for generating AOP workflows
+// LLM Service for generating workflow configurations
 // This service will handle communication with the LLM API
 
 interface LLMWorkflowResponse {
@@ -124,7 +124,7 @@ class LLMService {
     userQuery: string,
     files: UploadedFile[]
   ): Promise<LLMWorkflowResponse | LLMError> {
-    const systemPrompt = `You are an expert AOP (Automated Operations Procedure) builder specialist. Your task is to analyze user requests along with any provided images or videos to generate structured workflow configurations for automation.
+    const systemPrompt = `You are an expert workflow (Automated Operations Procedure) builder specialist. Your task is to analyze user requests along with any provided images or videos to generate structured workflow configurations for automation.
 
 When analyzing images or videos:
 1. Look for UI elements, forms, screens, workflows, or processes shown
@@ -144,7 +144,7 @@ Guidelines:
 
     const userPrompt =
       userQuery ||
-      "Analyze the provided images/videos and create an appropriate AOP workflow based on what you see.";
+      "Analyze the provided images/videos and create an appropriate workflow based on what you see.";
 
     try {
       // Check if API key is available
@@ -251,7 +251,7 @@ Guidelines:
   async generateWorkflow(
     userQuery: string
   ): Promise<LLMWorkflowResponse | LLMError> {
-    const systemPrompt = `You are an expert AOP (Automated Operations Procedure) builder specialist. Your task is to analyze user requests and generate structured workflow configurations for automation.
+    const systemPrompt = `You are an expert workflow (Automated Operations Procedure) builder specialist. Your task is to analyze user requests and generate structured workflow configurations for automation.
 
 Guidelines:
 1. The "name" should be a clear, concise title for the workflow
@@ -262,7 +262,7 @@ Guidelines:
 6. "llm" should be "general-purpose-llm" for most cases
 7. "category" should be one of: "Finance & Accounting", "HR & Payroll", "Operations", "Customer Service", "IT & Security", "Sales & Marketing", "Supply Chain", "General"`;
 
-    const userPrompt = `Create an AOP workflow for the following request: "${userQuery}"`;
+    const userPrompt = `Create a workflow for the following request: "${userQuery}"`;
 
     try {
       // Check if API key is available, if not return mock response

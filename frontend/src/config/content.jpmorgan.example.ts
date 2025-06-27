@@ -6,20 +6,20 @@ import { ContentConfig } from "./content";
 const content: ContentConfig = {
   // Client branding
   clientName: "JP Morgan",
-  platformName: "AOPS",
-  platformFullName: "JP Morgan AOPS Platform",
+  platformName: "Workflows",
+  platformFullName: "JP Morgan Workflows Platform",
 
   // Page titles and metadata
   pageTitleSuffix: "Automation Platform",
 
   // Welcome messages
-  welcomeMessage: "JP Morgan AOPS Platform",
-  builderWelcomeMessage: "JP Morgan AOPS Builder",
+  welcomeMessage: "JP Morgan Workflows Platform",
+  builderWelcomeMessage: "JP Morgan Workflows Builder",
   builderDescription:
     "JP Morgan workflows. Get started by selecting a workflow template.",
 
   // Footer
-  footerText: "© 2025 JP Morgan AOPS",
+  footerText: "© 2025 JP Morgan Workflows",
 
   // Brand colors
   colors: {

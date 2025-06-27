@@ -21,20 +21,20 @@ export interface ContentConfig {
 const content: ContentConfig = {
   // Client branding
   clientName: "Chime",
-  platformName: "AOPS",
-  platformFullName: "Chime AOPS Platform",
+  platformName: "Workflows",
+  platformFullName: "Chime Workflows Platform",
 
   // Page titles and metadata
   pageTitleSuffix: "Workflows Demo",
 
   // Welcome messages
-  welcomeMessage: "Chime AOP Platform",
-  builderWelcomeMessage: "Chime AOPS Builder",
+  welcomeMessage: "Chime Workflow Platform",
+  builderWelcomeMessage: "Chime Workflows Builder",
   builderDescription:
     "Chime workflows. Get started by selecting a workflow template.",
 
   // Footer
-  footerText: "© 2025 Chime AOPS",
+  footerText: "© 2025 Chime Workflows",
 
   // Brand colors
   colors: {

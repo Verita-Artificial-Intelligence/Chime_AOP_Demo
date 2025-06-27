@@ -526,9 +526,9 @@
       ]
     }
   ],
-  "aopsInstances": [
+  "workflowInstances": [
     {
-      "id": "AOP1",
+      "id": "WORKFLOW1",
       "name": "FCRA - Respond to ACDV case, Apply response code, Respond to consumer",
       "description": "Automate the Fair Credit Reporting Act (FCRA) response process for ACDV cases, including verification, investigation, escalation handling, and consumer communication.",
       "category": "Compliance & Legal",

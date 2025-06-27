@@ -210,7 +210,7 @@ export function AIAgentExecutionSimulation({
         {
           timestamp: runStartTime,
           status: "Started",
-          details: "AOP workflow execution started",
+          details: "Workflow execution started",
         },
         ...dataSources.map((ds, index) => ({
           timestamp: new Date(
@@ -230,7 +230,7 @@ export function AIAgentExecutionSimulation({
         {
           timestamp: new Date().toISOString(),
           status: "Success",
-          details: "AOP workflow completed successfully",
+          details: "Workflow completed successfully",
         },
       ],
       metrics: {

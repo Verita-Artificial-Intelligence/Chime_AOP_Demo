@@ -21,7 +21,7 @@ type Result = {
   };
 } | null;
 
-export function AOPPage() {
+export function WorkflowPage() {
   const [step, setStep] = React.useState(0);
   const [workflow, setWorkflow] = React.useState<WorkflowId>("");
   const [dataSources, setDataSources] = React.useState<DataSource[]>([]);
@@ -114,18 +114,19 @@ export function AOPPage() {
       case 0:
         return (
           <div className="space-y-4">
-            <h2 className="text-2xl font-semibold text-brand-dark">
-              {content.builderWelcomeMessage}
-            </h2>
+            <h1 className="text-2xl md:text-3xl font-bold text-brand-heading mb-2">
+              Create Automated Workflows to streamline your{" "}
+              <span className="text-brand-primary">daily operations</span>
+            </h1>
             <p className="text-brand-muted">
-              Create Automated Operations Procedures (AOPS) to streamline your{" "}
+              Create automated workflows to streamline your{" "}
               {content.builderDescription}
             </p>
             <button
-              onClick={next}
-              className="px-6 py-2 text-brand-dark bg-brand-primary rounded-md hover:bg-brand-hover focus:outline-none focus:ring-2 focus:ring-brand-primary focus:ring-opacity-50 transition-all duration-200"
+              onClick={() => navigate("/workflow/templates")}
+              className="w-full px-8 py-4 bg-brand-primary text-brand-dark rounded-lg shadow-md hover:bg-brand-hover transition-all duration-200 font-semibold text-lg"
             >
-              Get Started
+              Create Workflows
             </button>
           </div>
         );

@@ -5,6 +5,7 @@ import {
   SparklesIcon,
   PaperClipIcon,
   XMarkIcon,
+  PlayIcon,
 } from "@heroicons/react/24/outline";
 import { llmService } from "../services/llmService";
 
@@ -196,7 +197,7 @@ const TEMPLATE_CONFIGS: { [key: string]: MockPrompt } = {
   },
 };
 
-export function AOPBuilderPage() {
+export function WorkflowBuilderPage() {
   const [messages, setMessages] = useState<ChatMessage[]>([]);
   const [isBuilding, setIsBuilding] = useState(false);
   const [showAISuggestions, setShowAISuggestions] = useState(true);
@@ -260,7 +261,7 @@ export function AOPBuilderPage() {
     setIsBuilding(true);
 
     // Don't add user message as it's already added in the template initialization
-    addMessage("agent", `Okay, let's build an AOP for: "${prompt.title}".`);
+    addMessage("agent", `Okay, let's build a workflow for: "${prompt.title}".`);
     await new Promise((resolve) => setTimeout(resolve, 1000));
 
     const workflowDetails = mockData.workflows.find(
@@ -311,7 +312,7 @@ export function AOPBuilderPage() {
 
     addMessage(
       "system",
-      `AOP Configuration for "${prompt.title}" is complete!`,
+      `Workflow Configuration for "${prompt.title}" is complete!`,
       finalAgentConfig
     );
 
@@ -324,7 +325,7 @@ export function AOPBuilderPage() {
     setShowAISuggestions(false);
     addMessage("user", `I want to: ${prompt.title}`);
 
-    addMessage("agent", `Okay, let's build an AOP for: "${prompt.title}".`);
+    addMessage("agent", `Okay, let's build a workflow for: "${prompt.title}".`);
     await new Promise((resolve) => setTimeout(resolve, 1000));
 
     const workflowDetails = mockData.workflows.find(
@@ -375,7 +376,7 @@ export function AOPBuilderPage() {
 
     addMessage(
       "system",
-      `AOP Configuration for "${prompt.title}" is complete!`,
+      `Workflow Configuration for "${prompt.title}" is complete!`,
       finalAgentConfig
     );
 
@@ -499,11 +500,11 @@ export function AOPBuilderPage() {
       setIsBuilding(true);
 
       const hasFiles = attachedFiles.length > 0;
-      const analysisMessage = hasFiles
-        ? "Let me analyze your request along with the uploaded files to create a custom AOP workflow..."
-        : "Let me analyze your request and create a custom AOP workflow for you...";
+      const introMessage = hasFiles
+        ? "Let me analyze your request along with the uploaded files to create a custom workflow..."
+        : "Let me analyze your request and create a custom workflow for you...";
 
-      addMessage("agent", analysisMessage);
+      addMessage("agent", introMessage);
 
       try {
         // Call LLM service to generate workflow with visual context
@@ -624,7 +625,7 @@ export function AOPBuilderPage() {
 
     addMessage(
       "system",
-      `Your custom AOP "${prompt.title}" is ready!`,
+      `Your custom workflow "${prompt.title}" is ready!`,
       finalAgentConfig
     );
 
@@ -645,17 +646,7 @@ export function AOPBuilderPage() {
       setMessages((prev) => prev.filter((msg) => msg.id !== "save-button"));
       setTimeout(() => {
         // Navigate to active runs with the agent configuration
-        navigate("/aop/active-runs", {
-          state: {
-            id: agentConfig.id,
-            name: agentConfig.name,
-            workflow: agentConfig.workflow,
-            dataSources: agentConfig.dataSources,
-            actions: agentConfig.actions,
-            llm: agentConfig.llm,
-            fromBuilder: true,
-          },
-        });
+        navigate("/workflow");
       }, 1500);
     } catch (error) {
       console.error("Failed to save agent:", error);
@@ -668,8 +659,8 @@ export function AOPBuilderPage() {
 
   return (
     <div className="container mx-auto max-w-3xl p-4 flex flex-col h-[calc(100vh-100px)] bg-brand-card">
-      <h1 className="text-3xl font-bold text-brand-dark mb-6 text-center">
-        AOP Builder
+      <h1 className="text-2xl font-bold text-brand-heading mb-2">
+        Workflow Builder
       </h1>
 
       <div className="flex-grow bg-brand-card p-6 rounded-lg overflow-y-auto mb-4">
@@ -749,7 +740,7 @@ export function AOPBuilderPage() {
                     onClick={() => saveAgent(msg.config as AgentConfig)}
                     className="px-4 py-2 bg-brand-primary text-brand-dark rounded-md hover:bg-brand-hover focus:outline-none focus:ring-2 focus:ring-white focus:ring-opacity-50 w-full transition-all duration-200 font-semibold"
                   >
-                    Save & Run This AOP
+                    Save & Run This Workflow
                   </button>
                 </div>
               )}
@@ -826,7 +817,7 @@ export function AOPBuilderPage() {
         <div className="flex items-center gap-2">
           <input
             type="text"
-            placeholder="Type your AOP request or upload files..."
+            placeholder="Type your workflow request or upload files..."
             value={chatInput}
             onChange={(e) => setChatInput(e.target.value)}
             disabled={isBuilding}
