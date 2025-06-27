@@ -19,7 +19,8 @@ const quickAccessItems = [
   {
     name: "Workflow Chat Builder",
     href: "/workflow/builder",
-    description: "Use a chat interface to guide you through building a workflow.",
+    description:
+      "Use a chat interface to guide you through building a workflow.",
     icon: BoltIcon, // Consider a different icon if you have one for chat/AI
   },
   {
@@ -52,8 +53,7 @@ export function HomePage() {
         </h1>
         <p className="text-lg text-brand-dark mb-6">
           Streamline your operations with powerful automation tools. Build,
-          manage, and monitor your automated workflows all in
-          one place.
+          manage, and monitor your automated workflows all in one place.
         </p>
       </div>
 

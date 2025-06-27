@@ -45,10 +45,10 @@ interface ActiveRun {
 
 // Verification options with icons
 const verificationOptions = [
-  { value: 'default', label: 'No Verification', icon: FaSquare },
-  { value: 'simple', label: 'Simple Verification', icon: FaCircle },
-  { value: 'optional', label: 'Gmail Verification', icon: SiGmail },
-  { value: 'slack', label: 'Slack Verification', icon: SiSlack },
+  { value: "default", label: "No Verification", icon: FaSquare },
+  { value: "simple", label: "Simple Verification", icon: FaCircle },
+  { value: "optional", label: "Gmail Verification", icon: SiGmail },
+  { value: "slack", label: "Slack Verification", icon: SiSlack },
 ];
 
 // Custom dropdown component for verification options
@@ -59,19 +59,25 @@ const VerificationDropdown: React.FC<{
 }> = ({ value, onChange, className = "" }) => {
   const [isOpen, setIsOpen] = useState(false);
   const dropdownRef = React.useRef<HTMLDivElement>(null);
-  const currentOption = verificationOptions.find(opt => opt.value === value) || verificationOptions[0];
+  const currentOption =
+    verificationOptions.find((opt) => opt.value === value) ||
+    verificationOptions[0];
 
   // Close dropdown when clicking outside
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
-      if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
+      if (
+        dropdownRef.current &&
+        !dropdownRef.current.contains(event.target as Node)
+      ) {
         setIsOpen(false);
       }
     };
 
     if (isOpen) {
-      document.addEventListener('mousedown', handleClickOutside);
-      return () => document.removeEventListener('mousedown', handleClickOutside);
+      document.addEventListener("mousedown", handleClickOutside);
+      return () =>
+        document.removeEventListener("mousedown", handleClickOutside);
     }
   }, [isOpen]);
 
@@ -84,9 +90,13 @@ const VerificationDropdown: React.FC<{
       >
         {currentOption.icon && <currentOption.icon className="h-3 w-3" />}
         <span className="flex-1 text-left truncate">{currentOption.label}</span>
-        <ChevronDownIcon className={`h-3 w-3 transition-transform ${isOpen ? 'rotate-180' : ''}`} />
+        <ChevronDownIcon
+          className={`h-3 w-3 transition-transform ${
+            isOpen ? "rotate-180" : ""
+          }`}
+        />
       </button>
-      
+
       {isOpen && (
         <div className="absolute top-full left-0 right-0 mt-1 bg-white border border-gray-300 rounded shadow-lg z-10 min-w-[180px]">
           {verificationOptions.map((option) => (
@@ -98,7 +108,9 @@ const VerificationDropdown: React.FC<{
                 setIsOpen(false);
               }}
               className={`flex items-center gap-2 w-full px-2 py-2 text-xs hover:bg-gray-50 transition-colors ${
-                option.value === value ? 'bg-brand-light text-brand-primary' : ''
+                option.value === value
+                  ? "bg-brand-light text-brand-primary"
+                  : ""
               }`}
             >
               {option.icon && <option.icon className="h-3 w-3" />}
@@ -110,7 +122,7 @@ const VerificationDropdown: React.FC<{
     </div>
   );
 };
-  
+
 interface SOPToWorkflowStep {
   step: number;
   action: string;
@@ -127,7 +139,9 @@ export const ActiveRunsPage: React.FC = () => {
   const [activeRun, setActiveRun] = useState<ActiveRun | null>(null);
   const [isEditMode, setIsEditMode] = useState(false);
   const [editingStep, setEditingStep] = useState<string | null>(null);
-  const [showDeleteConfirm, setShowDeleteConfirm] = useState<string | null>(null);
+  const [showDeleteConfirm, setShowDeleteConfirm] = useState<string | null>(
+    null
+  );
   const [showSaveSuccess, setShowSaveSuccess] = useState(false);
   const [isRunning, setIsRunning] = useState(false);
 
@@ -135,28 +149,32 @@ export const ActiveRunsPage: React.FC = () => {
   const getCriticalActions = () => {
     return [
       "Close case",
-      "Submit final response", 
+      "Submit final response",
       "Apply admin notation",
       "Delete tradeline",
       "Update credit bureau",
       "Send member acknowledgment",
       "Save case to OSCAR system",
       "Notify Fraud-Ops",
-      "Notify Legal/Compliance"
+      "Notify Legal/Compliance",
     ];
   };
 
   const isCriticalAction = (action: string) => {
     const criticalActions = getCriticalActions();
-    return criticalActions.some(critical => 
+    return criticalActions.some((critical) =>
       action.toLowerCase().includes(critical.toLowerCase())
     );
   };
 
   // Convert workflow data to steps
-  const createWorkflowSteps = (dataSources: string[], actions: string[], llm: string): WorkflowStep[] => {
+  const createWorkflowSteps = (
+    dataSources: string[],
+    actions: string[],
+    llm: string
+  ): WorkflowStep[] => {
     const steps: WorkflowStep[] = [];
-    
+
     // Add data source steps
     dataSources.forEach((source, index) => {
       steps.push({
@@ -166,7 +184,7 @@ export const ActiveRunsPage: React.FC = () => {
         description: `Connect and retrieve data from ${source}`,
       });
     });
-    
+
     // Add LLM step
     if (llm) {
       steps.push({
@@ -176,7 +194,7 @@ export const ActiveRunsPage: React.FC = () => {
         description: `Process data using ${llm} language model`,
       });
     }
-    
+
     // Add action steps
     actions.forEach((action, index) => {
       steps.push({
@@ -187,11 +205,13 @@ export const ActiveRunsPage: React.FC = () => {
         verificationRequired: isCriticalAction(action), // Auto-enable for critical actions
       });
     });
-    
+
     return steps;
   };
 
-  const [sopToWorkflowData, setSopToWorkflowData] = useState<SOPToWorkflowStep[] | null>(null);
+  const [sopToWorkflowData, setSopToWorkflowData] = useState<
+    SOPToWorkflowStep[] | null
+  >(null);
   const [currentStep, setCurrentStep] = useState(0);
 
   // Check if we're coming from SOP to Workflow
@@ -210,7 +230,11 @@ export const ActiveRunsPage: React.FC = () => {
 
   // Animate through steps
   useEffect(() => {
-    if (sopToWorkflowData && currentStep > 0 && currentStep < sopToWorkflowData.length) {
+    if (
+      sopToWorkflowData &&
+      currentStep > 0 &&
+      currentStep < sopToWorkflowData.length
+    ) {
       const timer = setTimeout(() => {
         setCurrentStep(currentStep + 1);
       }, 2000);
@@ -222,11 +246,15 @@ export const ActiveRunsPage: React.FC = () => {
   useEffect(() => {
     if (location.state && location.state.workflow) {
       const workflowId = location.state.id || `run-${Date.now()}`;
-      
+
       // Try to load existing configuration from localStorage first
-      const existingConfigs = JSON.parse(localStorage.getItem('workflowConfigs') || '[]');
-      const savedConfig = existingConfigs.find((config: any) => config.id === workflowId);
-      
+      const existingConfigs = JSON.parse(
+        localStorage.getItem("workflowConfigs") || "[]"
+      );
+      const savedConfig = existingConfigs.find(
+        (config: any) => config.id === workflowId
+      );
+
       let steps;
       if (savedConfig && savedConfig.steps) {
         // Use saved steps with verification settings
@@ -239,10 +267,12 @@ export const ActiveRunsPage: React.FC = () => {
           location.state.llm || ""
         );
       }
-      
+
       const newRun: ActiveRun = {
         id: workflowId,
-        name: location.state.name || "FCRA - Respond to ACDV case, Apply response code, Respond to consumer",
+        name:
+          location.state.name ||
+          "FCRA - Respond to ACDV case, Apply response code, Respond to consumer",
         startTime: new Date().toLocaleString(),
         currentStep: 0,
         totalSteps: steps.length,
@@ -255,7 +285,7 @@ export const ActiveRunsPage: React.FC = () => {
         steps,
       };
       setActiveRun(newRun);
-      
+
       // Clear the location state to prevent re-runs on refresh
       window.history.replaceState({}, document.title);
     }
@@ -272,120 +302,131 @@ export const ActiveRunsPage: React.FC = () => {
   const createVerificationUrl = (step: WorkflowStep) => {
     const baseUrl = "http://localhost:3001"; // chimetools URL
     const params = new URLSearchParams();
-    
+
     // Add common parameters
-    params.set('workflowId', activeRun?.id || '');
-    params.set('stepId', step.id);
-    params.set('stepTitle', step.title);
-    params.set('workflowName', activeRun?.name || '');
-    
+    params.set("workflowId", activeRun?.id || "");
+    params.set("stepId", step.id);
+    params.set("stepTitle", step.title);
+    params.set("workflowName", activeRun?.name || "");
+
     // Collect data from previous steps to pre-fill forms
     if (activeRun) {
-      const currentIndex = activeRun.steps.findIndex(s => s.id === step.id);
+      const currentIndex = activeRun.steps.findIndex((s) => s.id === step.id);
       const previousSteps = activeRun.steps.slice(0, currentIndex);
-      
+
       // Extract member/account data from previous data source steps
-      const memberDataStep = previousSteps.find(s => 
-        s.type === "dataSource" && (
-          s.title.toLowerCase().includes('penny') || 
-          s.title.toLowerCase().includes('account') || 
-          s.title.toLowerCase().includes('member')
-        )
+      const memberDataStep = previousSteps.find(
+        (s) =>
+          s.type === "dataSource" &&
+          (s.title.toLowerCase().includes("penny") ||
+            s.title.toLowerCase().includes("account") ||
+            s.title.toLowerCase().includes("member"))
       );
-      
+
       if (memberDataStep) {
         // Penny page parameters (for workflow context display)
-        params.set('memberName', 'Victoria Lockhart');
-        params.set('memberId', '62151244');
-        
+        params.set("memberName", "Victoria Lockhart");
+        params.set("memberId", "62151244");
+
         // eOSCAR/Zendesk form parameters (match exact field names)
-        params.set('actualPaymentAmount', '39.00');
-        params.set('dateOfLastPayment', '2024-04-12');
-        params.set('currentBalance', '145.32');
-        params.set('lastPaymentAmount', '39.00');
-        params.set('lastPaymentDate', '2024-04-12');
-        params.set('accountStatus', 'Open');
-        params.set('hasTransactions', 'true');
-        params.set('highestCreditLimit', '500');
+        params.set("actualPaymentAmount", "39.00");
+        params.set("dateOfLastPayment", "2024-04-12");
+        params.set("currentBalance", "145.32");
+        params.set("lastPaymentAmount", "39.00");
+        params.set("lastPaymentDate", "2024-04-12");
+        params.set("accountStatus", "Open");
+        params.set("hasTransactions", "true");
+        params.set("highestCreditLimit", "500");
       }
-      
-      // Extract analytics data from previous steps  
-      const analyticsDataStep = previousSteps.find(s => 
-        s.type === "dataSource" && (
-          s.title.toLowerCase().includes('looker') || 
-          s.title.toLowerCase().includes('analytics') || 
-          s.title.toLowerCase().includes('data')
-        )
+
+      // Extract analytics data from previous steps
+      const analyticsDataStep = previousSteps.find(
+        (s) =>
+          s.type === "dataSource" &&
+          (s.title.toLowerCase().includes("looker") ||
+            s.title.toLowerCase().includes("analytics") ||
+            s.title.toLowerCase().includes("data"))
       );
-      
+
       if (analyticsDataStep) {
         // Looker analytics parameters (match exact field names)
-        params.set('dateRange', 'last30days');
-        params.set('totalTransactions', '156');
-        params.set('totalSpent', '3456.78');
-        params.set('disputedTransactions', '3');
+        params.set("dateRange", "last30days");
+        params.set("totalTransactions", "156");
+        params.set("totalSpent", "3456.78");
+        params.set("disputedTransactions", "3");
       }
-      
+
       // Extract LLM processing data
-      const llmStep = previousSteps.find(s => s.type === "llm");
+      const llmStep = previousSteps.find((s) => s.type === "llm");
       if (llmStep) {
-        params.set('llmModel', activeRun.llm || 'GPT-4');
-        params.set('processType', 'llm');
+        params.set("llmModel", activeRun.llm || "GPT-4");
+        params.set("processType", "llm");
       }
     }
-    
+
     const stepTitleLower = step.title.toLowerCase();
-    
+
     // Only handle action steps (since only actions have verify buttons now)
     if (step.type === "action") {
       // Communication/member interactions → Zendesk
-      if (stepTitleLower.includes('send') || stepTitleLower.includes('member') || 
-          stepTitleLower.includes('acknowledgment') || stepTitleLower.includes('notify') ||
-          stepTitleLower.includes('email') || stepTitleLower.includes('ticket') || 
-          stepTitleLower.includes('response') || stepTitleLower.includes('zendesk') ||
-          stepTitleLower.includes('communication') || stepTitleLower.includes('contact')) {
+      if (
+        stepTitleLower.includes("send") ||
+        stepTitleLower.includes("member") ||
+        stepTitleLower.includes("acknowledgment") ||
+        stepTitleLower.includes("notify") ||
+        stepTitleLower.includes("email") ||
+        stepTitleLower.includes("ticket") ||
+        stepTitleLower.includes("response") ||
+        stepTitleLower.includes("zendesk") ||
+        stepTitleLower.includes("communication") ||
+        stepTitleLower.includes("contact")
+      ) {
         // Zendesk-specific parameters (exact field names from Zendesk form)
-        params.set('contactReason', 'Balance');
-        params.set('creditReportingAgency', 'TransUnion');
-        params.set('responseCode', '23');
-        params.set('disputeCode', '118');
-        params.set('acdbNumber', 'ACDB-2024-0001');
-        params.set('formType', 'consumerDispute');
-        params.set('macro', 'acknowledgment');
-        params.set('ticketStatus', 'Open');
+        params.set("contactReason", "Balance");
+        params.set("creditReportingAgency", "TransUnion");
+        params.set("responseCode", "23");
+        params.set("disputeCode", "118");
+        params.set("acdbNumber", "ACDB-2024-0001");
+        params.set("formType", "consumerDispute");
+        params.set("macro", "acknowledgment");
+        params.set("ticketStatus", "Open");
         return `${baseUrl}/zendesk?${params.toString()}`;
       }
-      
+
       // Credit reporting/account updates → eOSCAR
-      if (stepTitleLower.includes('eoscar') || stepTitleLower.includes('update') || 
-          stepTitleLower.includes('credit') || stepTitleLower.includes('report') ||
-          stepTitleLower.includes('dispute') || stepTitleLower.includes('acdv') ||
-          stepTitleLower.includes('bureau') || stepTitleLower.includes('account')) {
+      if (
+        stepTitleLower.includes("eoscar") ||
+        stepTitleLower.includes("update") ||
+        stepTitleLower.includes("credit") ||
+        stepTitleLower.includes("report") ||
+        stepTitleLower.includes("dispute") ||
+        stepTitleLower.includes("acdv") ||
+        stepTitleLower.includes("bureau") ||
+        stepTitleLower.includes("account")
+      ) {
         // eOSCAR-specific parameters (exact field names from eOSCAR form)
-        params.set('responseCode', '23');
-        params.set('portfolioType', 'Secure');
-        params.set('paymentRating', 'N/A');
-        params.set('nonPursuitDelinquency', 'None');
+        params.set("responseCode", "23");
+        params.set("portfolioType", "Secure");
+        params.set("paymentRating", "N/A");
+        params.set("nonPursuitDelinquency", "None");
         return `${baseUrl}/eoscar?${params.toString()}`;
       }
-      
-      // Default action to Zendesk (most actions involve communication) 
-      params.set('contactReason', 'Balance');
-      params.set('creditReportingAgency', 'TransUnion');
-      params.set('responseCode', '23');
-      params.set('disputeCode', '118');
-      params.set('acdbNumber', 'ACDB-2024-0001');
-      params.set('formType', 'consumerDispute');
-      params.set('macro', 'acknowledgment');
-      params.set('ticketStatus', 'Open');
+
+      // Default action to Zendesk (most actions involve communication)
+      params.set("contactReason", "Balance");
+      params.set("creditReportingAgency", "TransUnion");
+      params.set("responseCode", "23");
+      params.set("disputeCode", "118");
+      params.set("acdbNumber", "ACDB-2024-0001");
+      params.set("formType", "consumerDispute");
+      params.set("macro", "acknowledgment");
+      params.set("ticketStatus", "Open");
       return `${baseUrl}/zendesk?${params.toString()}`;
     }
-    
+
     // Fallback to main dashboard with workflow context
     return `${baseUrl}?${params.toString()}`;
   };
-
-
 
   const handleEditTemplate = () => {
     setIsEditMode(true);
@@ -408,16 +449,20 @@ export const ActiveRunsPage: React.FC = () => {
         actions: activeRun.actions,
         llm: activeRun.llm,
         steps: activeRun.steps,
-        lastSaved: new Date().toISOString()
+        lastSaved: new Date().toISOString(),
       };
-      
+
       // Save to localStorage
-      const existingConfigs = JSON.parse(localStorage.getItem('workflowConfigs') || '[]');
-      const updatedConfigs = existingConfigs.filter((config: any) => config.id !== activeRun.id);
+      const existingConfigs = JSON.parse(
+        localStorage.getItem("workflowConfigs") || "[]"
+      );
+      const updatedConfigs = existingConfigs.filter(
+        (config: any) => config.id !== activeRun.id
+      );
       updatedConfigs.push(workflowConfig);
-      localStorage.setItem('workflowConfigs', JSON.stringify(updatedConfigs));
+      localStorage.setItem("workflowConfigs", JSON.stringify(updatedConfigs));
     }
-    
+
     setShowSaveSuccess(true);
     setIsEditMode(false);
     setEditingStep(null);
@@ -442,11 +487,13 @@ export const ActiveRunsPage: React.FC = () => {
 
   const confirmDeleteStep = () => {
     if (showDeleteConfirm && activeRun) {
-      const updatedSteps = activeRun.steps.filter(step => step.id !== showDeleteConfirm);
+      const updatedSteps = activeRun.steps.filter(
+        (step) => step.id !== showDeleteConfirm
+      );
       setActiveRun({
         ...activeRun,
         steps: updatedSteps,
-        totalSteps: updatedSteps.length
+        totalSteps: updatedSteps.length,
       });
       setShowDeleteConfirm(null);
     }
@@ -454,7 +501,7 @@ export const ActiveRunsPage: React.FC = () => {
 
   const handleAddStep = (afterStepId?: string) => {
     if (!activeRun) return;
-    
+
     const newStep: WorkflowStep = {
       id: `step-${Date.now()}`,
       type: "action",
@@ -462,50 +509,55 @@ export const ActiveRunsPage: React.FC = () => {
       description: "Enter step description",
       verificationRequired: false,
     };
-    
+
     let updatedSteps;
     if (afterStepId) {
-      const insertIndex = activeRun.steps.findIndex(step => step.id === afterStepId) + 1;
+      const insertIndex =
+        activeRun.steps.findIndex((step) => step.id === afterStepId) + 1;
       updatedSteps = [
         ...activeRun.steps.slice(0, insertIndex),
         newStep,
-        ...activeRun.steps.slice(insertIndex)
+        ...activeRun.steps.slice(insertIndex),
       ];
     } else {
       updatedSteps = [...activeRun.steps, newStep];
     }
-    
+
     setActiveRun({
       ...activeRun,
       steps: updatedSteps,
-      totalSteps: updatedSteps.length
+      totalSteps: updatedSteps.length,
     });
   };
 
-  const handleUpdateStep = (stepId: string, field: string, value: string | boolean) => {
+  const handleUpdateStep = (
+    stepId: string,
+    field: string,
+    value: string | boolean
+  ) => {
     if (!activeRun) return;
-    
-    const updatedSteps = activeRun.steps.map(step => 
+
+    const updatedSteps = activeRun.steps.map((step) =>
       step.id === stepId ? { ...step, [field]: value } : step
     );
-    
+
     setActiveRun({
       ...activeRun,
-      steps: updatedSteps
+      steps: updatedSteps,
     });
   };
 
   const handleVerificationToggle = (stepId: string, enabled: boolean) => {
-    handleUpdateStep(stepId, 'verificationRequired', enabled);
-    
+    handleUpdateStep(stepId, "verificationRequired", enabled);
+
     // Auto-save to localStorage when verification settings change
     if (activeRun) {
       setTimeout(() => {
         // Get the updated run after state update
-        const updatedSteps = activeRun.steps.map(step => 
+        const updatedSteps = activeRun.steps.map((step) =>
           step.id === stepId ? { ...step, verificationRequired: enabled } : step
         );
-        
+
         const workflowConfig = {
           id: activeRun.id,
           name: activeRun.name,
@@ -514,18 +566,20 @@ export const ActiveRunsPage: React.FC = () => {
           actions: activeRun.actions,
           llm: activeRun.llm,
           steps: updatedSteps,
-          lastSaved: new Date().toISOString()
+          lastSaved: new Date().toISOString(),
         };
-        
-        const existingConfigs = JSON.parse(localStorage.getItem('workflowConfigs') || '[]');
-        const updatedConfigs = existingConfigs.filter((config: any) => config.id !== activeRun.id);
+
+        const existingConfigs = JSON.parse(
+          localStorage.getItem("workflowConfigs") || "[]"
+        );
+        const updatedConfigs = existingConfigs.filter(
+          (config: any) => config.id !== activeRun.id
+        );
         updatedConfigs.push(workflowConfig);
-        localStorage.setItem('workflowConfigs', JSON.stringify(updatedConfigs));
+        localStorage.setItem("workflowConfigs", JSON.stringify(updatedConfigs));
       }, 100);
     }
   };
-
-
 
   const handleSimulationComplete = () => {
     // Save the completed run to localStorage
@@ -533,49 +587,52 @@ export const ActiveRunsPage: React.FC = () => {
       id: activeRun?.id || `run-${Date.now()}`,
       name: activeRun?.name || "Unknown Run",
       description: `Automated workflow execution for ${activeRun?.workflow}`,
-      category: activeRun?.workflow === 'fcra-acdv-response' ? 'Compliance & Legal' : 'Compliance',
+      category:
+        activeRun?.workflow === "fcra-acdv-response"
+          ? "Compliance & Legal"
+          : "Compliance",
       status: "Completed",
       lastRun: new Date().toISOString(),
       runHistory: [
         {
           timestamp: new Date().toISOString(),
           status: "Success",
-          details: "Workflow completed successfully"
-        }
+          details: "Workflow completed successfully",
+        },
       ],
       metrics: {
         dataSourcesAnalyzed: String(activeRun?.dataSources.length || 0),
         actionsExecuted: String(activeRun?.actions.length || 0),
         totalSteps: String(activeRun?.totalSteps || 0),
-        executionTime: activeRun?.estimatedCompletion || "Unknown"
-      }
+        executionTime: activeRun?.estimatedCompletion || "Unknown",
+      },
     };
 
     // Get existing run history from localStorage
-    const existingHistory = localStorage.getItem('aopRunHistory');
+    const existingHistory = localStorage.getItem("aopRunHistory");
     let runHistory: any[] = [];
-    
+
     if (existingHistory) {
       try {
         runHistory = JSON.parse(existingHistory);
       } catch (e) {
-        console.error('Error parsing existing run history:', e);
+        console.error("Error parsing existing run history:", e);
         runHistory = [];
       }
     }
 
     // Add the new completed run
     runHistory.push(completedRun);
-    
+
     // Save back to localStorage
-    localStorage.setItem('aopRunHistory', JSON.stringify(runHistory));
+    localStorage.setItem("aopRunHistory", JSON.stringify(runHistory));
 
     // After simulation completes, clear the active run
     setShowSimulation(false);
     setActiveRun(null);
-    
+
     // Navigate to run history
-    navigate("/aop/run");
+    navigate("/workflow/run");
   };
 
   // If we're showing SOP to Workflow data
@@ -621,7 +678,8 @@ export const ActiveRunsPage: React.FC = () => {
                 Progress: Step {currentStep} of {sopToWorkflowData.length}
               </span>
               <span className="text-sm text-gray-600">
-                {Math.round((currentStep / sopToWorkflowData.length) * 100)}% Complete
+                {Math.round((currentStep / sopToWorkflowData.length) * 100)}%
+                Complete
               </span>
             </div>
             <div className="w-full bg-gray-200 rounded-full h-2">
@@ -638,7 +696,7 @@ export const ActiveRunsPage: React.FC = () => {
             {sopToWorkflowData.map((step, index) => {
               const isActive = index < currentStep;
               const isCurrent = index === currentStep - 1;
-              
+
               return (
                 <div
                   key={step.step}
@@ -706,20 +764,22 @@ export const ActiveRunsPage: React.FC = () => {
             <div className="mt-6 text-center">
               <div className="inline-flex items-center gap-2 px-4 py-2 bg-green-100 text-green-700 rounded-lg">
                 <CheckCircleIcon className="h-5 w-5" />
-                <span className="font-medium">Workflow Completed Successfully</span>
+                <span className="font-medium">
+                  Workflow Completed Successfully
+                </span>
               </div>
               <div className="mt-4 flex gap-4 justify-center">
                 <button
-                  onClick={() => navigate("/aop/sop-to-aop")}
+                  onClick={() => navigate("/workflow/sop-to-workflow")}
                   className="px-4 py-2 bg-brand-primary text-white rounded-md hover:bg-brand-primaryHover transition-colors"
                 >
                   Upload New SOP
                 </button>
                 <button
-                  onClick={() => navigate("/aop/run")}
+                  onClick={() => navigate("/workflow/run")}
                   className="px-4 py-2 border border-brand-primary text-brand-primary rounded-md hover:bg-brand-light transition-colors"
                 >
-                  View Run History
+                  View Workflow History
                 </button>
               </div>
             </div>
@@ -741,7 +801,7 @@ export const ActiveRunsPage: React.FC = () => {
         onRestart={() => {
           setShowSimulation(false);
           setActiveRun(null);
-          navigate("/aop/builder");
+          navigate("/workflow/builder");
         }}
       />
     );
@@ -751,7 +811,9 @@ export const ActiveRunsPage: React.FC = () => {
     return (
       <div className="max-w-7xl mx-auto">
         <div className="mb-8">
-          <h1 className="text-3xl font-bold text-gray-900 mb-2">Active Workflows</h1>
+          <h1 className="text-3xl font-bold text-gray-900 mb-2">
+            Active Workflows
+          </h1>
           <p className="text-gray-600">
             Monitor your currently executing automation workflows
           </p>
@@ -766,13 +828,13 @@ export const ActiveRunsPage: React.FC = () => {
           </p>
           <div className="flex gap-4 justify-center">
             <button
-              onClick={() => navigate("/aop/templates")}
+              onClick={() => navigate("/workflow/templates")}
               className="px-4 py-2 bg-brand-primary text-brand-dark rounded-md hover:bg-brand-hover transition-colors font-semibold"
             >
               Browse Templates
             </button>
             <button
-              onClick={() => navigate("/aop/builder")}
+              onClick={() => navigate("/workflow/builder")}
               className="px-6 py-3 bg-brand-primary text-brand-dark rounded-lg shadow-md hover:bg-brand-hover transition-all duration-200 font-semibold"
             >
               Create Custom Workflow
@@ -812,7 +874,9 @@ export const ActiveRunsPage: React.FC = () => {
   return (
     <div className="max-w-7xl mx-auto">
       <div className="mb-8">
-        <h1 className="text-3xl font-bold text-gray-900 mb-2">Active Workflows</h1>
+        <h1 className="text-3xl font-bold text-gray-900 mb-2">
+          Active Workflows
+        </h1>
         <p className="text-gray-600">
           Review and customize your automation workflow before execution
         </p>
@@ -832,10 +896,13 @@ export const ActiveRunsPage: React.FC = () => {
           <div className="bg-white rounded-lg p-6 max-w-md mx-4">
             <div className="flex items-center gap-3 mb-4">
               <ExclamationTriangleIcon className="h-6 w-6 text-red-500" />
-              <h3 className="text-lg font-semibold text-gray-900">Delete Step</h3>
+              <h3 className="text-lg font-semibold text-gray-900">
+                Delete Step
+              </h3>
             </div>
             <p className="text-gray-600 mb-6">
-              Are you sure you want to delete this workflow step? This action cannot be undone.
+              Are you sure you want to delete this workflow step? This action
+              cannot be undone.
             </p>
             <div className="flex justify-end gap-3">
               <button
@@ -914,7 +981,9 @@ export const ActiveRunsPage: React.FC = () => {
         {/* Workflow Steps */}
         <div className="p-6">
           <div className="flex items-center justify-between mb-4">
-            <h4 className="text-lg font-semibold text-gray-900">Workflow Steps</h4>
+            <h4 className="text-lg font-semibold text-gray-900">
+              Workflow Steps
+            </h4>
             {isEditMode && (
               <div className="flex items-center gap-2 text-sm text-brand-primary bg-brand-light px-3 py-1 rounded-full">
                 <PencilIcon className="h-4 w-4" />
@@ -925,11 +994,13 @@ export const ActiveRunsPage: React.FC = () => {
           <div className="space-y-4">
             {activeRun.steps.map((step, index) => (
               <div key={step.id}>
-                <div className={`flex items-start gap-4 p-4 border rounded-lg transition-all ${
-                  editingStep === step.id 
-                    ? 'border-brand-primary bg-brand-light shadow-md' 
-                    : 'border-gray-200 hover:border-gray-300'
-                }`}>
+                <div
+                  className={`flex items-start gap-4 p-4 border rounded-lg transition-all ${
+                    editingStep === step.id
+                      ? "border-brand-primary bg-brand-light shadow-md"
+                      : "border-gray-200 hover:border-gray-300"
+                  }`}
+                >
                   <div className="flex items-center justify-center w-8 h-8 bg-brand-primary text-white rounded-full text-sm font-semibold flex-shrink-0">
                     {index + 1}
                   </div>
@@ -941,84 +1012,114 @@ export const ActiveRunsPage: React.FC = () => {
                             <input
                               type="text"
                               value={step.title}
-                              onChange={(e) => handleUpdateStep(step.id, 'title', e.target.value)}
+                              onChange={(e) =>
+                                handleUpdateStep(
+                                  step.id,
+                                  "title",
+                                  e.target.value
+                                )
+                              }
                               className="w-full text-lg font-semibold text-gray-900 border border-brand-primary rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-brand-primary focus:border-transparent"
                               placeholder="Step title"
                             />
                           </div>
                         ) : (
-                          <h5 className="text-lg font-semibold text-gray-900 truncate flex-1">{step.title}</h5>
+                          <h5 className="text-lg font-semibold text-gray-900 truncate flex-1">
+                            {step.title}
+                          </h5>
                         )}
-                        <span className={`px-2 py-1 text-xs font-medium rounded-full flex-shrink-0 ${getStepTypeColor(step.type)}`}>
+                        <span
+                          className={`px-2 py-1 text-xs font-medium rounded-full flex-shrink-0 ${getStepTypeColor(
+                            step.type
+                          )}`}
+                        >
                           {getStepTypeDisplayText(step.type)}
                         </span>
                         {/* Verification toggle for action steps only */}
                         {step.type === "action" && !isEditMode && (
                           <div className="flex items-center gap-2 ml-3">
                             <VerificationDropdown
-                              value={step.verificationRequired ? 'default' : 'optional'}
-                              onChange={(value) => handleVerificationToggle(step.id, value !== 'optional')}
+                              value={
+                                step.verificationRequired
+                                  ? "default"
+                                  : "optional"
+                              }
+                              onChange={(value) =>
+                                handleVerificationToggle(
+                                  step.id,
+                                  value !== "optional"
+                                )
+                              }
                             />
                             <button
-                              onClick={() => handleVerificationToggle(step.id, !step.verificationRequired)}
+                              onClick={() =>
+                                handleVerificationToggle(
+                                  step.id,
+                                  !step.verificationRequired
+                                )
+                              }
                               className={`px-2 py-1 text-xs rounded transition-colors ${
                                 step.verificationRequired
-                                  ? 'bg-blue-100 text-blue-800 hover:bg-blue-200'
-                                  : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
+                                  ? "bg-blue-100 text-blue-800 hover:bg-blue-200"
+                                  : "bg-gray-100 text-gray-600 hover:bg-gray-200"
                               }`}
                             >
-                              {step.verificationRequired ? 'On' : 'Off'}
+                              {step.verificationRequired ? "On" : "Off"}
                             </button>
                           </div>
                         )}
                       </div>
                       <div className="flex items-center gap-1 ml-3">
-                                               {/* Edit Mode Controls */}
-                       {isEditMode && editingStep !== step.id && (
-                         <button
-                           onClick={() => handleEditStep(step.id)}
-                           className="p-1.5 text-brand-primary hover:bg-brand-light rounded-md transition-colors"
-                           title="Edit step"
-                         >
-                           <PencilIcon className="h-4 w-4" />
-                         </button>
-                       )}
-                       {editingStep === step.id && (
-                         <>
-                           <button
-                             onClick={handleSaveStep}
-                             className="p-1.5 text-green-600 hover:bg-green-50 rounded-md transition-colors"
-                             title="Save changes"
-                           >
-                             <CheckIcon className="h-4 w-4" />
-                           </button>
-                           <button
-                             onClick={handleCancelEdit}
-                             className="p-1.5 text-gray-500 hover:bg-gray-50 rounded-md transition-colors"
-                             title="Cancel editing"
-                           >
-                             <XMarkIcon className="h-4 w-4" />
-                           </button>
-                         </>
-                       )}
-                       {isEditMode && (
-                         <button
-                           onClick={() => handleDeleteStep(step.id)}
-                           className="p-1.5 text-red-500 hover:bg-red-50 rounded-md transition-colors"
-                           title="Delete step"
-                         >
-                           <XMarkIcon className="h-4 w-4" />
-                         </button>
-                       )}
-
-
+                        {/* Edit Mode Controls */}
+                        {isEditMode && editingStep !== step.id && (
+                          <button
+                            onClick={() => handleEditStep(step.id)}
+                            className="p-1.5 text-brand-primary hover:bg-brand-light rounded-md transition-colors"
+                            title="Edit step"
+                          >
+                            <PencilIcon className="h-4 w-4" />
+                          </button>
+                        )}
+                        {editingStep === step.id && (
+                          <>
+                            <button
+                              onClick={handleSaveStep}
+                              className="p-1.5 text-green-600 hover:bg-green-50 rounded-md transition-colors"
+                              title="Save changes"
+                            >
+                              <CheckIcon className="h-4 w-4" />
+                            </button>
+                            <button
+                              onClick={handleCancelEdit}
+                              className="p-1.5 text-gray-500 hover:bg-gray-50 rounded-md transition-colors"
+                              title="Cancel editing"
+                            >
+                              <XMarkIcon className="h-4 w-4" />
+                            </button>
+                          </>
+                        )}
+                        {isEditMode && (
+                          <button
+                            onClick={() => handleDeleteStep(step.id)}
+                            className="p-1.5 text-red-500 hover:bg-red-50 rounded-md transition-colors"
+                            title="Delete step"
+                          >
+                            <XMarkIcon className="h-4 w-4" />
+                          </button>
+                        )}
                       </div>
                     </div>
                     {editingStep === step.id ? (
                       <div className="space-y-3">
                         <textarea
                           value={step.description}
-                          onChange={(e) => handleUpdateStep(step.id, 'description', e.target.value)}
+                          onChange={(e) =>
+                            handleUpdateStep(
+                              step.id,
+                              "description",
+                              e.target.value
+                            )
+                          }
                           className="w-full text-gray-600 border border-brand-primary rounded-md px-3 py-2 resize-none focus:outline-none focus:ring-2 focus:ring-brand-primary focus:border-transparent"
                           rows={3}
                           placeholder="Step description"
@@ -1027,7 +1128,9 @@ export const ActiveRunsPage: React.FC = () => {
                           <span className="text-gray-500">Step type:</span>
                           <select
                             value={step.type}
-                            onChange={(e) => handleUpdateStep(step.id, 'type', e.target.value)}
+                            onChange={(e) =>
+                              handleUpdateStep(step.id, "type", e.target.value)
+                            }
                             className="border border-gray-300 rounded px-2 py-1 text-sm focus:outline-none focus:ring-2 focus:ring-brand-primary focus:border-transparent"
                           >
                             <option value="dataSource">Data Source</option>
@@ -1037,11 +1140,13 @@ export const ActiveRunsPage: React.FC = () => {
                         </div>
                       </div>
                     ) : (
-                      <p className="text-gray-600 leading-relaxed">{step.description}</p>
+                      <p className="text-gray-600 leading-relaxed">
+                        {step.description}
+                      </p>
                     )}
                   </div>
                 </div>
-                
+
                 {/* Add Step Button */}
                 {isEditMode && !editingStep && (
                   <div className="flex justify-center my-2">
@@ -1056,7 +1161,7 @@ export const ActiveRunsPage: React.FC = () => {
                 )}
               </div>
             ))}
-            
+
             {/* Add Step at End */}
             {isEditMode && !editingStep && activeRun.steps.length === 0 && (
               <div className="text-center py-8">
@@ -1069,7 +1174,7 @@ export const ActiveRunsPage: React.FC = () => {
                 </button>
               </div>
             )}
-            
+
             {isEditMode && !editingStep && activeRun.steps.length > 0 && (
               <div className="text-center">
                 <button
