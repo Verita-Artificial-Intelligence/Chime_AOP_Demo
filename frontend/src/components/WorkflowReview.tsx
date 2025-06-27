@@ -125,7 +125,9 @@ export const WorkflowReview: React.FC<WorkflowReviewProps> = ({
   const navigate = useNavigate();
   const [isEditMode, setIsEditMode] = useState(false);
   const [editingStep, setEditingStep] = useState<string | null>(null);
-  const [showDeleteConfirm, setShowDeleteConfirm] = useState<string | null>(null);
+  const [showDeleteConfirm, setShowDeleteConfirm] = useState<string | null>(
+    null
+  );
   const [showSaveSuccess, setShowSaveSuccess] = useState(false);
 
   // Define critical actions that always require verification
@@ -153,7 +155,7 @@ export const WorkflowReview: React.FC<WorkflowReviewProps> = ({
   // Convert workflow data to steps
   const createWorkflowSteps = (): WorkflowStep[] => {
     const steps: WorkflowStep[] = [];
-    
+
     // Add data source steps
     config.dataSources.forEach((source, index) => {
       steps.push({
@@ -163,7 +165,7 @@ export const WorkflowReview: React.FC<WorkflowReviewProps> = ({
         description: `Connect and retrieve data from ${source}`,
       });
     });
-    
+
     // Add LLM step
     if (config.llm) {
       steps.push({
@@ -173,7 +175,7 @@ export const WorkflowReview: React.FC<WorkflowReviewProps> = ({
         description: `Process data using ${config.llm} language model`,
       });
     }
-    
+
     // Add action steps
     config.actions.forEach((action, index) => {
       steps.push({
@@ -184,7 +186,7 @@ export const WorkflowReview: React.FC<WorkflowReviewProps> = ({
         verificationRequired: isCriticalAction(action), // Auto-enable for critical actions
       });
     });
-    
+
     return steps;
   };
 
@@ -221,19 +223,85 @@ export const WorkflowReview: React.FC<WorkflowReviewProps> = ({
     const workflowConfig = {
       ...config,
       steps: steps,
-      lastSaved: new Date().toISOString()
+      lastSaved: new Date().toISOString(),
     };
-    
+
     // Save to localStorage
-    const existingConfigs = JSON.parse(localStorage.getItem('workflowConfigs') || '[]');
-    const updatedConfigs = existingConfigs.filter((c: any) => c.id !== config.id);
+    const existingConfigs = JSON.parse(
+      localStorage.getItem("workflowConfigs") || "[]"
+    );
+    const updatedConfigs = existingConfigs.filter(
+      (c: any) => c.id !== config.id
+    );
     updatedConfigs.push(workflowConfig);
-    localStorage.setItem('workflowConfigs', JSON.stringify(updatedConfigs));
-    
+    localStorage.setItem("workflowConfigs", JSON.stringify(updatedConfigs));
+
     setShowSaveSuccess(true);
     setIsEditMode(false);
     setEditingStep(null);
     setTimeout(() => setShowSaveSuccess(false), 3000);
+  };
+
+  const handleEditStep = (stepId: string) => {
+    setEditingStep(stepId);
+  };
+
+  const handleSaveStep = () => {
+    setEditingStep(null);
+  };
+
+  const handleCancelEdit = () => {
+    setEditingStep(null);
+  };
+
+  const handleDeleteStep = (stepId: string) => {
+    setShowDeleteConfirm(stepId);
+  };
+
+  const confirmDeleteStep = () => {
+    if (showDeleteConfirm) {
+      const updatedSteps = steps.filter(
+        (step) => step.id !== showDeleteConfirm
+      );
+      setSteps(updatedSteps);
+      setShowDeleteConfirm(null);
+    }
+  };
+
+  const handleAddStep = (afterStepId?: string) => {
+    const newStep: WorkflowStep = {
+      id: `step-${Date.now()}`,
+      type: "action",
+      title: "New Step",
+      description: "Enter step description",
+      verificationRequired: false,
+    };
+
+    let updatedSteps;
+    if (afterStepId) {
+      const insertIndex =
+        steps.findIndex((step) => step.id === afterStepId) + 1;
+      updatedSteps = [
+        ...steps.slice(0, insertIndex),
+        newStep,
+        ...steps.slice(insertIndex),
+      ];
+    } else {
+      updatedSteps = [...steps, newStep];
+    }
+
+    setSteps(updatedSteps);
+  };
+
+  const handleUpdateStep = (
+    stepId: string,
+    field: string,
+    value: string | boolean
+  ) => {
+    const updatedSteps = steps.map((step) =>
+      step.id === stepId ? { ...step, [field]: value } : step
+    );
+    setSteps(updatedSteps);
   };
 
   const handleVerificationToggle = (stepId: string, enabled: boolean) => {
@@ -279,6 +347,38 @@ export const WorkflowReview: React.FC<WorkflowReviewProps> = ({
         </div>
       )}
 
+      {/* Delete Confirmation Modal */}
+      {showDeleteConfirm && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+          <div className="bg-white rounded-lg p-6 max-w-md mx-4">
+            <div className="flex items-center gap-3 mb-4">
+              <ExclamationTriangleIcon className="h-6 w-6 text-red-500" />
+              <h3 className="text-lg font-semibold text-gray-900">
+                Delete Step
+              </h3>
+            </div>
+            <p className="text-gray-600 mb-6">
+              Are you sure you want to delete this workflow step? This action
+              cannot be undone.
+            </p>
+            <div className="flex justify-end gap-3">
+              <button
+                onClick={() => setShowDeleteConfirm(null)}
+                className="px-4 py-2 border border-gray-300 text-gray-700 rounded-md hover:bg-gray-50 transition-colors"
+              >
+                Cancel
+              </button>
+              <button
+                onClick={confirmDeleteStep}
+                className="px-4 py-2 bg-red-600 text-white rounded-md hover:bg-red-700 transition-colors"
+              >
+                Delete
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
       <div className="bg-white rounded-lg shadow-sm border border-gray-200">
         {/* Header */}
         <div className="border-b border-gray-200 p-6">
@@ -318,7 +418,7 @@ export const WorkflowReview: React.FC<WorkflowReviewProps> = ({
                     className="px-4 py-2 bg-green-600 text-white rounded-md hover:bg-green-700 transition-colors flex items-center gap-2"
                   >
                     <CheckIcon className="h-4 w-4" />
-                    Save Changes
+                    Save Template
                   </button>
                 </>
               ) : (
@@ -344,7 +444,9 @@ export const WorkflowReview: React.FC<WorkflowReviewProps> = ({
         {/* Workflow Steps */}
         <div className="p-6">
           <div className="flex items-center justify-between mb-4">
-            <h4 className="text-lg font-semibold text-gray-900">Workflow Steps</h4>
+            <h4 className="text-lg font-semibold text-gray-900">
+              Workflow Steps
+            </h4>
             {isEditMode && (
               <div className="flex items-center gap-2 text-sm text-brand-primary bg-brand-light px-3 py-1 rounded-full">
                 <PencilIcon className="h-4 w-4" />
@@ -355,19 +457,45 @@ export const WorkflowReview: React.FC<WorkflowReviewProps> = ({
           <div className="space-y-4">
             {steps.map((step, index) => (
               <div key={step.id}>
-                <div className={`flex items-start gap-4 p-4 border rounded-lg transition-all ${
-                  editingStep === step.id 
-                    ? 'border-brand-primary bg-brand-light shadow-md' 
-                    : 'border-gray-200 hover:border-gray-300'
-                }`}>
+                <div
+                  className={`flex items-start gap-4 p-4 border rounded-lg transition-all ${
+                    editingStep === step.id
+                      ? "border-brand-primary bg-brand-light shadow-md"
+                      : "border-gray-200 hover:border-gray-300"
+                  }`}
+                >
                   <div className="flex items-center justify-center w-8 h-8 bg-brand-primary text-white rounded-full text-sm font-semibold flex-shrink-0">
                     {index + 1}
                   </div>
                   <div className="flex-1 min-w-0">
                     <div className="flex items-start justify-between mb-2">
                       <div className="flex items-center gap-3 flex-1 min-w-0">
-                        <h5 className="text-lg font-semibold text-gray-900 truncate flex-1">{step.title}</h5>
-                        <span className={`px-2 py-1 text-xs font-medium rounded-full flex-shrink-0 ${getStepTypeColor(step.type)}`}>
+                        {editingStep === step.id ? (
+                          <div className="flex-1">
+                            <input
+                              type="text"
+                              value={step.title}
+                              onChange={(e) =>
+                                handleUpdateStep(
+                                  step.id,
+                                  "title",
+                                  e.target.value
+                                )
+                              }
+                              className="w-full text-lg font-semibold text-gray-900 border border-brand-primary rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-brand-primary focus:border-transparent"
+                              placeholder="Step title"
+                            />
+                          </div>
+                        ) : (
+                          <h5 className="text-lg font-semibold text-gray-900 truncate flex-1">
+                            {step.title}
+                          </h5>
+                        )}
+                        <span
+                          className={`px-2 py-1 text-xs font-medium rounded-full flex-shrink-0 ${getStepTypeColor(
+                            step.type
+                          )}`}
+                        >
                           {getStepTypeDisplayText(step.type)}
                         </span>
                         {/* Verification toggle for action steps only */}
@@ -404,15 +532,126 @@ export const WorkflowReview: React.FC<WorkflowReviewProps> = ({
                           </div>
                         )}
                       </div>
+                      <div className="flex items-center gap-1 ml-3">
+                        {/* Edit Mode Controls */}
+                        {isEditMode && editingStep !== step.id && (
+                          <button
+                            onClick={() => handleEditStep(step.id)}
+                            className="p-1.5 text-brand-primary hover:bg-brand-light rounded-md transition-colors"
+                            title="Edit step"
+                          >
+                            <PencilIcon className="h-4 w-4" />
+                          </button>
+                        )}
+                        {editingStep === step.id && (
+                          <>
+                            <button
+                              onClick={handleSaveStep}
+                              className="p-1.5 text-green-600 hover:bg-green-50 rounded-md transition-colors"
+                              title="Save changes"
+                            >
+                              <CheckIcon className="h-4 w-4" />
+                            </button>
+                            <button
+                              onClick={handleCancelEdit}
+                              className="p-1.5 text-gray-500 hover:bg-gray-50 rounded-md transition-colors"
+                              title="Cancel editing"
+                            >
+                              <XMarkIcon className="h-4 w-4" />
+                            </button>
+                          </>
+                        )}
+                        {isEditMode && (
+                          <button
+                            onClick={() => handleDeleteStep(step.id)}
+                            className="p-1.5 text-red-500 hover:bg-red-50 rounded-md transition-colors"
+                            title="Delete step"
+                          >
+                            <XMarkIcon className="h-4 w-4" />
+                          </button>
+                        )}
+                      </div>
                     </div>
-                    <p className="text-gray-600 leading-relaxed">{step.description}</p>
+                    {editingStep === step.id ? (
+                      <div className="space-y-3">
+                        <textarea
+                          value={step.description}
+                          onChange={(e) =>
+                            handleUpdateStep(
+                              step.id,
+                              "description",
+                              e.target.value
+                            )
+                          }
+                          className="w-full text-gray-600 border border-brand-primary rounded-md px-3 py-2 resize-none focus:outline-none focus:ring-2 focus:ring-brand-primary focus:border-transparent"
+                          rows={3}
+                          placeholder="Step description"
+                        />
+                        <div className="flex items-center gap-2 text-sm">
+                          <span className="text-gray-500">Step type:</span>
+                          <select
+                            value={step.type}
+                            onChange={(e) =>
+                              handleUpdateStep(step.id, "type", e.target.value)
+                            }
+                            className="border border-gray-300 rounded px-2 py-1 text-sm focus:outline-none focus:ring-2 focus:ring-brand-primary focus:border-transparent"
+                          >
+                            <option value="dataSource">Data Source</option>
+                            <option value="llm">LLM</option>
+                            <option value="action">Action</option>
+                          </select>
+                        </div>
+                      </div>
+                    ) : (
+                      <p className="text-gray-600 leading-relaxed">
+                        {step.description}
+                      </p>
+                    )}
                   </div>
                 </div>
+
+                {/* Add Step Button */}
+                {isEditMode && !editingStep && (
+                  <div className="flex justify-center my-2">
+                    <button
+                      onClick={() => handleAddStep(step.id)}
+                      className="p-2 text-brand-primary hover:bg-brand-light rounded-full transition-colors group"
+                      title="Add step after this one"
+                    >
+                      <PlusIcon className="h-5 w-5 group-hover:scale-110 transition-transform" />
+                    </button>
+                  </div>
+                )}
               </div>
             ))}
+
+            {/* Add Step at End */}
+            {isEditMode && !editingStep && steps.length === 0 && (
+              <div className="text-center py-8">
+                <button
+                  onClick={() => handleAddStep()}
+                  className="px-4 py-2 border-2 border-dashed border-brand-primary text-brand-primary rounded-lg hover:bg-brand-light hover:border-solid transition-all flex items-center gap-2 mx-auto group"
+                >
+                  <PlusIcon className="h-5 w-5 group-hover:scale-110 transition-transform" />
+                  Add First Step
+                </button>
+              </div>
+            )}
+
+            {isEditMode && !editingStep && steps.length > 0 && (
+              <div className="text-center">
+                <button
+                  onClick={() => handleAddStep()}
+                  className="px-4 py-2 border-2 border-dashed border-brand-primary text-brand-primary rounded-lg hover:bg-brand-light hover:border-solid transition-all flex items-center gap-2 mx-auto group"
+                >
+                  <PlusIcon className="h-5 w-5 group-hover:scale-110 transition-transform" />
+                  Add Step
+                </button>
+              </div>
+            )}
           </div>
         </div>
       </div>
     </div>
   );
-}; 
+};
