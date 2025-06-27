@@ -17,19 +17,14 @@ const quickAccessItems = [
     icon: BoltIcon,
   },
   {
-    name: "Build a Workflow (Legacy)",
-    href: "/workflow",
-    description: "Manually configure a new automated workflow.",
-    icon: BoltIcon,
-  },
-  {
     name: "Workflow Chat Builder",
     href: "/workflow/builder",
-    description: "Use a chat interface to guide you through building a workflow.",
+    description:
+      "Use a chat interface to guide you through building a workflow.",
     icon: BoltIcon, // Consider a different icon if you have one for chat/AI
   },
   {
-    name: "Active Runs",
+    name: "Active Workflows",
     href: "/workflow/active-runs",
     description: "Check the status and history of your workflow executions.",
     icon: CircleStackIcon,
@@ -58,18 +53,10 @@ export function HomePage() {
         </h1>
         <p className="text-lg text-brand-dark mb-6">
           Streamline your operations with powerful automation tools. Build,
-          manage, and monitor your automated workflows all in
-          one place.
-        </p>
-        <p className="text-brand-muted">
-          Use the sidebar to navigate or select one of the quick access options
-          below to get started.
+          manage, and monitor your automated workflows all in one place.
         </p>
       </div>
 
-      <h2 className="text-2xl font-semibold text-brand-dark mb-6">
-        Quick Access
-      </h2>
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
         {quickAccessItems.map((item) => (
           <Link

@@ -35,12 +35,15 @@ export const SOPToWorkflowPage: React.FC = () => {
     setFiles((prevFiles) => [...prevFiles, ...droppedFiles]);
   }, []);
 
-  const handleFileSelect = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
-    if (e.target.files) {
-      const selectedFiles = Array.from(e.target.files);
-      setFiles((prevFiles) => [...prevFiles, ...selectedFiles]);
-    }
-  }, []);
+  const handleFileSelect = useCallback(
+    (e: React.ChangeEvent<HTMLInputElement>) => {
+      if (e.target.files) {
+        const selectedFiles = Array.from(e.target.files);
+        setFiles((prevFiles) => [...prevFiles, ...selectedFiles]);
+      }
+    },
+    []
+  );
 
   const removeFile = useCallback((index: number) => {
     setFiles((prevFiles) => prevFiles.filter((_, i) => i !== index));
@@ -58,7 +61,7 @@ export const SOPToWorkflowPage: React.FC = () => {
     if (files.length === 0) return;
 
     setIsUploading(true);
-    
+
     // Create FormData for file upload
     const formData = new FormData();
     files.forEach((file) => {
@@ -67,64 +70,71 @@ export const SOPToWorkflowPage: React.FC = () => {
 
     try {
       // Simulate API call - replace with actual endpoint
-      await new Promise(resolve => setTimeout(resolve, 2000));
-      
+      await new Promise((resolve) => setTimeout(resolve, 2000));
+
       // Store the agent journey data in sessionStorage for the active runs page
       const steps = [
         {
-          "step": 1,
-          "action": "type",
-          "element_description": "The 'Actual Payment Amount' input field on the ACDV form.",
-          "element_type": "textfield",
-          "value": "40"
+          step: 1,
+          action: "type",
+          element_description:
+            "The 'Actual Payment Amount' input field on the ACDV form.",
+          element_type: "textfield",
+          value: "40",
         },
         {
-          "step": 2,
-          "action": "type",
-          "element_description": "The 'Date of Last Payment' input field on the ACDV form.",
-          "element_type": "textfield",
-          "value": "2025-01-01"
+          step: 2,
+          action: "type",
+          element_description:
+            "The 'Date of Last Payment' input field on the ACDV form.",
+          element_type: "textfield",
+          value: "2025-01-01",
         },
         {
-          "step": 3,
-          "action": "check",
-          "element_description": "Checkbox for 'Name' under the PII Verification Checklist.",
-          "element_type": "checkbox"
+          step: 3,
+          action: "check",
+          element_description:
+            "Checkbox for 'Name' under the PII Verification Checklist.",
+          element_type: "checkbox",
         },
         {
-          "step": 4,
-          "action": "check",
-          "element_description": "Checkbox for 'SSN' under the PII Verification Checklist.",
-          "element_type": "checkbox"
+          step: 4,
+          action: "check",
+          element_description:
+            "Checkbox for 'SSN' under the PII Verification Checklist.",
+          element_type: "checkbox",
         },
         {
-          "step": 5,
-          "action": "check",
-          "element_description": "Checkbox for 'Address' under the PII Verification Checklist.",
-          "element_type": "checkbox"
+          step: 5,
+          action: "check",
+          element_description:
+            "Checkbox for 'Address' under the PII Verification Checklist.",
+          element_type: "checkbox",
         },
         {
-          "step": 6,
-          "action": "check",
-          "element_description": "Checkbox for 'Date of Birth' under the PII Verification Checklist.",
-          "element_type": "checkbox"
+          step: 6,
+          action: "check",
+          element_description:
+            "Checkbox for 'Date of Birth' under the PII Verification Checklist.",
+          element_type: "checkbox",
         },
         {
-          "step": 7,
-          "action": "check",
-          "element_description": "Checkbox for 'Account Number' under the PII Verification Checklist.",
-          "element_type": "checkbox"
+          step: 7,
+          action: "check",
+          element_description:
+            "Checkbox for 'Account Number' under the PII Verification Checklist.",
+          element_type: "checkbox",
         },
         {
-          "step": 8,
-          "action": "click",
-          "element_description": "The 'Submit eOSCAR update' button.",
-          "element_type": "button"
-        }
+          step: 8,
+          action: "click",
+          element_description: "The 'Submit eOSCAR update' button.",
+          element_type: "button",
+        },
       ];
-      
+
       sessionStorage.setItem("sopToWorkflowData", JSON.stringify(steps));
-      
+
       // Navigate to the active runs page with a parameter
       navigate("/workflow/active-runs?source=sop-to-workflow");
     } catch (error) {
@@ -138,11 +148,10 @@ export const SOPToWorkflowPage: React.FC = () => {
   return (
     <div className="max-w-4xl mx-auto">
       <div className="mb-8">
-        <h1 className="text-3xl font-bold text-brand-dark mb-2">
-          SOP to {content.platformName}
-        </h1>
+        <h1 className="text-3xl font-bold text-brand-dark mb-2">Upload SOP</h1>
         <p className="text-brand-muted">
-          Upload your Standard Operating Procedure documents to automatically convert them into {content.platformName}
+          Upload your Standard Operating Procedure documents and
+          screenrecordings to automatically convert them into Workflows
         </p>
       </div>
 
@@ -166,9 +175,9 @@ export const SOPToWorkflowPage: React.FC = () => {
             accept=".pdf,.doc,.docx,.txt,.png,.jpg,.jpeg,.mp4,.avi,.mov"
             onChange={handleFileSelect}
           />
-          
+
           <ArrowUpTrayIcon className="mx-auto h-12 w-12 text-gray-400 mb-4" />
-          
+
           <label
             htmlFor="file-upload"
             className="cursor-pointer text-brand-primary hover:text-brand-primaryHover font-medium"
@@ -176,9 +185,10 @@ export const SOPToWorkflowPage: React.FC = () => {
             Click to upload
           </label>
           <span className="text-brand-muted"> or drag and drop</span>
-          
+
           <p className="text-xs text-gray-500 mt-2">
-            Supports PDF, DOC, DOCX, TXT, Images (PNG, JPG), and Videos (MP4, AVI, MOV)
+            Supports PDF, DOC, DOCX, TXT, Images (PNG, JPG), and Videos (MP4,
+            AVI, MOV)
           </p>
         </div>
 
@@ -232,4 +242,4 @@ export const SOPToWorkflowPage: React.FC = () => {
       </div>
     </div>
   );
-}; 
+};

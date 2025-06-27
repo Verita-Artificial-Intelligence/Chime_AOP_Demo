@@ -42,8 +42,8 @@ function getStoredRunHistory(): WorkflowInstance[] {
       // Fallback to mockData if parsing fails or data is invalid
     }
   }
-  // Fallback to aopsInstances from mockData if nothing in localStorage or if it's invalid
-  return mockData.aopsInstances || [];
+  // Fallback to workflowInstances from mockData if nothing in localStorage or if it's invalid
+  return mockData.workflowInstances || [];
 }
 
 // Function to save run history (Potentially to be used when new runs occur)
@@ -74,7 +74,7 @@ export default function WorkflowRunHistoryPage() {
 
   // Determine if the displayed history is the fallback mock data
   const isMockData =
-    JSON.stringify(runHistory) === JSON.stringify(mockData.aopsInstances || []);
+    JSON.stringify(runHistory) === JSON.stringify(mockData.workflowInstances || []);
 
   // Helper function to get display status
   const getDisplayStatus = (run: WorkflowInstance) => {
@@ -101,7 +101,7 @@ export default function WorkflowRunHistoryPage() {
       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-6">
         <div>
           <h1 className="text-3xl font-bold text-brand-heading">
-            Workflow Run History
+            Workflow History
           </h1>
           <p className="text-brand-muted opacity-70 mt-1">
             View the execution history of your Automated Operation Procedures.

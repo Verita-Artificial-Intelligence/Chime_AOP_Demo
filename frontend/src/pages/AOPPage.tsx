@@ -98,7 +98,7 @@ export function WorkflowPage() {
     const existingAgents = getStoredAgents();
     saveAgents([...existingAgents, newAgent]);
 
-    navigate("/aop/run", {
+    navigate("/workflow/run", {
       state: {
         workflow: workflow,
         dataSources: dataSources,

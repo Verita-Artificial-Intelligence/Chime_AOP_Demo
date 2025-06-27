@@ -20,21 +20,21 @@ export interface ContentConfig {
 
 const content: ContentConfig = {
   // Client branding
-  clientName: "Chime",
+  clientName: "Verita",
   platformName: "Workflows",
-  platformFullName: "Chime Workflows Platform",
+  platformFullName: "Verita AI Platform",
 
   // Page titles and metadata
-  pageTitleSuffix: "Workflows Demo",
+  pageTitleSuffix: "AI Demo",
 
   // Welcome messages
-  welcomeMessage: "Chime Workflow Platform",
-  builderWelcomeMessage: "Chime Workflows Builder",
+  welcomeMessage: "Verita Dashboard",
+  builderWelcomeMessage: "Verita AI Builder",
   builderDescription:
-    "Chime workflows. Get started by selecting a workflow template.",
+    "Verita AI workflows. Get started by selecting a workflow template.",
 
   // Footer
-  footerText: "© 2025 Chime Workflows",
+  footerText: "© 2025 Verita AI",
 
   // Brand colors
   colors: {
