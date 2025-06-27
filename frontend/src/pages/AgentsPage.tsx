@@ -256,7 +256,7 @@ export default function WorkflowRunHistoryPage() {
                   onClick={() => handleDeleteRun(run.id)}
                   title="Delete this run history"
                 >
-                  Delete Run
+                  Delete
                 </button>
                 <button
                   className="px-4 py-1.5 bg-brand-primary text-brand-dark rounded-md text-xs font-semibold hover:bg-brand-hover transition-all duration-200"

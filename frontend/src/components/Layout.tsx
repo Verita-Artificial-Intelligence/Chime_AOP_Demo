@@ -29,7 +29,7 @@ const navItems: NavItem[] = [
     icon: BoltIcon,
     subItems: [
       { name: "Workflow Templates", href: "/workflow/templates" },
-      { name: "Workflow Chat Builder", href: "/workflow/builder" },
+      { name: "Workflow Chat", href: "/workflow/builder" },
       { name: "Upload SOP", href: "/workflow/sop-to-workflow" },
       { name: "Active Workflows", href: "/workflow/active-runs" },
       { name: "Workflow History", href: "/workflow/run" },
