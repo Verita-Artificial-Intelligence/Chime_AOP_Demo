@@ -4,8 +4,26 @@ import {
   PlayIcon,
   ClockIcon,
   ArrowPathIcon,
+  PencilIcon,
+  XMarkIcon,
+  PlusIcon,
+  CheckIcon,
+  ExclamationTriangleIcon,
+  ArrowTopRightOnSquareIcon,
+  ChevronDownIcon,
 } from "@heroicons/react/24/outline";
+import { SiGmail, SiSlack } from "react-icons/si";
+import { FaSquare, FaCircle } from "react-icons/fa";
 import { AIAgentExecutionSimulation } from "../components/AIAgentExecutionSimulation";
+
+interface WorkflowStep {
+  id: string;
+  type: "dataSource" | "action" | "llm";
+  title: string;
+  description: string;
+  verificationRequired?: boolean; // Only applies to action steps
+  config?: any;
+}
 
 interface ActiveRun {
   id: string;
@@ -13,43 +31,462 @@ interface ActiveRun {
   startTime: string;
   currentStep: number;
   totalSteps: number;
-  status: "running" | "paused";
+  status: "running" | "paused" | "ready";
   estimatedCompletion: string;
   workflow: string;
   dataSources: string[];
   actions: string[];
   llm: string;
+  steps: WorkflowStep[];
 }
+
+// Verification options with icons
+const verificationOptions = [
+  { value: 'optional', label: 'No Verification', icon: FaSquare },
+  { value: 'default', label: 'Simple Verification', icon: FaCircle },
+  { value: 'gmail', label: 'Gmail Verification', icon: SiGmail },
+  { value: 'slack', label: 'Slack Verification', icon: SiSlack },
+];
+
+// Custom dropdown component for verification options
+const VerificationDropdown: React.FC<{
+  value: string;
+  onChange: (value: string) => void;
+  className?: string;
+}> = ({ value, onChange, className = "" }) => {
+  const [isOpen, setIsOpen] = useState(false);
+  const dropdownRef = React.useRef<HTMLDivElement>(null);
+  const currentOption = verificationOptions.find(opt => opt.value === value) || verificationOptions[0];
+
+  // Close dropdown when clicking outside
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
+        setIsOpen(false);
+      }
+    };
+
+    if (isOpen) {
+      document.addEventListener('mousedown', handleClickOutside);
+      return () => document.removeEventListener('mousedown', handleClickOutside);
+    }
+  }, [isOpen]);
+
+  return (
+    <div ref={dropdownRef} className={`relative ${className}`}>
+      <button
+        type="button"
+        onClick={() => setIsOpen(!isOpen)}
+        className="flex items-center gap-2 px-2 py-1 text-xs border border-gray-300 rounded focus:outline-none focus:ring-1 focus:ring-brand-primary bg-white hover:bg-gray-50 transition-colors min-w-[140px]"
+      >
+        {currentOption.icon && <currentOption.icon className="h-3 w-3" />}
+        <span className="flex-1 text-left truncate">{currentOption.label}</span>
+        <ChevronDownIcon className={`h-3 w-3 transition-transform ${isOpen ? 'rotate-180' : ''}`} />
+      </button>
+      
+      {isOpen && (
+        <div className="absolute top-full left-0 right-0 mt-1 bg-white border border-gray-300 rounded shadow-lg z-10 min-w-[180px]">
+          {verificationOptions.map((option) => (
+            <button
+              key={option.value}
+              type="button"
+              onClick={() => {
+                onChange(option.value);
+                setIsOpen(false);
+              }}
+              className={`flex items-center gap-2 w-full px-2 py-2 text-xs hover:bg-gray-50 transition-colors ${
+                option.value === value ? 'bg-brand-light text-brand-primary' : ''
+              }`}
+            >
+              {option.icon && <option.icon className="h-3 w-3" />}
+              <span>{option.label}</span>
+            </button>
+          ))}
+        </div>
+      )}
+    </div>
+  );
+};
 
 export const ActiveRunsPage: React.FC = () => {
   const navigate = useNavigate();
   const location = useLocation();
   const [showSimulation, setShowSimulation] = useState(false);
   const [activeRun, setActiveRun] = useState<ActiveRun | null>(null);
+  const [isEditMode, setIsEditMode] = useState(false);
+  const [editingStep, setEditingStep] = useState<string | null>(null);
+  const [showDeleteConfirm, setShowDeleteConfirm] = useState<string | null>(null);
+  const [showSaveSuccess, setShowSaveSuccess] = useState(false);
+  const [isRunning, setIsRunning] = useState(false);
+
+  // Define critical actions that always require verification
+  const getCriticalActions = () => {
+    return [
+      "Close case",
+      "Submit final response", 
+      "Apply admin notation",
+      "Delete tradeline",
+      "Update credit bureau",
+      "Send member acknowledgment",
+      "Save case to OSCAR system",
+      "Notify Fraud-Ops",
+      "Notify Legal/Compliance"
+    ];
+  };
+
+  const isCriticalAction = (action: string) => {
+    const criticalActions = getCriticalActions();
+    return criticalActions.some(critical => 
+      action.toLowerCase().includes(critical.toLowerCase())
+    );
+  };
+
+  // Convert workflow data to steps
+  const createWorkflowSteps = (dataSources: string[], actions: string[], llm: string): WorkflowStep[] => {
+    const steps: WorkflowStep[] = [];
+    
+    // Add data source steps
+    dataSources.forEach((source, index) => {
+      steps.push({
+        id: `ds-${index}`,
+        type: "dataSource",
+        title: `Data Source: ${source}`,
+        description: `Connect and retrieve data from ${source}`,
+      });
+    });
+    
+    // Add LLM step
+    if (llm) {
+      steps.push({
+        id: "llm-step",
+        type: "llm",
+        title: `LLM: ${llm}`,
+        description: `Process data using ${llm} language model`,
+      });
+    }
+    
+    // Add action steps
+    actions.forEach((action, index) => {
+      steps.push({
+        id: `action-${index}`,
+        type: "action",
+        title: `Action: ${action}`,
+        description: `Execute ${action}`,
+        verificationRequired: isCriticalAction(action), // Auto-enable for critical actions
+      });
+    });
+    
+    return steps;
+  };
 
   // Check if we're coming from the AOP Builder or Templates with a new run
   useEffect(() => {
     if (location.state && location.state.workflow) {
+      const workflowId = location.state.id || `run-${Date.now()}`;
+      
+      // Try to load existing configuration from localStorage first
+      const existingConfigs = JSON.parse(localStorage.getItem('workflowConfigs') || '[]');
+      const savedConfig = existingConfigs.find((config: any) => config.id === workflowId);
+      
+      let steps;
+      if (savedConfig && savedConfig.steps) {
+        // Use saved steps with verification settings
+        steps = savedConfig.steps;
+      } else {
+        // Create new steps with default settings
+        steps = createWorkflowSteps(
+          location.state.dataSources || [],
+          location.state.actions || [],
+          location.state.llm || ""
+        );
+      }
+      
       const newRun: ActiveRun = {
-        id: location.state.id || `run-${Date.now()}`,
+        id: workflowId,
         name: location.state.name || "FCRA - Respond to ACDV case, Apply response code, Respond to consumer",
         startTime: new Date().toLocaleString(),
-        currentStep: 1,
-        totalSteps: location.state.actions ? location.state.actions.length + location.state.dataSources.length + 2 : 10,
-        status: "running",
+        currentStep: 0,
+        totalSteps: steps.length,
+        status: "ready",
         estimatedCompletion: "15-20 mins",
         workflow: location.state.workflow,
-        dataSources: location.state.dataSources,
-        actions: location.state.actions,
-        llm: location.state.llm,
+        dataSources: location.state.dataSources || [],
+        actions: location.state.actions || [],
+        llm: location.state.llm || "",
+        steps,
       };
       setActiveRun(newRun);
-      setShowSimulation(true);
       
       // Clear the location state to prevent re-runs on refresh
       window.history.replaceState({}, document.title);
     }
   }, [location.state]);
+
+  const handleRunWorkflow = () => {
+    if (activeRun) {
+      setIsRunning(true);
+      setShowSimulation(true);
+    }
+  };
+
+  // Create verification URL for action steps, collecting data from previous steps
+  const createVerificationUrl = (step: WorkflowStep) => {
+    const baseUrl = "http://localhost:3001"; // chimetools URL
+    const params = new URLSearchParams();
+    
+    // Add common parameters
+    params.set('workflowId', activeRun?.id || '');
+    params.set('stepId', step.id);
+    params.set('stepTitle', step.title);
+    params.set('workflowName', activeRun?.name || '');
+    
+    // Collect data from previous steps to pre-fill forms
+    if (activeRun) {
+      const currentIndex = activeRun.steps.findIndex(s => s.id === step.id);
+      const previousSteps = activeRun.steps.slice(0, currentIndex);
+      
+      // Extract member/account data from previous data source steps
+      const memberDataStep = previousSteps.find(s => 
+        s.type === "dataSource" && (
+          s.title.toLowerCase().includes('penny') || 
+          s.title.toLowerCase().includes('account') || 
+          s.title.toLowerCase().includes('member')
+        )
+      );
+      
+      if (memberDataStep) {
+        // Penny page parameters (for workflow context display)
+        params.set('memberName', 'Victoria Lockhart');
+        params.set('memberId', '62151244');
+        
+        // eOSCAR/Zendesk form parameters (match exact field names)
+        params.set('actualPaymentAmount', '39.00');
+        params.set('dateOfLastPayment', '2024-04-12');
+        params.set('currentBalance', '145.32');
+        params.set('lastPaymentAmount', '39.00');
+        params.set('lastPaymentDate', '2024-04-12');
+        params.set('accountStatus', 'Open');
+        params.set('hasTransactions', 'true');
+        params.set('highestCreditLimit', '500');
+      }
+      
+      // Extract analytics data from previous steps  
+      const analyticsDataStep = previousSteps.find(s => 
+        s.type === "dataSource" && (
+          s.title.toLowerCase().includes('looker') || 
+          s.title.toLowerCase().includes('analytics') || 
+          s.title.toLowerCase().includes('data')
+        )
+      );
+      
+      if (analyticsDataStep) {
+        // Looker analytics parameters (match exact field names)
+        params.set('dateRange', 'last30days');
+        params.set('totalTransactions', '156');
+        params.set('totalSpent', '3456.78');
+        params.set('disputedTransactions', '3');
+      }
+      
+      // Extract LLM processing data
+      const llmStep = previousSteps.find(s => s.type === "llm");
+      if (llmStep) {
+        params.set('llmModel', activeRun.llm || 'GPT-4');
+        params.set('processType', 'llm');
+      }
+    }
+    
+    const stepTitleLower = step.title.toLowerCase();
+    
+    // Only handle action steps (since only actions have verify buttons now)
+    if (step.type === "action") {
+      // Communication/member interactions → Zendesk
+      if (stepTitleLower.includes('send') || stepTitleLower.includes('member') || 
+          stepTitleLower.includes('acknowledgment') || stepTitleLower.includes('notify') ||
+          stepTitleLower.includes('email') || stepTitleLower.includes('ticket') || 
+          stepTitleLower.includes('response') || stepTitleLower.includes('zendesk') ||
+          stepTitleLower.includes('communication') || stepTitleLower.includes('contact')) {
+        // Zendesk-specific parameters (exact field names from Zendesk form)
+        params.set('contactReason', 'Balance');
+        params.set('creditReportingAgency', 'TransUnion');
+        params.set('responseCode', '23');
+        params.set('disputeCode', '118');
+        params.set('acdbNumber', 'ACDB-2024-0001');
+        params.set('formType', 'consumerDispute');
+        params.set('macro', 'acknowledgment');
+        params.set('ticketStatus', 'Open');
+        return `${baseUrl}/zendesk?${params.toString()}`;
+      }
+      
+      // Credit reporting/account updates → eOSCAR
+      if (stepTitleLower.includes('eoscar') || stepTitleLower.includes('update') || 
+          stepTitleLower.includes('credit') || stepTitleLower.includes('report') ||
+          stepTitleLower.includes('dispute') || stepTitleLower.includes('acdv') ||
+          stepTitleLower.includes('bureau') || stepTitleLower.includes('account')) {
+        // eOSCAR-specific parameters (exact field names from eOSCAR form)
+        params.set('responseCode', '23');
+        params.set('portfolioType', 'Secure');
+        params.set('paymentRating', 'N/A');
+        params.set('nonPursuitDelinquency', 'None');
+        return `${baseUrl}/eoscar?${params.toString()}`;
+      }
+      
+      // Default action to Zendesk (most actions involve communication) 
+      params.set('contactReason', 'Balance');
+      params.set('creditReportingAgency', 'TransUnion');
+      params.set('responseCode', '23');
+      params.set('disputeCode', '118');
+      params.set('acdbNumber', 'ACDB-2024-0001');
+      params.set('formType', 'consumerDispute');
+      params.set('macro', 'acknowledgment');
+      params.set('ticketStatus', 'Open');
+      return `${baseUrl}/zendesk?${params.toString()}`;
+    }
+    
+    // Fallback to main dashboard with workflow context
+    return `${baseUrl}?${params.toString()}`;
+  };
+
+
+
+  const handleEditTemplate = () => {
+    setIsEditMode(true);
+    setEditingStep(null); // Clear any individual step editing
+  };
+
+  const handleCancelEditMode = () => {
+    setIsEditMode(false);
+    setEditingStep(null);
+  };
+
+  const handleSaveTemplate = () => {
+    // Save workflow configuration including verification settings to localStorage
+    if (activeRun) {
+      const workflowConfig = {
+        id: activeRun.id,
+        name: activeRun.name,
+        workflow: activeRun.workflow,
+        dataSources: activeRun.dataSources,
+        actions: activeRun.actions,
+        llm: activeRun.llm,
+        steps: activeRun.steps,
+        lastSaved: new Date().toISOString()
+      };
+      
+      // Save to localStorage
+      const existingConfigs = JSON.parse(localStorage.getItem('workflowConfigs') || '[]');
+      const updatedConfigs = existingConfigs.filter((config: any) => config.id !== activeRun.id);
+      updatedConfigs.push(workflowConfig);
+      localStorage.setItem('workflowConfigs', JSON.stringify(updatedConfigs));
+    }
+    
+    setShowSaveSuccess(true);
+    setIsEditMode(false);
+    setEditingStep(null);
+    setTimeout(() => setShowSaveSuccess(false), 3000);
+  };
+
+  const handleEditStep = (stepId: string) => {
+    setEditingStep(stepId);
+  };
+
+  const handleSaveStep = () => {
+    setEditingStep(null);
+  };
+
+  const handleCancelEdit = () => {
+    setEditingStep(null);
+  };
+
+  const handleDeleteStep = (stepId: string) => {
+    setShowDeleteConfirm(stepId);
+  };
+
+  const confirmDeleteStep = () => {
+    if (showDeleteConfirm && activeRun) {
+      const updatedSteps = activeRun.steps.filter(step => step.id !== showDeleteConfirm);
+      setActiveRun({
+        ...activeRun,
+        steps: updatedSteps,
+        totalSteps: updatedSteps.length
+      });
+      setShowDeleteConfirm(null);
+    }
+  };
+
+  const handleAddStep = (afterStepId?: string) => {
+    if (!activeRun) return;
+    
+    const newStep: WorkflowStep = {
+      id: `step-${Date.now()}`,
+      type: "action",
+      title: "New Step",
+      description: "Enter step description",
+      verificationRequired: false,
+    };
+    
+    let updatedSteps;
+    if (afterStepId) {
+      const insertIndex = activeRun.steps.findIndex(step => step.id === afterStepId) + 1;
+      updatedSteps = [
+        ...activeRun.steps.slice(0, insertIndex),
+        newStep,
+        ...activeRun.steps.slice(insertIndex)
+      ];
+    } else {
+      updatedSteps = [...activeRun.steps, newStep];
+    }
+    
+    setActiveRun({
+      ...activeRun,
+      steps: updatedSteps,
+      totalSteps: updatedSteps.length
+    });
+  };
+
+  const handleUpdateStep = (stepId: string, field: string, value: string | boolean) => {
+    if (!activeRun) return;
+    
+    const updatedSteps = activeRun.steps.map(step => 
+      step.id === stepId ? { ...step, [field]: value } : step
+    );
+    
+    setActiveRun({
+      ...activeRun,
+      steps: updatedSteps
+    });
+  };
+
+  const handleVerificationToggle = (stepId: string, enabled: boolean) => {
+    handleUpdateStep(stepId, 'verificationRequired', enabled);
+    
+    // Auto-save to localStorage when verification settings change
+    if (activeRun) {
+      setTimeout(() => {
+        // Get the updated run after state update
+        const updatedSteps = activeRun.steps.map(step => 
+          step.id === stepId ? { ...step, verificationRequired: enabled } : step
+        );
+        
+        const workflowConfig = {
+          id: activeRun.id,
+          name: activeRun.name,
+          workflow: activeRun.workflow,
+          dataSources: activeRun.dataSources,
+          actions: activeRun.actions,
+          llm: activeRun.llm,
+          steps: updatedSteps,
+          lastSaved: new Date().toISOString()
+        };
+        
+        const existingConfigs = JSON.parse(localStorage.getItem('workflowConfigs') || '[]');
+        const updatedConfigs = existingConfigs.filter((config: any) => config.id !== activeRun.id);
+        updatedConfigs.push(workflowConfig);
+        localStorage.setItem('workflowConfigs', JSON.stringify(updatedConfigs));
+      }, 100);
+    }
+  };
+
+
 
   const handleSimulationComplete = () => {
     // Save the completed run to localStorage
@@ -77,7 +514,7 @@ export const ActiveRunsPage: React.FC = () => {
 
     // Get existing run history from localStorage
     const existingHistory = localStorage.getItem('aopRunHistory');
-    let runHistory = [];
+    let runHistory: any[] = [];
     
     if (existingHistory) {
       try {
@@ -110,6 +547,7 @@ export const ActiveRunsPage: React.FC = () => {
         dataSources={activeRun.dataSources}
         actions={activeRun.actions}
         llm={activeRun.llm}
+        steps={activeRun.steps}
         onRestart={() => {
           setShowSimulation(false);
           setActiveRun(null);
@@ -119,15 +557,7 @@ export const ActiveRunsPage: React.FC = () => {
     );
   }
 
-  // Mock data - empty by default unless there's an active run
-  const mockActiveRuns: ActiveRun[] = activeRun ? [activeRun] : [];
-
-  const handleViewRun = (run: ActiveRun) => {
-    setActiveRun(run);
-    setShowSimulation(true);
-  };
-
-  if (mockActiveRuns.length === 0) {
+  if (!activeRun) {
     return (
       <div className="max-w-7xl mx-auto">
         <div className="mb-8">
@@ -166,80 +596,306 @@ export const ActiveRunsPage: React.FC = () => {
     );
   }
 
+  const getStepTypeColor = (type: string) => {
+    switch (type) {
+      case "dataSource":
+        return "bg-blue-100 text-blue-800";
+      case "llm":
+        return "bg-purple-100 text-purple-800";
+      case "action":
+        return "bg-green-100 text-green-800";
+      default:
+        return "bg-gray-100 text-gray-800";
+    }
+  };
+
+  const getStepTypeDisplayText = (type: string) => {
+    switch (type) {
+      case "dataSource":
+        return "Data Source";
+      case "llm":
+        return "LLM";
+      case "action":
+        return "Action";
+      default:
+        return type;
+    }
+  };
+
   return (
     <div className="max-w-7xl mx-auto">
       <div className="mb-8">
         <h1 className="text-3xl font-bold text-gray-900 mb-2">Active Runs</h1>
         <p className="text-gray-600">
-          Monitor your currently executing automation workflows
+          Review and customize your automation workflow before execution
         </p>
       </div>
 
-      <div className="space-y-4">
-        {mockActiveRuns.map((run) => (
-          <div
-            key={run.id}
-            className="bg-white rounded-lg shadow-sm border border-gray-200 p-6"
-          >
-            <div className="flex items-start justify-between mb-4">
-              <div className="flex-1">
-                <h3 className="text-lg font-semibold text-gray-900 mb-1">
-                  {run.name}
-                </h3>
-                <div className="flex items-center gap-4 text-sm text-gray-600">
-                  <span className="flex items-center gap-1">
-                    <ClockIcon className="h-4 w-4" />
-                    Started: {run.startTime}
-                  </span>
-                  <span>•</span>
-                  <span>Est. completion: {run.estimatedCompletion}</span>
-                </div>
-              </div>
-              <div className="flex items-center gap-2">
-                {run.status === "running" && (
-                  <div className="flex items-center gap-2">
-                    <ArrowPathIcon className="h-5 w-5 text-brand-primary animate-spin" />
-                    <span className="text-sm font-medium text-brand-primary">
-                      Running
-                    </span>
-                  </div>
-                )}
-              </div>
-            </div>
+      {/* Success Toast */}
+      {showSaveSuccess && (
+        <div className="fixed top-4 right-4 bg-green-500 text-white px-4 py-2 rounded-md shadow-lg flex items-center gap-2 z-50">
+          <CheckIcon className="h-5 w-5" />
+          Template saved successfully!
+        </div>
+      )}
 
-            <div className="mb-4">
-              <div className="flex items-center justify-between mb-2">
-                <span className="text-sm font-medium text-gray-700">
-                  Step {run.currentStep} of {run.totalSteps}
-                </span>
-                <span className="text-sm text-gray-600">
-                  {Math.round((run.currentStep / run.totalSteps) * 100)}%
-                  Complete
-                </span>
-              </div>
-              <div className="w-full bg-gray-200 rounded-full h-2">
-                <div
-                  className="bg-brand-primary h-2 rounded-full transition-all duration-500"
-                  style={{
-                    width: `${(run.currentStep / run.totalSteps) * 100}%`,
-                  }}
-                />
-              </div>
+      {/* Delete Confirmation Modal */}
+      {showDeleteConfirm && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+          <div className="bg-white rounded-lg p-6 max-w-md mx-4">
+            <div className="flex items-center gap-3 mb-4">
+              <ExclamationTriangleIcon className="h-6 w-6 text-red-500" />
+              <h3 className="text-lg font-semibold text-gray-900">Delete Step</h3>
             </div>
-
-            <div className="flex items-center justify-between">
+            <p className="text-gray-600 mb-6">
+              Are you sure you want to delete this workflow step? This action cannot be undone.
+            </p>
+            <div className="flex justify-end gap-3">
               <button
-                onClick={() => handleViewRun(run)}
-                className="px-4 py-2 bg-brand-primary text-white rounded-md hover:bg-brand-hover transition-colors"
+                onClick={() => setShowDeleteConfirm(null)}
+                className="px-4 py-2 border border-gray-300 text-gray-700 rounded-md hover:bg-gray-50 transition-colors"
               >
-                View Details
+                Cancel
               </button>
-              <button className="px-4 py-2 border border-gray-300 text-gray-700 rounded-md hover:bg-gray-50 transition-colors">
-                Pause
+              <button
+                onClick={confirmDeleteStep}
+                className="px-4 py-2 bg-red-600 text-white rounded-md hover:bg-red-700 transition-colors"
+              >
+                Delete
               </button>
             </div>
           </div>
-        ))}
+        </div>
+      )}
+
+      <div className="bg-white rounded-lg shadow-sm border border-gray-200">
+        {/* Header */}
+        <div className="border-b border-gray-200 p-6">
+          <div className="flex items-start justify-between mb-4">
+            <div className="flex-1">
+              <h3 className="text-lg font-semibold text-gray-900 mb-1">
+                {activeRun.name}
+              </h3>
+              <div className="flex items-center gap-4 text-sm text-gray-600">
+                <span className="flex items-center gap-1">
+                  <ClockIcon className="h-4 w-4" />
+                  Created: {activeRun.startTime}
+                </span>
+                <span>•</span>
+                <span>Est. completion: {activeRun.estimatedCompletion}</span>
+                <span>•</span>
+                <span>{activeRun.steps.length} steps</span>
+              </div>
+            </div>
+            <div className="flex items-center gap-3">
+              {isEditMode ? (
+                <>
+                  <button
+                    onClick={handleCancelEditMode}
+                    className="px-4 py-2 border border-gray-300 text-gray-700 rounded-md hover:bg-gray-50 transition-colors"
+                  >
+                    Cancel
+                  </button>
+                  <button
+                    onClick={handleSaveTemplate}
+                    className="px-4 py-2 bg-green-600 text-white rounded-md hover:bg-green-700 transition-colors flex items-center gap-2"
+                  >
+                    <CheckIcon className="h-4 w-4" />
+                    Save Template
+                  </button>
+                </>
+              ) : (
+                <button
+                  onClick={handleEditTemplate}
+                  className="px-4 py-2 border border-brand-primary text-brand-primary rounded-md hover:bg-brand-light transition-colors flex items-center gap-2"
+                >
+                  <PencilIcon className="h-4 w-4" />
+                  Edit Template
+                </button>
+              )}
+              <button
+                onClick={handleRunWorkflow}
+                className="px-6 py-2 bg-brand-primary text-white rounded-md hover:bg-brand-hover transition-colors flex items-center gap-2 font-semibold"
+              >
+                <PlayIcon className="h-4 w-4" />
+                Run
+              </button>
+            </div>
+          </div>
+        </div>
+
+        {/* Workflow Steps */}
+        <div className="p-6">
+          <div className="flex items-center justify-between mb-4">
+            <h4 className="text-lg font-semibold text-gray-900">Workflow Steps</h4>
+            {isEditMode && (
+              <div className="flex items-center gap-2 text-sm text-brand-primary bg-brand-light px-3 py-1 rounded-full">
+                <PencilIcon className="h-4 w-4" />
+                <span>Editing Mode</span>
+              </div>
+            )}
+          </div>
+          <div className="space-y-4">
+            {activeRun.steps.map((step, index) => (
+              <div key={step.id}>
+                <div className={`flex items-start gap-4 p-4 border rounded-lg transition-all ${
+                  editingStep === step.id 
+                    ? 'border-brand-primary bg-brand-light shadow-md' 
+                    : 'border-gray-200 hover:border-gray-300'
+                }`}>
+                  <div className="flex items-center justify-center w-8 h-8 bg-brand-primary text-white rounded-full text-sm font-semibold flex-shrink-0">
+                    {index + 1}
+                  </div>
+                  <div className="flex-1 min-w-0">
+                    <div className="flex items-start justify-between mb-2">
+                      <div className="flex items-center gap-3 flex-1 min-w-0">
+                        {editingStep === step.id ? (
+                          <div className="flex-1">
+                            <input
+                              type="text"
+                              value={step.title}
+                              onChange={(e) => handleUpdateStep(step.id, 'title', e.target.value)}
+                              className="w-full text-lg font-semibold text-gray-900 border border-brand-primary rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-brand-primary focus:border-transparent"
+                              placeholder="Step title"
+                            />
+                          </div>
+                        ) : (
+                          <h5 className="text-lg font-semibold text-gray-900 truncate flex-1">{step.title}</h5>
+                        )}
+                        <span className={`px-2 py-1 text-xs font-medium rounded-full flex-shrink-0 ${getStepTypeColor(step.type)}`}>
+                          {getStepTypeDisplayText(step.type)}
+                        </span>
+                        {/* Verification toggle for action steps only */}
+                        {step.type === "action" && !isEditMode && (
+                          <div className="flex items-center gap-2 ml-3">
+                            <VerificationDropdown
+                              value={step.verificationRequired ? 'default' : 'optional'}
+                              onChange={(value) => handleVerificationToggle(step.id, value !== 'optional')}
+                            />
+                            <button
+                              onClick={() => handleVerificationToggle(step.id, !step.verificationRequired)}
+                              className={`px-2 py-1 text-xs rounded transition-colors ${
+                                step.verificationRequired
+                                  ? 'bg-blue-100 text-blue-800 hover:bg-blue-200'
+                                  : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
+                              }`}
+                            >
+                              {step.verificationRequired ? 'On' : 'Off'}
+                            </button>
+                          </div>
+                        )}
+                      </div>
+                      <div className="flex items-center gap-1 ml-3">
+                                               {/* Edit Mode Controls */}
+                       {isEditMode && editingStep !== step.id && (
+                         <button
+                           onClick={() => handleEditStep(step.id)}
+                           className="p-1.5 text-brand-primary hover:bg-brand-light rounded-md transition-colors"
+                           title="Edit step"
+                         >
+                           <PencilIcon className="h-4 w-4" />
+                         </button>
+                       )}
+                       {editingStep === step.id && (
+                         <>
+                           <button
+                             onClick={handleSaveStep}
+                             className="p-1.5 text-green-600 hover:bg-green-50 rounded-md transition-colors"
+                             title="Save changes"
+                           >
+                             <CheckIcon className="h-4 w-4" />
+                           </button>
+                           <button
+                             onClick={handleCancelEdit}
+                             className="p-1.5 text-gray-500 hover:bg-gray-50 rounded-md transition-colors"
+                             title="Cancel editing"
+                           >
+                             <XMarkIcon className="h-4 w-4" />
+                           </button>
+                         </>
+                       )}
+                       {isEditMode && (
+                         <button
+                           onClick={() => handleDeleteStep(step.id)}
+                           className="p-1.5 text-red-500 hover:bg-red-50 rounded-md transition-colors"
+                           title="Delete step"
+                         >
+                           <XMarkIcon className="h-4 w-4" />
+                         </button>
+                       )}
+
+
+                      </div>
+                    </div>
+                    {editingStep === step.id ? (
+                      <div className="space-y-3">
+                        <textarea
+                          value={step.description}
+                          onChange={(e) => handleUpdateStep(step.id, 'description', e.target.value)}
+                          className="w-full text-gray-600 border border-brand-primary rounded-md px-3 py-2 resize-none focus:outline-none focus:ring-2 focus:ring-brand-primary focus:border-transparent"
+                          rows={3}
+                          placeholder="Step description"
+                        />
+                        <div className="flex items-center gap-2 text-sm">
+                          <span className="text-gray-500">Step type:</span>
+                          <select
+                            value={step.type}
+                            onChange={(e) => handleUpdateStep(step.id, 'type', e.target.value)}
+                            className="border border-gray-300 rounded px-2 py-1 text-sm focus:outline-none focus:ring-2 focus:ring-brand-primary focus:border-transparent"
+                          >
+                            <option value="dataSource">Data Source</option>
+                            <option value="llm">LLM</option>
+                            <option value="action">Action</option>
+                          </select>
+                        </div>
+                      </div>
+                    ) : (
+                      <p className="text-gray-600 leading-relaxed">{step.description}</p>
+                    )}
+                  </div>
+                </div>
+                
+                {/* Add Step Button */}
+                {isEditMode && !editingStep && (
+                  <div className="flex justify-center my-2">
+                    <button
+                      onClick={() => handleAddStep(step.id)}
+                      className="p-2 text-brand-primary hover:bg-brand-light rounded-full transition-colors group"
+                      title="Add step after this one"
+                    >
+                      <PlusIcon className="h-5 w-5 group-hover:scale-110 transition-transform" />
+                    </button>
+                  </div>
+                )}
+              </div>
+            ))}
+            
+            {/* Add Step at End */}
+            {isEditMode && !editingStep && activeRun.steps.length === 0 && (
+              <div className="text-center py-8">
+                <button
+                  onClick={() => handleAddStep()}
+                  className="px-4 py-2 border-2 border-dashed border-brand-primary text-brand-primary rounded-lg hover:bg-brand-light hover:border-solid transition-all flex items-center gap-2 mx-auto group"
+                >
+                  <PlusIcon className="h-5 w-5 group-hover:scale-110 transition-transform" />
+                  Add First Step
+                </button>
+              </div>
+            )}
+            
+            {isEditMode && !editingStep && activeRun.steps.length > 0 && (
+              <div className="text-center">
+                <button
+                  onClick={() => handleAddStep()}
+                  className="px-4 py-2 border-2 border-dashed border-brand-primary text-brand-primary rounded-lg hover:bg-brand-light hover:border-solid transition-all flex items-center gap-2 mx-auto group"
+                >
+                  <PlusIcon className="h-5 w-5 group-hover:scale-110 transition-transform" />
+                  Add Step
+                </button>
+              </div>
+            )}
+          </div>
+        </div>
       </div>
     </div>
   );
