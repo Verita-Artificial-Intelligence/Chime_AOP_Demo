@@ -28,15 +28,15 @@ const navItems: NavItem[] = [
     name: content.platformName,
     icon: BoltIcon,
     subItems: [
-      { name: "Workflow Builder", href: "/workflow/builder" },
       { name: "Workflow Templates", href: "/workflow/templates" },
-      { name: "Workflow Run History", href: "/workflow/run" },
-      { name: "Active Runs", href: "/workflow/active-runs" },
-      { name: "SOP to Workflow", href: "/workflow/sop-to-workflow" },
+      { name: "Workflow Chat Builder", href: "/workflow/builder" },
+      { name: "Upload SOP", href: "/workflow/sop-to-workflow" },
+      { name: "Active Workflows", href: "/workflow/active-runs" },
+      { name: "Workflow History", href: "/workflow/run" },
     ],
   },
   { name: "Integrations", href: "/integrations", icon: CircleStackIcon },
-  { name: "Security & OAuth", href: "/security", icon: CogIcon },
+  { name: "Security", href: "/security", icon: CogIcon },
 ];
 
 interface LayoutProps {
@@ -52,7 +52,7 @@ export const Layout: React.FC<LayoutProps> = ({ children }) => {
         <div className="p-4 border-b border-brand-sidebarBorder">
           <Link to="/">
             <h1 className="text-2xl font-bold text-brand-dark hover:text-brand-primary transition-colors">
-              {content.clientName} {content.platformName}
+              Verita AI
             </h1>
           </Link>
         </div>

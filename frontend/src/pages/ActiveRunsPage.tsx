@@ -612,9 +612,6 @@ export const ActiveRunsPage: React.FC = () => {
           <h1 className="text-2xl font-bold text-gray-800 mb-1">
             SOP to Workflow Agent Journey
           </h1>
-          <p className="text-gray-500 text-center">
-            No current workflow is running
-          </p>
         </div>
 
         <div className="bg-white rounded-lg shadow-sm border border-brand-border p-6">
@@ -754,7 +751,7 @@ export const ActiveRunsPage: React.FC = () => {
     return (
       <div className="max-w-7xl mx-auto">
         <div className="mb-8">
-          <h1 className="text-3xl font-bold text-gray-900 mb-2">Active Runs</h1>
+          <h1 className="text-3xl font-bold text-gray-900 mb-2">Active Workflows</h1>
           <p className="text-gray-600">
             Monitor your currently executing automation workflows
           </p>
@@ -764,9 +761,6 @@ export const ActiveRunsPage: React.FC = () => {
           <div className="mx-auto w-16 h-16 bg-gray-100 rounded-full flex items-center justify-center mb-4">
             <PlayIcon className="h-8 w-8 text-gray-400" />
           </div>
-          <h2 className="text-xl font-semibold text-gray-900 mb-2">
-            No current workflow is running
-          </h2>
           <p className="text-gray-600 mb-6">
             Start a new automation workflow from templates or create your own
           </p>
@@ -818,7 +812,7 @@ export const ActiveRunsPage: React.FC = () => {
   return (
     <div className="max-w-7xl mx-auto">
       <div className="mb-8">
-        <h1 className="text-3xl font-bold text-gray-900 mb-2">Active Runs</h1>
+        <h1 className="text-3xl font-bold text-gray-900 mb-2">Active Workflows</h1>
         <p className="text-gray-600">
           Review and customize your automation workflow before execution
         </p>
