@@ -120,7 +120,7 @@ export default function AOPRunPage() {
       <div className="max-w-3xl mx-auto p-4 md:p-6 bg-white shadow-lg rounded-lg">
         <div className="border-b pb-4 mb-4">
           <h1 className="text-2xl font-bold text-gray-800 mb-1">
-            AOP Run History Details: {aopInstanceData.name}
+            Workflow Run History Details: {aopInstanceData.name}
           </h1>
           <p className="text-sm text-gray-500">
             ID: {aopInstanceData.id}{" "}

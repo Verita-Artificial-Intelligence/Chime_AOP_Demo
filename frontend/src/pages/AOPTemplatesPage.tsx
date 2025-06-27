@@ -110,7 +110,7 @@ export const AOPTemplatesPage: React.FC = () => {
   return (
     <div className="max-w-7xl mx-auto">
       <div className="mb-8">
-        <h1 className="text-3xl font-bold text-gray-900 mb-2">AOP Templates</h1>
+        <h1 className="text-3xl font-bold text-gray-900 mb-2">Workflow Templates</h1>
         <p className="text-gray-600">
           Pre-built automation templates for common compliance and operational
           workflows
@@ -124,7 +124,7 @@ export const AOPTemplatesPage: React.FC = () => {
             onClick={() => handleTemplateClick(template.id)}
             className={`bg-white rounded-lg shadow-sm border ${
               index === 0 ? "border-brand-primary border-2" : "border-gray-200"
-            } p-6 hover:shadow-lg transition-all cursor-pointer group`}
+            } p-6 hover:shadow-lg transition-all cursor-pointer group h-full flex flex-col`}
           >
             {index === 0 && (
               <div className="mb-3">
@@ -152,7 +152,7 @@ export const AOPTemplatesPage: React.FC = () => {
               {template.name}
             </h3>
 
-            <p className="text-sm text-gray-600 mb-4 line-clamp-3">
+            <p className="text-sm text-gray-600 mb-4 line-clamp-3 flex-grow">
               {template.description}
             </p>
 
@@ -175,14 +175,14 @@ export const AOPTemplatesPage: React.FC = () => {
           Need a custom template?
         </h2>
         <p className="text-gray-600 mb-4">
-          Create your own automation workflow from scratch using our AOP
+          Create your own automation workflow from scratch using our Workflow
           Builder.
         </p>
         <button
           onClick={() => navigate("/aop/builder")}
           className="px-4 py-2 bg-brand-primary text-brand-dark rounded-md hover:bg-brand-hover transition-colors font-semibold"
         >
-          Create Custom AOP
+          Create Custom Workflow
         </button>
       </div>
     </div>

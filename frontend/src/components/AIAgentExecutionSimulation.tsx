@@ -263,24 +263,7 @@ export function AIAgentExecutionSimulation({
     localStorage.setItem("aopRunHistory", JSON.stringify(runHistory));
   };
 
-  // Auto-scroll to the current step card
-  useEffect(() => {
-    if (currentStep > 0) {
-      // Small delay to ensure the element is rendered
-      setTimeout(() => {
-        const stepElement = document.getElementById(
-          `agent-step-card-${currentStep - 1}`
-        );
-        if (stepElement) {
-          stepElement.scrollIntoView({
-            behavior: "smooth",
-            block: "center",
-            inline: "nearest",
-          });
-        }
-      }, 100);
-    }
-  }, [currentStep]);
+  // Removed auto-scroll functionality to allow independent scrolling
 
   // Helper to get a human-readable summary/table for each data source
   const getDataSourceSummary = (ds: string) => {
@@ -701,7 +684,7 @@ export function AIAgentExecutionSimulation({
   // Get verification message based on action type
   const getVerificationMessage = (action: string) => {
     if (isCriticalAction(action)) {
-      return `⚠️ CRITICAL ACTION: "${action}" requires mandatory human verification before execution. Please review the case details in the Chime platform and confirm this action is appropriate.`;
+      return `This action requires mandatory human verification before execution. Please review the case details in the Chime platform and confirm this action is appropriate.`;
     } else {
       return "This step requires human verification. Please review the details in the appropriate Chime platform.";
     }
@@ -756,7 +739,7 @@ export function AIAgentExecutionSimulation({
                         : 'text-yellow-800'
                     }`}>
                       {isCriticalAction((step as any).action || "") 
-                        ? 'Critical Action - Verification Required' 
+                        ? 'Verification Required' 
                         : 'Human Verification Required'}
                     </span>
                   </div>
@@ -1007,6 +990,21 @@ export function AIAgentExecutionSimulation({
     }
   };
 
+  // Get proper workflow display name
+  const getWorkflowDisplayName = (workflowId: string) => {
+    const workflowMap: { [key: string]: string } = {
+      'fcra-acdv-response': 'FCRA ACDV response',
+      'fcra-indirect-dispute': 'FCRA indirect dispute',
+      'aml-monitoring': 'AML monitoring',
+      'regulatory-reporting': 'regulatory reporting',
+      'audit-trail': 'audit trail',
+      'risk-assessment': 'risk assessment',
+      'custom-workflow': 'custom'
+    };
+    
+    return workflowMap[workflowId] || workflowId.replace(/-/g, ' ');
+  };
+
   return (
     <>
       {/* Add custom scrollbar styles */}
@@ -1043,7 +1041,7 @@ export function AIAgentExecutionSimulation({
           <div className="bg-brand-card border border-brand-border rounded-card shadow-card p-6 flex flex-col gap-4 items-center mb-8 text-white">
             <div className="flex flex-wrap gap-3 justify-center">
               <span className="inline-flex items-center justify-start px-3 py-1 rounded-full text-brand-primary font-semibold text-sm">
-                <BriefcaseIcon className="w-4 h-4 mr-1" /> {workflow}
+                <BriefcaseIcon className="w-4 h-4 mr-1" /> {getWorkflowDisplayName(workflow)}
               </span>
               {dataSources.map((ds, i) => (
                 <span
@@ -1097,8 +1095,21 @@ export function AIAgentExecutionSimulation({
                   Workflow Completed
                 </span>
                 <p className="text-sm text-gray-600 mb-4 text-center">
-                  The {workflow === 'fcra-acdv-response' ? 'FCRA ACDV response' : workflow} workflow has been executed and all
-                  steps have been completed successfully.
+                  {workflow === 'fcra-acdv-response' 
+                    ? 'FCRA ACDV response workflow has been executed' 
+                    : workflow === 'fcra-indirect-dispute'
+                    ? 'FCRA indirect dispute workflow has been executed'
+                    : workflow === 'aml-monitoring'
+                    ? 'AML monitoring workflow has been executed'
+                    : workflow === 'regulatory-reporting'
+                    ? 'Regulatory reporting workflow has been executed'
+                    : workflow === 'audit-trail'
+                    ? 'Audit trail workflow has been executed'
+                    : workflow === 'risk-assessment'
+                    ? 'Risk assessment workflow has been executed'
+                    : workflow === 'custom-workflow'
+                    ? 'Custom workflow has been executed'
+                    : `${workflow.replace(/-/g, ' ')} workflow has been executed`}
                 </p>
                 <div className="flex justify-center gap-4 mt-2 w-full">
                   <button className="btn-primary w-1/2" onClick={onRestart}>

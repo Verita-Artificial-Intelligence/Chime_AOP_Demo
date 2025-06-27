@@ -121,7 +121,7 @@ const ServiceJourney: React.FC<ServiceJourneyProps> = ({ steps, currentStep, exe
     <div className="fixed right-4 top-10 w-96 bg-white rounded-xl shadow-2xl border border-gray-100 max-h-[calc(90vh)] overflow-hidden flex flex-col">
       {/* Header */}
       <div className="px-6 py-5 border-b border-gray-100">
-        <h2 className="text-2xl font-bold text-gray-900">Agent Journey</h2>
+        <h2 className="text-2xl font-bold text-gray-900">Workflow Steps</h2>
         {!executionComplete && currentStep > 0 && (
           <p className="text-sm text-blue-600 mt-1 flex items-center">
             <ClockIcon className="w-4 h-4 mr-1" />
