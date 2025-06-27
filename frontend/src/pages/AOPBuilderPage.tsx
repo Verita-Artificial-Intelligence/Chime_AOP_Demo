@@ -8,6 +8,7 @@ import {
   PlayIcon,
 } from "@heroicons/react/24/outline";
 import { llmService } from "../services/llmService";
+import { WorkflowReview } from "../components/WorkflowReview";
 
 interface AgentConfig {
   id: string;
@@ -207,6 +208,8 @@ export function WorkflowBuilderPage() {
   const [searchParams] = useSearchParams();
   const chatEndRef = useRef<null | HTMLDivElement>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
+  const [showReview, setShowReview] = useState(false);
+  const [reviewConfig, setReviewConfig] = useState<any>(null);
 
   // Check if we're loading from a template
   useEffect(() => {
@@ -644,10 +647,18 @@ export function WorkflowBuilderPage() {
       );
       addMessage("system", `Agent "${agentConfig.name}" saved successfully!`);
       setMessages((prev) => prev.filter((msg) => msg.id !== "save-button"));
-      setTimeout(() => {
-        // Navigate to active runs with the agent configuration
-        navigate("/workflow");
-      }, 1500);
+      
+      // Show review component instead of navigating
+      setReviewConfig({
+        id: agentConfig.id,
+        name: agentConfig.name,
+        workflow: agentConfig.workflow,
+        dataSources: agentConfig.dataSources,
+        actions: agentConfig.actions,
+        llm: agentConfig.llm,
+        estimatedCompletion: "15-20 mins",
+      });
+      setShowReview(true);
     } catch (error) {
       console.error("Failed to save agent:", error);
       addMessage(
@@ -656,6 +667,29 @@ export function WorkflowBuilderPage() {
       );
     }
   };
+
+  // If showing review, render the review component
+  if (showReview && reviewConfig) {
+    return (
+      <div className="container mx-auto max-w-5xl p-4">
+        <div className="mb-8">
+          <h1 className="text-3xl font-bold text-gray-900 mb-2">
+            Review Your Workflow
+          </h1>
+          <p className="text-gray-600">
+            Review and customize your automation workflow before execution
+          </p>
+        </div>
+        <WorkflowReview 
+          config={reviewConfig} 
+          onCancel={() => {
+            setShowReview(false);
+            setReviewConfig(null);
+          }}
+        />
+      </div>
+    );
+  }
 
   return (
     <div className="container mx-auto max-w-3xl p-4 flex flex-col h-[calc(100vh-100px)] bg-brand-card">

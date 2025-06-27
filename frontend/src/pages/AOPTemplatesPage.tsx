@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import {
   DocumentTextIcon,
@@ -9,6 +9,7 @@ import {
   UserGroupIcon,
 } from "@heroicons/react/24/outline";
 import templateConfigsData from "../data/templateConfigs";
+import { WorkflowReview } from "../components/WorkflowReview";
 
 interface Template {
   id: string;
@@ -85,27 +86,46 @@ const templates: Template[] = [
 
 export const WorkflowTemplatesPage: React.FC = () => {
   const navigate = useNavigate();
+  const [selectedTemplate, setSelectedTemplate] = useState<any>(null);
 
   const handleTemplateClick = (templateId: string) => {
     // Get template configuration from mockData
     const templateConfig = templateConfigsData[templateId];
+    const template = templates.find(t => t.id === templateId);
 
-    if (templateConfig) {
-      // Navigate directly to active runs with the template configuration
-      navigate("/workflow/active-runs", {
-        state: {
-          id: `run-${templateId}-${Date.now()}`,
-          name: templateConfig.name,
-          workflow: templateConfig.workflow,
-          dataSources: templateConfig.dataSources,
-          actions: templateConfig.actions,
-          llm: templateConfig.llm,
-          fromTemplate: true,
-          templateId: templateId,
-        },
+    if (templateConfig && template) {
+      // Show the review component instead of navigating
+      setSelectedTemplate({
+        id: `run-${templateId}-${Date.now()}`,
+        name: templateConfig.name,
+        workflow: templateConfig.workflow,
+        dataSources: templateConfig.dataSources,
+        actions: templateConfig.actions,
+        llm: templateConfig.llm,
+        estimatedCompletion: template.estimatedTime,
       });
     }
   };
+
+  // If a template is selected, show the review component
+  if (selectedTemplate) {
+    return (
+      <div className="max-w-7xl mx-auto">
+        <div className="mb-8">
+          <h1 className="text-3xl font-bold text-gray-900 mb-2">
+            Review Workflow Template
+          </h1>
+          <p className="text-gray-600">
+            Review and customize your automation workflow before execution
+          </p>
+        </div>
+        <WorkflowReview 
+          config={selectedTemplate} 
+          onCancel={() => setSelectedTemplate(null)}
+        />
+      </div>
+    );
+  }
 
   return (
     <div className="max-w-7xl mx-auto">
