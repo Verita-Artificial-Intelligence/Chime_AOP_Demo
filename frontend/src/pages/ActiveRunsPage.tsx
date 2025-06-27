@@ -18,6 +18,12 @@ import {
 import { SiGmail, SiSlack } from "react-icons/si";
 import { FaSquare, FaCircle } from "react-icons/fa";
 import { AIAgentExecutionSimulation } from "../components/AIAgentExecutionSimulation";
+import { WorkflowStepsDisplay } from "../components/WorkflowStepsDisplay";
+
+// Import the JSON files
+import creditDisputeBureauData from "../data/Credit-Dispute-through-Credit-Bureau.json";
+import directDisputeMemberData from "../data/Direct-Dispute-from-Member.json";
+import complexDisputeEquifaxData from "../data/Complex-Dispute-via-Equifax.json";
 
 interface WorkflowStep {
   id: string;
@@ -129,6 +135,7 @@ interface SOPToWorkflowStep {
   element_description: string;
   element_type: string;
   value?: string;
+  heading?: string;
 }
 
 export const ActiveRunsPage: React.FC = () => {
@@ -144,6 +151,34 @@ export const ActiveRunsPage: React.FC = () => {
   );
   const [showSaveSuccess, setShowSaveSuccess] = useState(false);
   const [isRunning, setIsRunning] = useState(false);
+  const [workflowJsonData, setWorkflowJsonData] = useState<
+    SOPToWorkflowStep[] | null
+  >(null);
+  const [workflowTitle, setWorkflowTitle] = useState<string>("");
+
+  // Map template IDs to their JSON data
+  const templateDataMap: Record<string, SOPToWorkflowStep[]> = {
+    "credit-dispute-credit-bureau": creditDisputeBureauData,
+    "direct-dispute-member": directDisputeMemberData,
+    "complex-dispute-equifax": complexDisputeEquifaxData,
+  };
+
+  // Check if we're coming from templates page with a template selection
+  useEffect(() => {
+    if (location.state && location.state.templateId) {
+      const { templateId, templateTitle, jsonFile } = location.state;
+
+      // Load the corresponding JSON data
+      const jsonData = templateDataMap[templateId];
+      if (jsonData) {
+        setWorkflowJsonData(jsonData);
+        setWorkflowTitle(templateTitle);
+      }
+
+      // Clear the location state to prevent re-runs on refresh
+      window.history.replaceState({}, document.title);
+    }
+  }, [location.state]);
 
   // Define critical actions that always require verification
   const getCriticalActions = () => {
@@ -246,7 +281,7 @@ export const ActiveRunsPage: React.FC = () => {
   useEffect(() => {
     if (location.state && location.state.workflow && location.state.isRunning) {
       const workflowId = location.state.id || `run-${Date.now()}`;
-      
+
       // Try to load existing configuration from localStorage first
       const existingConfigs = JSON.parse(
         localStorage.getItem("workflowConfigs") || "[]"
@@ -254,7 +289,7 @@ export const ActiveRunsPage: React.FC = () => {
       const savedConfig = existingConfigs.find(
         (config: any) => config.id === workflowId
       );
-      
+
       let steps;
       if (location.state.steps) {
         // Use the steps passed from the review component
@@ -270,7 +305,7 @@ export const ActiveRunsPage: React.FC = () => {
           location.state.llm || ""
         );
       }
-      
+
       const newRun: ActiveRun = {
         id: workflowId,
         name:
@@ -290,7 +325,7 @@ export const ActiveRunsPage: React.FC = () => {
       setActiveRun(newRun);
       setIsRunning(true);
       setShowSimulation(true);
-      
+
       // Clear the location state to prevent re-runs on refresh
       window.history.replaceState({}, document.title);
     }
@@ -640,6 +675,22 @@ export const ActiveRunsPage: React.FC = () => {
     navigate("/workflow/run");
   };
 
+  // If we're showing JSON workflow data from templates
+  if (workflowJsonData && workflowTitle) {
+    return (
+      <WorkflowStepsDisplay
+        steps={workflowJsonData}
+        title={workflowTitle}
+        onComplete={() => {
+          // Navigate back to templates or history after completion
+          setTimeout(() => {
+            navigate("/workflow/run");
+          }, 2000);
+        }}
+      />
+    );
+  }
+
   // If we're showing SOP to Workflow data
   if (sopToWorkflowData) {
     const getActionIcon = (action: string) => {
@@ -674,9 +725,7 @@ export const ActiveRunsPage: React.FC = () => {
           <h1 className="text-2xl font-bold text-gray-800 mb-1">
             Workflow Title
           </h1>
-          <p className="text-gray-600">
-            Start time
-          </p>
+          <p className="text-gray-600">Start time</p>
         </div>
 
         <div className="bg-white rounded-lg shadow-sm border border-brand-border p-6">
