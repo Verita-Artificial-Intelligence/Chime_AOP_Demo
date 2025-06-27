@@ -456,6 +456,74 @@
         { "saveId": "SAVE-002", "caseId": "IND-002", "savedAt": "2024-07-18T17:15:00Z", "dataArchived": "Yes", "responsesSent": "Yes", "caseStatus": "Completed" },
         { "saveId": "SAVE-003", "caseId": "IND-003", "savedAt": "2024-07-17T13:45:00Z", "dataArchived": "Yes", "responsesSent": "Yes", "caseStatus": "Completed" }
       ]
+    },
+    {
+      "action": "Notify",
+      "results": [
+        { "notificationId": "NOTIF-001", "type": "Email", "recipient": "supervisor@company.com", "status": "Sent", "timestamp": "2024-07-19T12:00:00Z", "message": "Workflow step completed - human review required" },
+        { "notificationId": "NOTIF-002", "type": "SMS", "recipient": "+1-555-0123", "status": "Delivered", "timestamp": "2024-07-19T12:01:00Z", "message": "Action requires approval" },
+        { "notificationId": "NOTIF-003", "type": "Slack", "channel": "#operations", "status": "Posted", "timestamp": "2024-07-19T12:02:00Z", "message": "Human-in-the-loop checkpoint reached" }
+      ]
+    },
+    {
+      "action": "Save to Oscar",
+      "results": [
+        { "oscarSaveId": "OSCAR-SAVE-001", "recordId": "REC-12345", "system": "OSCAR", "status": "Saved", "timestamp": "2024-07-19T12:30:00Z", "dataIntegrity": "Verified" },
+        { "oscarSaveId": "OSCAR-SAVE-002", "recordId": "REC-12346", "system": "OSCAR", "status": "Saved", "timestamp": "2024-07-19T12:31:00Z", "dataIntegrity": "Verified" },
+        { "oscarSaveId": "OSCAR-SAVE-003", "recordId": "REC-12347", "system": "OSCAR", "status": "Error", "timestamp": "2024-07-19T12:32:00Z", "errorCode": "CONNECTION_TIMEOUT", "retryScheduled": "Yes" }
+      ]
+    },
+    {
+      "action": "Human-in-the-loop: Review before final response (Verification needed)",
+      "results": [
+        { "reviewId": "HIL-001", "stepType": "Pre-Response Review", "status": "Pending Human Verification", "assignedTo": "Compliance Team", "platformLink": "https://chime-legal-compliance.internal.com", "timestamp": "2024-07-19T13:00:00Z" },
+        { "reviewId": "HIL-002", "stepType": "Pre-Response Review", "status": "Verified", "approvedBy": "John Doe", "completedAt": "2024-07-19T13:15:00Z", "notes": "Response approved for submission" }
+      ]
+    },
+    {
+      "action": "Human-in-the-loop: Final approval before case closure (Verification needed)", 
+      "results": [
+        { "approvalId": "HIL-003", "stepType": "Case Closure Approval", "status": "Pending Human Verification", "assignedTo": "Legal Team", "platformLink": "https://chime-legal-compliance.internal.com", "timestamp": "2024-07-19T14:00:00Z" },
+        { "approvalId": "HIL-004", "stepType": "Case Closure Approval", "status": "Approved", "approvedBy": "Jane Smith", "completedAt": "2024-07-19T14:30:00Z", "notes": "Case cleared for closure" }
+      ]
+    },
+    {
+      "action": "Human-in-the-loop: Review drafted response (Verification needed)",
+      "results": [
+        { "draftReviewId": "HIL-005", "stepType": "Response Draft Review", "status": "Pending Human Verification", "assignedTo": "Compliance Officer", "platformLink": "https://chime-legal-compliance.internal.com", "timestamp": "2024-07-19T11:00:00Z" },
+        { "draftReviewId": "HIL-006", "stepType": "Response Draft Review", "status": "Approved with Changes", "reviewedBy": "Sarah Wilson", "completedAt": "2024-07-19T11:45:00Z", "changesRequested": "Minor wording adjustments for clarity" }
+      ]
+    },
+    {
+      "action": "Human-in-the-loop: Final review before case save (Verification needed)",
+      "results": [
+        { "finalReviewId": "HIL-007", "stepType": "Pre-Save Review", "status": "Pending Human Verification", "assignedTo": "Senior Analyst", "platformLink": "https://chime-platform.internal.com", "timestamp": "2024-07-19T15:00:00Z" },
+        { "finalReviewId": "HIL-008", "stepType": "Pre-Save Review", "status": "Approved", "reviewedBy": "Michael Brown", "completedAt": "2024-07-19T15:20:00Z", "notes": "All documentation complete and accurate" }
+      ]
+    },
+    {
+      "action": "Close case",
+      "results": [
+        { "caseCloseId": "CLOSE-001", "caseId": "CASE-12345", "status": "Closed", "closedBy": "System", "timestamp": "2024-07-19T16:00:00Z", "resolution": "Dispute resolved - Account corrected", "finalStatus": "Completed" },
+        { "caseCloseId": "CLOSE-002", "caseId": "CASE-12346", "status": "Closed", "closedBy": "Compliance Officer", "timestamp": "2024-07-19T16:15:00Z", "resolution": "Investigation complete - No action required", "finalStatus": "No Change" },
+        { "caseCloseId": "CLOSE-003", "caseId": "CASE-12347", "status": "Pending Closure", "assignedTo": "Legal Team", "timestamp": "2024-07-19T16:30:00Z", "notes": "Awaiting final legal review before closure" }
+      ]
+    },
+    {
+      "action": "Apply admin notation",
+      "results": [
+        { "notationId": "ADMIN-001", "caseId": "CASE-12345", "notation": "Consumer dispute resolved via automated verification process", "addedBy": "System", "timestamp": "2024-07-19T15:45:00Z", "visibility": "Internal Only" },
+        { "notationId": "ADMIN-002", "caseId": "CASE-12346", "notation": "Account verified - dispute unfounded", "addedBy": "Compliance Team", "timestamp": "2024-07-19T15:50:00Z", "visibility": "Consumer Visible" },
+        { "notationId": "ADMIN-003", "caseId": "CASE-12347", "notation": "Escalated to legal review due to complex dispute nature", "addedBy": "Senior Analyst", "timestamp": "2024-07-19T15:55:00Z", "visibility": "Internal Only" }
+      ]
+    },
+    {
+      "action": "Delete tradeline",
+      "results": [
+        { "deletionId": "DEL-001", "accountNumber": "XXXX-1234", "tradeline": "Credit Card Account", "status": "Deleted", "deletedBy": "Compliance System", "timestamp": "2024-07-19T14:30:00Z", "reason": "Identity theft confirmed" },
+        { "deletionId": "DEL-002", "accountNumber": "XXXX-5678", "tradeline": "Personal Loan", "status": "Marked for Deletion", "scheduledDate": "2024-07-20T09:00:00Z", "reason": "Consumer dispute verified" },
+        { "deletionId": "DEL-003", "accountNumber": "XXXX-9012", "tradeline": "Auto Loan", "status": "Deletion Denied", "reviewedBy": "Legal Team", "timestamp": "2024-07-19T14:45:00Z", "reason": "Insufficient evidence for removal" }
+      ]
     }
   ],
   "aopsInstances": [
@@ -535,8 +603,10 @@
       "Process through AI Agent",
       "Save case to OSCAR system",
       "Send member acknowledgment",
+      "Human-in-the-loop: Review before final response (Verification needed)",
       "Submit final response",
       "Apply admin notation",
+      "Human-in-the-loop: Final approval before case closure (Verification needed)",
       "Close case"
     ],
     "fcra-indirect-dispute": [
@@ -548,8 +618,10 @@
       "Balance vs tradeline check",
       "Process through AI Agent",
       "Draft FCRA response",
+      "Human-in-the-loop: Review drafted response (Verification needed)",
       "Verify internal notes",
       "Update dispute status",
+      "Human-in-the-loop: Final review before case save (Verification needed)",
       "Save case"
     ]
   }, 

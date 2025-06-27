@@ -8,11 +8,21 @@ import {
   SparklesIcon,
 } from "@heroicons/react/24/solid";
 
+interface WorkflowStep {
+  id: string;
+  type: "dataSource" | "action" | "llm";
+  title: string;
+  description: string;
+  verificationRequired?: boolean;
+  config?: any;
+}
+
 interface AIAgentExecutionSimulationProps {
   workflow: string;
   dataSources: string[];
   actions: string[];
   llm: string;
+  steps?: WorkflowStep[];
   onRestart: () => void;
 }
 
@@ -62,12 +72,15 @@ export function AIAgentExecutionSimulation({
   dataSources,
   actions,
   llm,
+  steps = [],
   onRestart,
 }: AIAgentExecutionSimulationProps) {
   const [currentStep, setCurrentStep] = useState(0);
   const [executionComplete, setExecutionComplete] = useState(false);
   const [mockData, setMockData] = useState<any>(null);
   const [runStartTime] = useState(new Date().toISOString());
+  const [isPaused, setIsPaused] = useState(false);
+  const [humanVerificationStep, setHumanVerificationStep] = useState<number | null>(null);
 
   // Build the step sequence: init, data sources, actions, complete
   const stepSequence = [
@@ -89,19 +102,89 @@ export function AIAgentExecutionSimulation({
     import("../data/mockData.json").then((data) => setMockData(data));
   }, []);
 
-  useEffect(() => {
-    if (!mockData) return;
+  // Define critical actions that always require human verification
+  const getCriticalActions = () => {
+    return [
+      "Close case",
+      "Submit final response", 
+      "Apply admin notation",
+      "Delete tradeline",
+      "Update credit bureau",
+      "Send member acknowledgment",
+      "Save case to OSCAR system",
+      "Notify Fraud-Ops",
+      "Notify Legal/Compliance"
+    ];
+  };
+
+  const isCriticalAction = (action: string) => {
+    const criticalActions = getCriticalActions();
+    return criticalActions.some(critical => 
+      action.toLowerCase().includes(critical.toLowerCase())
+    );
+  };
+
+  // Check if a step requires verification based on step configuration
+  const stepRequiresVerification = (stepIndex: number) => {
+    const currentStepData = stepSequence[stepIndex];
+    const isActionStep = currentStepData?.type === "action";
+    const actionText = (currentStepData as any).action || "";
+    
+    if (!isActionStep) return false;
+    
+    // Find the corresponding step from the steps array to check verification setting
+    // Match by action name/title from the steps configuration
+    const matchingStep = steps.find(step => 
+      step.type === "action" && 
+      (step.title === actionText || 
+       step.title.toLowerCase().includes(actionText.toLowerCase()) ||
+       actionText.toLowerCase().includes(step.title.toLowerCase()))
+    );
+    
+    // Require verification for:
+    // 1. Steps with verification enabled in configuration
+    // 2. Critical actions (always, regardless of setting)
+    return (matchingStep?.verificationRequired === true) || isCriticalAction(actionText);
+  };
+
+  // Handle human verification completion - SIMPLE VERSION
+  const handleVerificationComplete = () => {
+    setIsPaused(false);
+    setHumanVerificationStep(null);
+    
+    // Just move to next step immediately
     if (currentStep < stepSequence.length - 1) {
-      const timer = setTimeout(() => {
-        setCurrentStep((prev) => prev + 1);
-      }, 1400);
-      return () => clearTimeout(timer);
-    } else if (currentStep === stepSequence.length - 1 && !executionComplete) {
+      setCurrentStep(currentStep + 1);
+    } else {
       setExecutionComplete(true);
-      // Save the completed run to localStorage
       saveCompletedRun();
     }
-  }, [currentStep, stepSequence.length, mockData, executionComplete]);
+  };
+
+  // SIMPLIFIED useEffect - just handles normal flow
+  useEffect(() => {
+    if (!mockData || executionComplete || isPaused) return;
+    
+    // Check if current step needs verification
+    const needsVerification = stepRequiresVerification(currentStep);
+    
+    if (needsVerification) {
+      setIsPaused(true);
+      setHumanVerificationStep(currentStep);
+      return;
+    }
+    
+    // Normal step progression
+    if (currentStep < stepSequence.length - 1) {
+      const timer = setTimeout(() => {
+        setCurrentStep(currentStep + 1);
+      }, 1400);
+      return () => clearTimeout(timer);
+    } else {
+      setExecutionComplete(true);
+      saveCompletedRun();
+    }
+  }, [currentStep, mockData, executionComplete, isPaused]);
 
   const saveCompletedRun = () => {
     const workflowDetails = mockData?.workflows?.find(
@@ -589,6 +672,41 @@ export function AIAgentExecutionSimulation({
     }
   };
 
+  // Get platform link based on action type
+  const getPlatformLink = (action: string) => {
+    const actionLower = action.toLowerCase();
+    const baseUrl = "http://localhost:3001";
+    
+    // Map actions to specific Chime tools
+    if (actionLower.includes("oscar") || actionLower.includes("eoscar") || 
+        actionLower.includes("credit") || actionLower.includes("bureau") || 
+        actionLower.includes("tradeline") || actionLower.includes("dispute")) {
+      return `${baseUrl}/eoscar`;
+    } else if (actionLower.includes("zendesk") || actionLower.includes("case") || 
+               actionLower.includes("ticket") || actionLower.includes("support") ||
+               actionLower.includes("member") || actionLower.includes("acknowledgment")) {
+      return `${baseUrl}/zendesk`;
+    } else if (actionLower.includes("penny") || actionLower.includes("financial") || 
+               actionLower.includes("payment") || actionLower.includes("balance")) {
+      return `${baseUrl}/penny`;
+    } else if (actionLower.includes("looker") || actionLower.includes("analytics") || 
+               actionLower.includes("report") || actionLower.includes("dashboard")) {
+      return `${baseUrl}/looker`;
+    } else {
+      // Default to main dashboard
+      return baseUrl;
+    }
+  };
+
+  // Get verification message based on action type
+  const getVerificationMessage = (action: string) => {
+    if (isCriticalAction(action)) {
+      return `⚠️ CRITICAL ACTION: "${action}" requires mandatory human verification before execution. Please review the case details in the Chime platform and confirm this action is appropriate.`;
+    } else {
+      return "This step requires human verification. Please review the details in the appropriate Chime platform.";
+    }
+  };
+
   // Stepper steps for all steps
   const stepperSteps = stepSequence.map((step, i) => ({
     title: `Step ${i + 1}`,
@@ -619,8 +737,59 @@ export function AIAgentExecutionSimulation({
           )}
           {step.type === "action" && (
             <div className="mt-4 overflow-hidden">
-              <div className="text-xs text-brand-muted mb-2">Result:</div>
-              {getActionSummary((step as any).action)}
+              {/* Human-in-the-loop verification interface */}
+              {isPaused && humanVerificationStep === idx ? (
+                <div className={`border rounded-lg p-4 ${
+                  isCriticalAction((step as any).action || "") 
+                    ? 'bg-red-50 border-red-200' 
+                    : 'bg-yellow-50 border-yellow-200'
+                }`}>
+                  <div className="flex items-center mb-3">
+                    <div className={`w-3 h-3 rounded-full mr-2 animate-pulse ${
+                      isCriticalAction((step as any).action || "") 
+                        ? 'bg-red-400' 
+                        : 'bg-yellow-400'
+                    }`}></div>
+                    <span className={`text-sm font-semibold ${
+                      isCriticalAction((step as any).action || "") 
+                        ? 'text-red-800' 
+                        : 'text-yellow-800'
+                    }`}>
+                      {isCriticalAction((step as any).action || "") 
+                        ? 'Critical Action - Verification Required' 
+                        : 'Human Verification Required'}
+                    </span>
+                  </div>
+                  <p className="text-sm text-gray-700 mb-3">
+                    {getVerificationMessage((step as any).action || "")}
+                  </p>
+                  <div className="flex flex-col sm:flex-row gap-2">
+                    <a
+                      href={getPlatformLink((step as any).action)}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className={`flex-1 px-4 py-2 text-white rounded-md focus:outline-none focus:ring-2 text-center text-sm font-medium transition-colors ${
+                        isCriticalAction((step as any).action || "") 
+                          ? 'bg-red-600 hover:bg-red-700 focus:ring-red-500' 
+                          : 'bg-blue-600 hover:bg-blue-700 focus:ring-blue-500'
+                      }`}
+                    >
+                      Open Chime Platform →
+                    </a>
+                    <button
+                      onClick={handleVerificationComplete}
+                      className="flex-1 px-4 py-2 bg-green-600 text-white rounded-md hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-green-500 text-sm font-medium transition-colors"
+                    >
+                      ✓ Done
+                    </button>
+                  </div>
+                </div>
+              ) : (
+                <>
+                  <div className="text-xs text-brand-muted mb-2">Result:</div>
+                  {getActionSummary((step as any).action)}
+                </>
+              )}
             </div>
           )}
           {step.type === "init" && (
@@ -925,7 +1094,7 @@ export function AIAgentExecutionSimulation({
                       d="M8 12l2.5 2.5L16 9"
                     />
                   </svg>
-                  Agent workflow completed successfully!
+                  Workflow Completed
                 </span>
                 <p className="text-sm text-gray-600 mb-4 text-center">
                   The {workflow === 'fcra-acdv-response' ? 'FCRA ACDV response' : workflow} workflow has been executed and all

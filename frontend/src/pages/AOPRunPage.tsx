@@ -10,6 +10,7 @@ interface RunnableAgentConfig {
   dataSources: string[];
   actions: string[];
   llm: string;
+  verificationRequired?: "no" | "yes";
   name?: string; // Optional name, could be from prompt title or instance name
   createdAt?: string;
 }
@@ -107,6 +108,7 @@ export default function AOPRunPage() {
         dataSources={runnableConfig.dataSources}
         actions={runnableConfig.actions}
         llm={runnableConfig.llm}
+        verificationRequired={runnableConfig.verificationRequired || "no"}
         onRestart={() => navigate("/aop")} // Or navigate to builder /aop/builder
       />
     );

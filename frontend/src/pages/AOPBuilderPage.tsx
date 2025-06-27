@@ -15,6 +15,7 @@ interface AgentConfig {
   dataSources: string[];
   actions: string[];
   llm: string;
+  verificationRequired: "no" | "yes"; // Add verification requirement field
   createdAt: string;
 }
 
@@ -108,8 +109,10 @@ const AI_SUGGESTIONS: MockPrompt[] = [
         "Balance vs tradeline check",
         "Process through AI Agent",
         "Draft FCRA response",
+        "Human-in-the-loop: Review drafted response (Verification needed)",
         "Verify internal notes",
         "Update dispute status",
+        "Human-in-the-loop: Final review before case save (Verification needed)",
         "Save case",
       ],
       llm: "compliance-llm",
@@ -144,8 +147,10 @@ const TEMPLATE_CONFIGS: { [key: string]: MockPrompt } = {
         "Process through AI Agent",
         "Save case to OSCAR system",
         "Send member acknowledgment",
+        "Human-in-the-loop: Review before final response (Verification needed)",
         "Submit final response",
         "Apply admin notation",
+        "Human-in-the-loop: Final approval before case closure (Verification needed)",
         "Close case",
       ],
       llm: "compliance-llm",
@@ -180,8 +185,10 @@ const TEMPLATE_CONFIGS: { [key: string]: MockPrompt } = {
         "Balance vs tradeline check",
         "Process through AI Agent",
         "Draft FCRA response",
+        "Human-in-the-loop: Review drafted response (Verification needed)",
         "Verify internal notes",
         "Update dispute status",
+        "Human-in-the-loop: Final review before case save (Verification needed)",
         "Save case",
       ],
       llm: "compliance-llm",
@@ -268,13 +275,13 @@ export function AOPBuilderPage() {
     await new Promise((resolve) => setTimeout(resolve, 1500));
 
     for (const ds of prompt.config.dataSources) {
-      addMessage("agent", `Adding data source: ${ds}...`);
+      addMessage("agent", `Adding Data Source: ${ds}...`);
       await new Promise((resolve) => setTimeout(resolve, 700));
     }
 
     if (prompt.config.actions.length > 0) {
       for (const action of prompt.config.actions) {
-        addMessage("agent", `Adding action: ${action}...`);
+        addMessage("agent", `Adding Action: ${action}...`);
         await new Promise((resolve) => setTimeout(resolve, 700));
       }
     } else {
@@ -298,6 +305,7 @@ export function AOPBuilderPage() {
       dataSources: prompt.config.dataSources,
       actions: prompt.config.actions,
       llm: prompt.config.llm,
+      verificationRequired: "no",
       createdAt: new Date().toISOString(),
     };
 
@@ -331,13 +339,13 @@ export function AOPBuilderPage() {
     await new Promise((resolve) => setTimeout(resolve, 1500));
 
     for (const ds of prompt.config.dataSources) {
-      addMessage("agent", `Adding data source: ${ds}...`);
+      addMessage("agent", `Adding Data Source: ${ds}...`);
       await new Promise((resolve) => setTimeout(resolve, 700));
     }
 
     if (prompt.config.actions.length > 0) {
       for (const action of prompt.config.actions) {
-        addMessage("agent", `Adding action: ${action}...`);
+        addMessage("agent", `Adding Action: ${action}...`);
         await new Promise((resolve) => setTimeout(resolve, 700));
       }
     } else {
@@ -361,6 +369,7 @@ export function AOPBuilderPage() {
       dataSources: prompt.config.dataSources,
       actions: prompt.config.actions,
       llm: prompt.config.llm,
+      verificationRequired: "no",
       createdAt: new Date().toISOString(),
     };
 
@@ -580,13 +589,13 @@ export function AOPBuilderPage() {
     addMessage("agent", prompt.description);
     await new Promise((resolve) => setTimeout(resolve, 1500));
 
-    addMessage("agent", "Setting up data sources:");
+    addMessage("agent", "Setting up Data Sources:");
     for (const ds of prompt.config.dataSources) {
       addMessage("agent", `• ${ds}`);
       await new Promise((resolve) => setTimeout(resolve, 500));
     }
 
-    addMessage("agent", "Configuring automation actions:");
+    addMessage("agent", "Configuring automation Actions:");
     for (const action of prompt.config.actions) {
       addMessage("agent", `• ${action}`);
       await new Promise((resolve) => setTimeout(resolve, 500));
@@ -609,6 +618,7 @@ export function AOPBuilderPage() {
       dataSources: prompt.config.dataSources,
       actions: prompt.config.actions,
       llm: prompt.config.llm,
+      verificationRequired: "no",
       createdAt: new Date().toISOString(),
     };
 
@@ -708,12 +718,40 @@ export function AOPBuilderPage() {
                 </div>
               )}
               {msg.id === "save-button" && msg.config && (
-                <button
-                  onClick={() => saveAgent(msg.config as AgentConfig)}
-                  className="mt-2 px-4 py-2 bg-brand-primary text-brand-dark rounded-md hover:bg-brand-hover focus:outline-none focus:ring-2 focus:ring-white focus:ring-opacity-50 w-full transition-all duration-200 font-semibold"
-                >
-                  Save & Run This AOP
-                </button>
+                <div className="mt-3">
+                  <div className="mb-3 p-3 bg-gray-50 rounded-md">
+                    <h4 className="text-sm font-semibold text-gray-700 mb-2">Configuration Summary:</h4>
+                    <div className="text-xs space-y-1 text-gray-600">
+                      <div><span className="font-medium">Data Sources:</span> {msg.config.dataSources.length} configured</div>
+                      <div><span className="font-medium">Actions:</span> {msg.config.actions.length} steps</div>
+                      <div><span className="font-medium">LLM:</span> {msg.config.llm}</div>
+                      <div className="flex items-center justify-between">
+                        <span className="font-medium">Verification Required:</span>
+                        <select
+                          value={msg.config.verificationRequired}
+                          onChange={(e) => {
+                            // Update the config in the message
+                            setMessages(prev => prev.map(m => 
+                              m.id === "save-button" && m.config 
+                                ? { ...m, config: { ...m.config, verificationRequired: e.target.value as "no" | "yes" } }
+                                : m
+                            ));
+                          }}
+                          className="text-xs px-2 py-1 border border-gray-300 rounded focus:outline-none focus:ring-1 focus:ring-brand-primary"
+                        >
+                          <option value="no">No verification needed</option>
+                          <option value="yes">Verification needed</option>
+                        </select>
+                      </div>
+                    </div>
+                  </div>
+                  <button
+                    onClick={() => saveAgent(msg.config as AgentConfig)}
+                    className="px-4 py-2 bg-brand-primary text-brand-dark rounded-md hover:bg-brand-hover focus:outline-none focus:ring-2 focus:ring-white focus:ring-opacity-50 w-full transition-all duration-200 font-semibold"
+                  >
+                    Save & Run This AOP
+                  </button>
+                </div>
               )}
             </div>
           </div>
