@@ -1,0 +1,260 @@
+[
+  {
+    "step": 1,
+    "action": "click",
+    "element_description": "The Zendesk view tab labeled \u201cCompliance Ops \u2013 FCRA Disputes.\u201d",
+    "element_type": "tab",
+    "heading": "Clicked tab for Disputes.\u201d"
+  },
+  {
+    "step": 2,
+    "action": "click",
+    "element_description": "The column header \u201cTicket age\u201d to sort the queue from oldest to newest.",
+    "element_type": "datatable\u2011header",
+    "heading": "Clicked datatable\u2011header for newest"
+  },
+  {
+    "step": 3,
+    "action": "click",
+    "element_description": "The data\u2011table row for member \u201cTyler\u202fLewis.\u201d",
+    "element_type": "datatable",
+    "heading": "Clicked datatable for Lewis.\u201d"
+  },
+  {
+    "step": 4,
+    "action": "scroll",
+    "element_description": "The ticket conversation pane to review the AI\u2011generated summary of the member\u2019s dispute.",
+    "element_type": "pane",
+    "heading": "Scroll pane for dispute"
+  },
+  {
+    "step": 5,
+    "action": "click",
+    "element_description": "The \u201cAdmin link\u201d URL inside the ticket (opens Tyler\u202fLewis\u2019s profile in Penny).",
+    "element_type": "link",
+    "heading": "Clicked link for Penny)"
+  },
+  {
+    "step": 6,
+    "action": "copy",
+    "element_description": "The numeric Member\u202fID shown in the Penny profile header.",
+    "element_type": "text",
+    "heading": "Copy text for header"
+  },
+  {
+    "step": 7,
+    "action": "click",
+    "element_description": "The browser tab titled \u201cLooker \u2013 Metro2 Staging Data.\u201d",
+    "element_type": "tab",
+    "heading": "Clicked tab for Data.\u201d"
+  },
+  {
+    "step": 8,
+    "action": "type",
+    "element_description": "The \u201cMember ID\u201d filter input field.",
+    "element_type": "textfield",
+    "value": "<copied Member ID>",
+    "heading": "Typed textfield for field"
+  },
+  {
+    "step": 9,
+    "action": "click",
+    "element_description": "The \u201cRun\u201d (\u25b6) button to execute the query.",
+    "element_type": "button",
+    "heading": "Clicked button for query"
+  },
+  {
+    "step": 10,
+    "action": "scroll",
+    "element_description": "The query results table to verify the 03\u2011Jun\u20112025 row showing a $1,005 balance.",
+    "element_type": "datatable",
+    "heading": "Scroll datatable for balance"
+  },
+  {
+    "step": 11,
+    "action": "click",
+    "element_description": "The Penny browser tab for Tyler\u202fLewis.",
+    "element_type": "tab",
+    "heading": "Clicked tab for Lewis"
+  },
+  {
+    "step": 12,
+    "action": "click",
+    "element_description": "The \u201cTransactions\u201d link in the left navigation menu.",
+    "element_type": "link",
+    "heading": "Clicked link for menu"
+  },
+  {
+    "step": 13,
+    "action": "click",
+    "element_description": "The \u201cSecured credit builder\u201d account tab.",
+    "element_type": "tab",
+    "heading": "Clicked tab for tab"
+  },
+  {
+    "step": 14,
+    "action": "click",
+    "element_description": "The \u201cFilter\u201d button on the transactions page.",
+    "element_type": "button",
+    "heading": "Clicked button for page"
+  },
+  {
+    "step": 15,
+    "action": "type",
+    "element_description": "The \u201cto\u201d date field in the filter modal.",
+    "element_type": "textfield",
+    "value": "06/03/2025",
+    "heading": "Typed textfield for modal"
+  },
+  {
+    "step": 16,
+    "action": "click",
+    "element_description": "The \u201cUpdate table\u201d (Apply) button in the filter modal.",
+    "element_type": "button",
+    "heading": "Clicked button for modal"
+  },
+  {
+    "step": 17,
+    "action": "scroll",
+    "element_description": "The filtered ledger to confirm the $1,005 ending balance and the 05/12/2025 payment of $1,559.99.",
+    "element_type": "datatable",
+    "heading": "Scroll datatable for $1,559.99"
+  },
+  {
+    "step": 18,
+    "action": "click",
+    "element_description": "The Zendesk browser tab for Tyler\u202fLewis\u2019s dispute ticket.",
+    "element_type": "tab",
+    "heading": "Clicked tab for ticket"
+  },
+  {
+    "step": 19,
+    "action": "select",
+    "element_description": "The \u201cForm\u201d dropdown on the ticket.",
+    "element_type": "selector",
+    "value": "Consumer Response FCRA",
+    "heading": "Selected selector for ticket"
+  },
+  {
+    "step": 20,
+    "action": "select",
+    "element_description": "The \u201cContact Reason\u201d dropdown.",
+    "element_type": "selector",
+    "value": "Reported Balance",
+    "heading": "Selected selector for dropdown"
+  },
+  {
+    "step": 21,
+    "action": "click",
+    "element_description": "The \u201cDate Received\u201d date\u2011picker, selecting 12\u2011Jun\u20112025.",
+    "element_type": "datepicker",
+    "heading": "Clicked datepicker for 12\u2011Jun\u20112025"
+  },
+  {
+    "step": 22,
+    "action": "select",
+    "element_description": "The \u201cDispute Type\u201d dropdown.",
+    "element_type": "selector",
+    "value": "Balance",
+    "heading": "Selected selector for dropdown"
+  },
+  {
+    "step": 23,
+    "action": "select",
+    "element_description": "The \u201cResponse Type\u201d dropdown.",
+    "element_type": "selector",
+    "value": "Accurate",
+    "heading": "Selected selector for dropdown"
+  },
+  {
+    "step": 24,
+    "action": "type",
+    "element_description": "The \u201cAdmin Link\u201d text field.",
+    "element_type": "textfield",
+    "value": "https://admin.1debit.com/admin/users/<Member ID>",
+    "heading": "Typed textfield for field"
+  },
+  {
+    "step": 25,
+    "action": "type",
+    "element_description": "The \u201cMetro2 Link\u201d text field.",
+    "element_type": "textfield",
+    "value": "https://looker.company.com/looks/<query\u2011id>",
+    "heading": "Typed textfield for field"
+  },
+  {
+    "step": 26,
+    "action": "type",
+    "element_description": "The internal \u201cPrivate note\u201d text area.",
+    "element_type": "textarea",
+    "value": "Information was accurate as of 06\u201103\u20112025.",
+    "heading": "Typed textarea for area"
+  },
+  {
+    "step": 27,
+    "action": "select",
+    "element_description": "The \u201cApply macro\u201d dropdown, choosing \u201cDirect\u2011dispute :: Acknowledgement.\u201d",
+    "element_type": "selector",
+    "value": "Direct\u2011dispute :: Acknowledgement",
+    "heading": "Selected selector for Acknowledgement.\u201d"
+  },
+  {
+    "step": 28,
+    "action": "click",
+    "element_description": "The \u201cSubmit as Open\u201d button.",
+    "element_type": "button",
+    "heading": "Clicked button for button"
+  },
+  {
+    "step": 29,
+    "action": "select",
+    "element_description": "The \u201cApply macro\u201d dropdown, choosing \u201cBalance payment concerns.\u201d",
+    "element_type": "selector",
+    "value": "Balance payment concerns",
+    "heading": "Selected selector for concerns.\u201d"
+  },
+  {
+    "step": 30,
+    "action": "type",
+    "element_description": "The public reply text area, editing the macro to reference \u201cthe credit bureau(s)\u201d generically.",
+    "element_type": "textarea",
+    "value": "<edited macro text>",
+    "heading": "Typed textarea for generically"
+  },
+  {
+    "step": 31,
+    "action": "click",
+    "element_description": "The \u201cSubmit as Solved\u201d button.",
+    "element_type": "button",
+    "heading": "Clicked button for button"
+  },
+  {
+    "step": 32,
+    "action": "click",
+    "element_description": "The Penny browser tab for Tyler\u202fLewis.",
+    "element_type": "tab",
+    "heading": "Clicked tab for Lewis"
+  },
+  {
+    "step": 33,
+    "action": "click",
+    "element_description": "The \u201cNotes\u201d link in the left navigation menu.",
+    "element_type": "link",
+    "heading": "Clicked link for menu"
+  },
+  {
+    "step": 34,
+    "action": "type",
+    "element_description": "The \u201cAdd a new note here\u201d text area.",
+    "element_type": "textarea",
+    "value": "Direct dispute responded #111537470",
+    "heading": "Typed textarea for area"
+  },
+  {
+    "step": 35,
+    "action": "click",
+    "element_description": "The \u201cCreate\u201d button to save the note.",
+    "element_type": "button",
+    "heading": "Clicked button for note"
+  }
+]
