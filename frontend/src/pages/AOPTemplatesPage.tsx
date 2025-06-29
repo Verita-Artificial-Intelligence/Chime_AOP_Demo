@@ -23,8 +23,8 @@ export const WorkflowTemplatesPage: React.FC = () => {
     const template = templateConfigs.find(t => t.id === templateId);
 
     if (template) {
-      // Navigate to active run page with the template
-      navigate('/workflow/active-runs', { 
+      // Navigate to workflow review page with the template
+      navigate('/workflow/review', { 
         state: { 
           templateId: template.id,
           templateTitle: template.title,

@@ -20,6 +20,7 @@ import { WorkflowTemplatesPage } from "./pages/AOPTemplatesPage";
 import { ActiveRunsPage } from "./pages/ActiveRunsPage";
 import { SecurityPage } from "./pages/SecurityPage";
 import { SOPToWorkflowPage } from "./pages/SOPToAOPPage";
+import { WorkflowReviewPage } from "./pages/WorkflowReviewPage";
 
 export function App() {
   // Update document title based on configuration
@@ -39,6 +40,7 @@ export function App() {
         <Route path="/workflow/run/:id" element={<WorkflowRunPage />} />
         <Route path="/workflow/builder" element={<WorkflowBuilderPage />} />
         <Route path="/workflow/templates" element={<WorkflowTemplatesPage />} />
+        <Route path="/workflow/review" element={<WorkflowReviewPage />} />
         <Route path="/workflow/active-runs" element={<ActiveRunsPage />} />
         <Route path="/workflow/sop-to-workflow" element={<SOPToWorkflowPage />} />
         <Route path="/security" element={<SecurityPage />} />

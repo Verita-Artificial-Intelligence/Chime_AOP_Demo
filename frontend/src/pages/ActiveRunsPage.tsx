@@ -166,13 +166,53 @@ export const ActiveRunsPage: React.FC = () => {
   // Check if we're coming from templates page with a template selection
   useEffect(() => {
     if (location.state && location.state.templateId) {
-      const { templateId, templateTitle, jsonFile } = location.state;
+      const { templateId, templateTitle, jsonFile, workflowSteps, stepVerifications, isRunning } = location.state;
 
       // Load the corresponding JSON data
-      const jsonData = templateDataMap[templateId];
+      const jsonData = templateDataMap[templateId] || workflowSteps;
       if (jsonData) {
         setWorkflowJsonData(jsonData);
         setWorkflowTitle(templateTitle);
+        
+        // If coming from review page with isRunning flag, start the workflow
+        if (isRunning && workflowSteps) {
+          const workflowId = `run-${Date.now()}`;
+          
+          // Process the steps from review page
+          const steps = location.state.processedSteps || createWorkflowSteps(
+            ["ACDV Case Management System", "B-Point Verification Database", "Dispute Code Repository", "Compliance Database"],
+            ["Search", "Update table", "Submit", "Submit as Solved", "Create"],
+            "GPT-4"
+          );
+          
+          // Apply verification settings from review page
+          if (stepVerifications) {
+            steps.forEach((step: WorkflowStep) => {
+              if (step.type === 'action' && stepVerifications[step.id]) {
+                step.verificationRequired = stepVerifications[step.id] !== 'none';
+              }
+            });
+          }
+          
+          const newRun: ActiveRun = {
+            id: workflowId,
+            name: templateTitle || "Workflow Run",
+            startTime: new Date().toLocaleString(),
+            currentStep: 0,
+            totalSteps: jsonData.length,
+            status: "ready",
+            estimatedCompletion: jsonData.length > 50 ? "30-40 mins" : jsonData.length > 30 ? "20-30 mins" : "15-20 mins",
+            workflow: templateTitle,
+            dataSources: ["ACDV Case Management System", "B-Point Verification Database", "Dispute Code Repository", "Compliance Database"],
+            actions: jsonData.filter((step: any) => step.action === "click" && step.element_type === "button").map((step: any) => step.heading),
+            llm: "GPT-4",
+            steps,
+          };
+          
+          setActiveRun(newRun);
+          setIsRunning(true);
+          setShowSimulation(true);
+        }
       }
 
       // Clear the location state to prevent re-runs on refresh
