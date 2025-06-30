@@ -1,15 +1,13 @@
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect } from "react";
 import { useNavigate, useLocation, useSearchParams } from "react-router-dom";
 import {
   PlayIcon,
-  ClockIcon,
   DocumentTextIcon,
   CursorArrowRaysIcon,
   CheckCircleIcon,
   DocumentArrowDownIcon,
 } from "@heroicons/react/24/outline";
 import { WorkflowStepsDisplay } from "../components/WorkflowStepsDisplay";
-import html2canvas from "html2canvas";
 import jsPDF from "jspdf";
 
 // Import the JSON files
@@ -30,7 +28,6 @@ export const ActiveRunsPage: React.FC = () => {
   const navigate = useNavigate();
   const location = useLocation();
   const [searchParams] = useSearchParams();
-  const workflowRef = useRef<HTMLDivElement>(null);
   const [workflowJsonData, setWorkflowJsonData] = useState<
     WorkflowStep[] | null
   >(null);
@@ -46,19 +43,28 @@ export const ActiveRunsPage: React.FC = () => {
   // Check if we're coming from templates page with a template selection
   useEffect(() => {
     if (location.state && location.state.templateId) {
-      const { templateId, templateTitle, jsonFile, workflowSteps, stepVerifications, isRunning } = location.state;
+      const {
+        templateId,
+        templateTitle,
+        jsonFile,
+        workflowSteps,
+        stepVerifications,
+        isRunning,
+      } = location.state;
 
       // Load the corresponding JSON data
       const jsonData = templateDataMap[templateId] || workflowSteps;
       if (jsonData) {
         setWorkflowJsonData(jsonData);
         setWorkflowTitle(templateTitle);
-        
+
         // If coming from review page with isRunning flag, we'll use WorkflowStepsDisplay
         // No need to create ActiveRun or set showSimulation=true
         if (isRunning && workflowSteps) {
           // Load saved customizations from localStorage
-          const savedCustomizations = localStorage.getItem(`workflow-custom-${templateId}`);
+          const savedCustomizations = localStorage.getItem(
+            `workflow-custom-${templateId}`
+          );
           if (savedCustomizations) {
             try {
               const customizations = JSON.parse(savedCustomizations);
@@ -111,7 +117,9 @@ export const ActiveRunsPage: React.FC = () => {
       return () => clearTimeout(timer);
     } else if (sopToWorkflowData && currentStep === sopToWorkflowData.length) {
       // Save SOP workflow to history when completed
-      const runHistory = JSON.parse(localStorage.getItem("workflowRunHistory") || "[]");
+      const runHistory = JSON.parse(
+        localStorage.getItem("workflowRunHistory") || "[]"
+      );
       const newRun = {
         id: `sop-run-${Date.now()}`,
         name: "SOP Workflow Execution",
@@ -119,14 +127,18 @@ export const ActiveRunsPage: React.FC = () => {
         category: "SOP CONVERSION",
         status: "Completed",
         lastRun: new Date().toISOString(),
-        runHistory: [{
-          timestamp: new Date().toISOString(),
-          status: "Success",
-          details: `SOP workflow completed with ${sopToWorkflowData.length} steps`,
-        }],
+        runHistory: [
+          {
+            timestamp: new Date().toISOString(),
+            status: "Success",
+            details: `SOP workflow completed with ${sopToWorkflowData.length} steps`,
+          },
+        ],
         metrics: {
           totalSteps: sopToWorkflowData.length.toString(),
-          completionTime: `${Math.floor((new Date().getTime() - sopStartTime.getTime()) / 1000)} seconds`,
+          completionTime: `${Math.floor(
+            (new Date().getTime() - sopStartTime.getTime()) / 1000
+          )} seconds`,
         },
         steps: sopToWorkflowData,
       };
@@ -136,61 +148,190 @@ export const ActiveRunsPage: React.FC = () => {
   }, [currentStep, sopToWorkflowData]);
 
   const handleDownloadReport = async () => {
-    if (!workflowRef.current || !sopToWorkflowData) return;
-    
+    if (!sopToWorkflowData) return;
+
     setIsDownloading(true);
-    
+
     try {
-      // Wait a bit for any animations to complete
-      await new Promise(resolve => setTimeout(resolve, 500));
-      
-      // Capture the workflow UI
-      const canvas = await html2canvas(workflowRef.current, {
-        scale: 2,
-        logging: false,
-        backgroundColor: '#ffffff',
-        windowWidth: workflowRef.current.scrollWidth,
-        windowHeight: workflowRef.current.scrollHeight,
-      });
-      
       // Create PDF
       const pdf = new jsPDF({
-        orientation: 'portrait',
-        unit: 'mm',
-        format: 'a4',
+        orientation: "portrait",
+        unit: "mm",
+        format: "a4",
       });
-      
-      // Add title and metadata
-      pdf.setFontSize(20);
-      pdf.text('SOP Workflow Execution Report', 20, 20);
-      
-      pdf.setFontSize(12);
-      pdf.text(`Completed on: ${new Date().toLocaleString()}`, 20, 30);
-      pdf.text(`Total Steps: ${sopToWorkflowData.length}`, 20, 37);
-      pdf.text(`Execution Time: ${Math.floor((new Date().getTime() - sopStartTime.getTime()) / 1000)} seconds`, 20, 44);
-      
-      // Add captured workflow UI
-      const imgWidth = 170; // A4 width minus margins
-      const imgHeight = (canvas.height * imgWidth) / canvas.width;
-      
-      pdf.addImage(
-        canvas.toDataURL('image/png'),
-        'PNG',
-        20,
-        55,
-        imgWidth,
-        imgHeight
+
+      // Set up fonts and colors
+      const pageWidth = pdf.internal.pageSize.getWidth();
+      const pageHeight = pdf.internal.pageSize.getHeight();
+      const margin = 20;
+      const contentWidth = pageWidth - margin * 2;
+      let yPosition = margin;
+
+      // Add header
+      pdf.setFillColor(34, 197, 94); // Green color
+      pdf.rect(0, 0, pageWidth, 40, "F");
+
+      pdf.setTextColor(255, 255, 255);
+      pdf.setFontSize(24);
+      pdf.text("SOP Workflow Execution Report", margin, 25);
+
+      // Add metadata section
+      yPosition = 50;
+      pdf.setTextColor(0, 0, 0);
+      pdf.setFontSize(10);
+      pdf.setFont("helvetica", "bold");
+      pdf.text("Report Generated:", margin, yPosition);
+      pdf.setFont("helvetica", "normal");
+      pdf.text(new Date().toLocaleString(), margin + 35, yPosition);
+
+      yPosition += 6;
+      pdf.setFont("helvetica", "bold");
+      pdf.text("Total Steps:", margin, yPosition);
+      pdf.setFont("helvetica", "normal");
+      pdf.text(sopToWorkflowData.length.toString(), margin + 25, yPosition);
+
+      yPosition += 6;
+      pdf.setFont("helvetica", "bold");
+      pdf.text("Execution Time:", margin, yPosition);
+      pdf.setFont("helvetica", "normal");
+      pdf.text(
+        `${Math.floor(
+          (new Date().getTime() - sopStartTime.getTime()) / 1000
+        )} seconds`,
+        margin + 30,
+        yPosition
       );
-      
+
+      yPosition += 6;
+      pdf.setFont("helvetica", "bold");
+      pdf.text("Status:", margin, yPosition);
+      pdf.setFont("helvetica", "normal");
+      pdf.setTextColor(34, 197, 94);
+      pdf.text("Completed Successfully", margin + 15, yPosition);
+      pdf.setTextColor(0, 0, 0);
+
+      // Add a line separator
+      yPosition += 10;
+      pdf.setDrawColor(200, 200, 200);
+      pdf.line(margin, yPosition, pageWidth - margin, yPosition);
+      yPosition += 10;
+
+      // Add workflow steps section
+      pdf.setFontSize(16);
+      pdf.setFont("helvetica", "bold");
+      pdf.text("Workflow Steps", margin, yPosition);
+      yPosition += 10;
+
+      // Process each step
+      sopToWorkflowData.forEach((step, index) => {
+        // Check if we need a new page
+        if (yPosition > pageHeight - 40) {
+          pdf.addPage();
+          yPosition = margin;
+        }
+
+        // Step box
+        const stepBoxHeight = 25;
+        const extraHeight = step.value ? 8 : 0;
+        const totalBoxHeight = stepBoxHeight + extraHeight;
+
+        // Draw step background
+        pdf.setFillColor(249, 250, 251); // Light gray background
+        pdf.roundedRect(
+          margin,
+          yPosition,
+          contentWidth,
+          totalBoxHeight,
+          3,
+          3,
+          "F"
+        );
+
+        // Draw step number circle with action color
+        const actionColor = getActionColorForPDF(step.action);
+        pdf.setFillColor(actionColor.r, actionColor.g, actionColor.b);
+        pdf.circle(margin + 8, yPosition + 8, 6, "F");
+
+        // Add step number in circle
+        pdf.setTextColor(255, 255, 255);
+        pdf.setFontSize(10);
+        pdf.setFont("helvetica", "bold");
+        pdf.text(step.step.toString(), margin + 8, yPosition + 9, {
+          align: "center",
+        });
+
+        // Add action badge
+        pdf.setFillColor(actionColor.r, actionColor.g, actionColor.b);
+        pdf.roundedRect(margin + 20, yPosition + 4, 25, 8, 2, 2, "F");
+        pdf.setTextColor(255, 255, 255);
+        pdf.setFontSize(8);
+        pdf.text(step.action.toUpperCase(), margin + 32.5, yPosition + 9, {
+          align: "center",
+        });
+
+        // Add step description
+        pdf.setTextColor(0, 0, 0);
+        pdf.setFontSize(10);
+        pdf.setFont("helvetica", "normal");
+        const description = step.heading || step.element_description;
+        const lines = pdf.splitTextToSize(description, contentWidth - 35);
+        pdf.text(lines, margin + 50, yPosition + 8);
+
+        // Add element type
+        pdf.setFontSize(8);
+        pdf.setTextColor(100, 100, 100);
+        pdf.text(`Element: ${step.element_type}`, margin + 50, yPosition + 16);
+
+        // Add value if exists
+        if (step.value) {
+          pdf.setFont("helvetica", "bold");
+          pdf.text("Value:", margin + 50, yPosition + 22);
+          pdf.setFont("helvetica", "normal");
+          pdf.text(step.value, margin + 65, yPosition + 22);
+        }
+
+        yPosition += totalBoxHeight + 5;
+      });
+
+      // Add footer
+      const footerY = pageHeight - 15;
+      pdf.setFontSize(8);
+      pdf.setTextColor(150, 150, 150);
+      pdf.text(
+        "Generated by Verita AI Workflow System",
+        pageWidth / 2,
+        footerY,
+        { align: "center" }
+      );
+
       // Save PDF
       const fileName = `SOP_Workflow_Report_${new Date().getTime()}.pdf`;
       pdf.save(fileName);
-      
     } catch (error) {
-      console.error('Error generating PDF:', error);
-      alert('Failed to generate PDF report. Please try again.');
+      console.error("Error generating PDF:", error);
+      alert("Failed to generate PDF report. Please try again.");
     } finally {
       setIsDownloading(false);
+    }
+  };
+
+  const getActionColorForPDF = (action: string) => {
+    const actionLower = action.toLowerCase();
+    switch (actionLower) {
+      case "type":
+        return { r: 59, g: 130, b: 246 }; // Blue
+      case "click":
+        return { r: 34, g: 197, b: 94 }; // Green
+      case "check":
+        return { r: 147, g: 51, b: 234 }; // Purple
+      case "select":
+        return { r: 250, g: 204, b: 21 }; // Yellow
+      case "scroll":
+        return { r: 251, g: 146, b: 60 }; // Orange
+      case "copy":
+        return { r: 236, g: 72, b: 153 }; // Pink
+      default:
+        return { r: 107, g: 114, b: 128 }; // Gray
     }
   };
 
@@ -234,7 +375,7 @@ export const ActiveRunsPage: React.FC = () => {
     };
 
     return (
-      <div className="max-w-4xl mx-auto" ref={workflowRef}>
+      <div className="max-w-4xl mx-auto">
         <div className="mb-8">
           <h1 className="text-2xl font-bold text-gray-800 mb-1">
             SOP Workflow Execution
@@ -341,10 +482,11 @@ export const ActiveRunsPage: React.FC = () => {
                   </span>
                 </div>
                 <p className="text-gray-600 text-sm mt-2">
-                  All {sopToWorkflowData.length} steps have been executed successfully
+                  All {sopToWorkflowData.length} steps have been executed
+                  successfully
                 </p>
               </div>
-              
+
               <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
                 <button
                   onClick={handleDownloadReport}
@@ -356,16 +498,18 @@ export const ActiveRunsPage: React.FC = () => {
                   }`}
                 >
                   <DocumentArrowDownIcon className="h-5 w-5" />
-                  {isDownloading ? "Generating Report..." : "Download PDF Report"}
+                  {isDownloading
+                    ? "Generating Report..."
+                    : "Download PDF Report"}
                 </button>
-                
+
                 <button
                   onClick={() => navigate("/workflow/run")}
                   className="px-6 py-3 border border-brand-primary text-brand-primary rounded-md hover:bg-brand-light transition-colors font-medium"
                 >
                   View Workflow History
                 </button>
-                
+
                 <button
                   onClick={() => navigate("/workflow/sop-to-workflow")}
                   className="px-6 py-3 border border-gray-300 text-gray-700 rounded-md hover:bg-gray-50 transition-colors font-medium"
