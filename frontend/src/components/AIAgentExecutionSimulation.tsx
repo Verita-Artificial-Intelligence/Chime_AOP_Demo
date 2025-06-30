@@ -77,7 +77,6 @@ export function AIAgentExecutionSimulation({
 }: AIAgentExecutionSimulationProps) {
   const [currentStep, setCurrentStep] = useState(0);
   const [executionComplete, setExecutionComplete] = useState(false);
-  const [mockData, setMockData] = useState<any>(null);
   const [runStartTime] = useState(new Date().toISOString());
   const [isPaused, setIsPaused] = useState(false);
   const [humanVerificationStep, setHumanVerificationStep] = useState<number | null>(null);
@@ -97,10 +96,6 @@ export function AIAgentExecutionSimulation({
     })),
     { type: "complete", label: "All steps completed!" },
   ];
-
-  useEffect(() => {
-    import("../data/mockData.json").then((data) => setMockData(data));
-  }, []);
 
   // Define critical actions that always require human verification
   const getCriticalActions = () => {
@@ -163,7 +158,7 @@ export function AIAgentExecutionSimulation({
 
   // SIMPLIFIED useEffect - just handles normal flow
   useEffect(() => {
-    if (!mockData || executionComplete || isPaused) return;
+    if (executionComplete || isPaused) return;
     
     // Check if current step needs verification
     const needsVerification = stepRequiresVerification(currentStep);
@@ -184,26 +179,18 @@ export function AIAgentExecutionSimulation({
       setExecutionComplete(true);
       saveCompletedRun();
     }
-  }, [currentStep, mockData, executionComplete, isPaused]);
+  }, [currentStep, executionComplete, isPaused]);
 
   const saveCompletedRun = () => {
-    const workflowDetails = mockData?.workflows?.find(
-      (wf: any) => wf.id === workflow
-    );
     const isCustomWorkflow = workflow === "custom-workflow";
 
     const completedRun = {
       id: `run-${workflow}-${Date.now()}`,
-      name:
-        workflowDetails?.name ||
-        (isCustomWorkflow ? "Custom Workflow" : workflow),
-      description:
-        workflowDetails?.description ||
-        (isCustomWorkflow
-          ? "A dynamically generated workflow based on user requirements"
-          : `Automated workflow execution for ${workflow}`),
-      category:
-        workflowDetails?.category || (isCustomWorkflow ? "Custom" : "General"),
+      name: isCustomWorkflow ? "Custom Workflow" : workflow,
+      description: isCustomWorkflow
+        ? "A dynamically generated workflow based on user requirements"
+        : `Automated workflow execution for ${workflow}`,
+      category: isCustomWorkflow ? "Custom" : "General",
       status: "Completed",
       lastRun: new Date().toISOString(),
       runHistory: [
@@ -267,392 +254,22 @@ export function AIAgentExecutionSimulation({
 
   // Helper to get a human-readable summary/table for each data source
   const getDataSourceSummary = (ds: string) => {
-    if (!mockData) return null;
-
-    // For custom workflows, generate appropriate mock data
-    if (workflow === "custom-workflow") {
-      return getCustomDataSourceSummary(ds);
-    }
-
-    // Attempt to fetch from the new dataSourceSamples section first
-    if (mockData.dataSourceSamples && mockData.dataSourceSamples[ds]) {
-      const sampleData = mockData.dataSourceSamples[ds];
-      return (
-        <SimpleTable
-          data={
-            Array.isArray(sampleData) ? sampleData.slice(0, 3) : [sampleData]
-          }
-        />
-      );
-    }
-
-    // Fallback to existing specific logic if needed (or can be removed if dataSourceSamples is comprehensive)
-    if (ds.toLowerCase().includes("orbit")) {
-      // Show first 3 receivables as example
-      return (
-        <SimpleTable data={mockData.receivablesTableData?.slice(0, 3) || []} />
-      );
-    }
-    if (ds.toLowerCase().includes("oracle")) {
-      // Show first 3 payables as example
-      return (
-        <SimpleTable data={mockData.payablesTableData?.slice(0, 3) || []} />
-      );
-    }
-    if (ds.toLowerCase().includes("powerbi")) {
-      // Show first 3 payroll runs as example
-      return <SimpleTable data={mockData.payrollRuns?.slice(0, 3) || []} />;
-    }
-    if (ds.toLowerCase().includes("manual")) {
-      // Show first 3 entitlements as example
-      return (
-        <SimpleTable data={mockData.entitlementsTableData?.slice(0, 3) || []} />
-      );
-    }
-    if (ds.toLowerCase().includes("web api")) {
-      // Show first webApiData response as example
-      const api = mockData.webApiData?.[0];
-      return api && api.response ? (
-        <SimpleTable data={api.response.slice(0, 3)} />
-      ) : (
-        <div className="text-brand-muted">No data available for Web API.</div>
-      );
-    }
-    if (ds.toLowerCase().includes("powerapps")) {
-      // Show first powerAppsData results as example
-      const app = mockData.powerAppsData?.[0];
-      return app && app.results ? (
-        <SimpleTable data={app.results.slice(0, 3)} />
-      ) : (
-        <div className="text-brand-muted">
-          No data available for Power Apps.
-        </div>
-      );
-    }
-    if (ds.toLowerCase().includes("excel")) {
-      // Show first excelData rows as example
-      const excel = mockData.excelData?.[0];
-      return excel && excel.rows ? (
-        <SimpleTable data={excel.rows.slice(0, 3)} />
-      ) : (
-        <div className="text-brand-muted">No data available for Excel.</div>
-      );
-    }
+    // Simplified data source summary without mockData
     return (
       <div className="text-brand-muted">
-        No specific sample data configured for this source.
+        Data source "{ds}" connected successfully.
       </div>
     );
-  };
-
-  // Helper for custom workflow data sources
-  const getCustomDataSourceSummary = (ds: string) => {
-    const dsLower = ds.toLowerCase();
-
-    // Generate contextual mock data based on data source name
-    if (dsLower.includes("invoice") || dsLower.includes("billing")) {
-      return (
-        <SimpleTable
-          data={[
-            {
-              invoiceId: "INV-2024-001",
-              vendor: "Acme Corp",
-              amount: 5000,
-              status: "Pending",
-            },
-            {
-              invoiceId: "INV-2024-002",
-              vendor: "Tech Solutions",
-              amount: 3500,
-              status: "Approved",
-            },
-            {
-              invoiceId: "INV-2024-003",
-              vendor: "Global Services",
-              amount: 7200,
-              status: "Processing",
-            },
-          ]}
-        />
-      );
-    } else if (dsLower.includes("employee") || dsLower.includes("hr")) {
-      return (
-        <SimpleTable
-          data={[
-            {
-              employeeId: "EMP-001",
-              name: "John Doe",
-              department: "Engineering",
-              status: "Active",
-            },
-            {
-              employeeId: "EMP-002",
-              name: "Jane Smith",
-              department: "Marketing",
-              status: "Onboarding",
-            },
-            {
-              employeeId: "EMP-003",
-              name: "Bob Johnson",
-              department: "Sales",
-              status: "Active",
-            },
-          ]}
-        />
-      );
-    } else if (dsLower.includes("customer") || dsLower.includes("client")) {
-      return (
-        <SimpleTable
-          data={[
-            {
-              customerId: "CUST-001",
-              name: "Alpha Industries",
-              tier: "Premium",
-              lastContact: "2024-07-15",
-            },
-            {
-              customerId: "CUST-002",
-              name: "Beta Corp",
-              tier: "Standard",
-              lastContact: "2024-07-18",
-            },
-            {
-              customerId: "CUST-003",
-              name: "Gamma LLC",
-              tier: "Premium",
-              lastContact: "2024-07-19",
-            },
-          ]}
-        />
-      );
-    } else if (dsLower.includes("api") || dsLower.includes("gateway")) {
-      return (
-        <SimpleTable
-          data={[
-            {
-              endpoint: "/api/v1/process",
-              method: "POST",
-              status: 200,
-              responseTime: "125ms",
-            },
-            {
-              endpoint: "/api/v1/validate",
-              method: "GET",
-              status: 200,
-              responseTime: "45ms",
-            },
-            {
-              endpoint: "/api/v1/submit",
-              method: "PUT",
-              status: 201,
-              responseTime: "230ms",
-            },
-          ]}
-        />
-      );
-    } else {
-      // Generic data for unrecognized data sources
-      return (
-        <SimpleTable
-          data={[
-            {
-              id: "REC-001",
-              type: "Data Entry",
-              status: "Processed",
-              timestamp: new Date().toISOString(),
-            },
-            {
-              id: "REC-002",
-              type: "Data Entry",
-              status: "Pending",
-              timestamp: new Date().toISOString(),
-            },
-            {
-              id: "REC-003",
-              type: "Data Entry",
-              status: "Processed",
-              timestamp: new Date().toISOString(),
-            },
-          ]}
-        />
-      );
-    }
   };
 
   // Helper to get a human-readable summary/result for each action
   const getActionSummary = (action: string) => {
-    if (!mockData) return null;
-
-    // For custom workflows, generate appropriate action results
-    if (workflow === "custom-workflow") {
-      return getCustomActionSummary(action);
-    }
-
-    if (action.toLowerCase().includes("invoice")) {
-      return (
-        <SimpleTable data={mockData.receivablesTableData?.slice(0, 3) || []} />
-      );
-    }
-    if (action.toLowerCase().includes("reminder")) {
-      return (
-        <SimpleTable data={mockData.payablesTableData?.slice(0, 3) || []} />
-      );
-    }
-    if (action.toLowerCase().includes("report")) {
-      // Show a stat summary for receivables/payables
-      const isReceivable = workflow.toLowerCase().includes("receivable");
-      const table = isReceivable
-        ? mockData.receivablesTableData
-        : mockData.payablesTableData;
-      const total = table?.reduce(
-        (sum: number, row: any) => sum + row.amount,
-        0
-      );
-      const overdue = table?.filter(
-        (row: any) => row.status === "Overdue"
-      ).length;
-      const dueSoon = table?.filter(
-        (row: any) => row.status === "Due Soon"
-      ).length;
-      return (
-        <div className="flex gap-6 flex-wrap">
-          <div className="bg-brand-card border border-brand-border rounded-lg p-4 flex-1 min-w-[120px]">
-            <div className="text-xs text-brand-muted mb-1">
-              Total Outstanding
-            </div>
-            <div className="text-xl font-bold text-brand-primary">
-              ${total?.toLocaleString()}
-            </div>
-          </div>
-          <div className="bg-brand-card border border-brand-border rounded-lg p-4 flex-1 min-w-[120px]">
-            <div className="text-xs text-brand-muted mb-1">Overdue</div>
-            <div className="text-xl font-bold text-brand-primary">
-              {overdue}
-            </div>
-          </div>
-          <div className="bg-brand-card border border-brand-border rounded-lg p-4 flex-1 min-w-[120px]">
-            <div className="text-xs text-brand-muted mb-1">Due Soon</div>
-            <div className="text-xl font-bold text-brand-primary">
-              {dueSoon}
-            </div>
-          </div>
-        </div>
-      );
-    }
-    if (action.toLowerCase().includes("payroll")) {
-      // Show latest payroll run
-      const run = mockData.payrollRuns?.[0];
-      if (!run) return null;
-      return (
-        <div className="flex gap-6 flex-wrap">
-          <div className="bg-brand-card border border-brand-border rounded-lg p-4 flex-1 min-w-[120px]">
-            <div className="text-xs text-brand-muted mb-1">Payroll ID</div>
-            <div className="text-xl font-bold text-brand-primary">{run.id}</div>
-          </div>
-          <div className="bg-brand-card border border-brand-border rounded-lg p-4 flex-1 min-w-[120px]">
-            <div className="text-xs text-brand-muted mb-1">Employees</div>
-            <div className="text-xl font-bold text-brand-primary">
-              {run.employees}
-            </div>
-          </div>
-          <div className="bg-brand-card border border-brand-border rounded-lg p-4 flex-1 min-w-[120px]">
-            <div className="text-xs text-brand-muted mb-1">Amount</div>
-            <div className="text-xl font-bold text-brand-primary">
-              ${run.amount?.toLocaleString()}
-            </div>
-          </div>
-        </div>
-      );
-    }
-    if (action.toLowerCase().includes("leave")) {
-      return (
-        <SimpleTable data={mockData.entitlementsTableData?.slice(0, 3) || []} />
-      );
-    }
-    // NEW: Try to find a matching action result in mockData.actionResults
-    const actionResult = mockData.actionResults?.find(
-      (ar: any) => ar.action === action
-    );
-    if (
-      actionResult &&
-      actionResult.results &&
-      actionResult.results.length > 0
-    ) {
-      return <SimpleTable data={actionResult.results} />;
-    }
+    // Simplified action summary without mockData
     return (
       <div className="text-brand-muted">
-        No summary available for this action.
+        Action "{action}" executed successfully.
       </div>
     );
-  };
-
-  // Helper for custom workflow actions
-  const getCustomActionSummary = (action: string) => {
-    const actionLower = action.toLowerCase();
-
-    // Generate contextual results based on action name
-    if (actionLower.includes("validate") || actionLower.includes("verify")) {
-      return (
-        <div className="text-sm text-brand-muted">
-          <div className="mb-2 font-semibold text-brand-success">
-            ✓ Validation Successful
-          </div>
-          <div>• All required fields present</div>
-          <div>• Data format verified</div>
-          <div>• Business rules passed</div>
-        </div>
-      );
-    } else if (actionLower.includes("send") || actionLower.includes("notify")) {
-      return (
-        <div className="text-sm text-brand-muted">
-          <div className="mb-2 font-semibold text-brand-success">
-            ✓ Notifications Sent
-          </div>
-          <div>• Email notifications: 3 recipients</div>
-          <div>• SMS alerts: 1 recipient</div>
-          <div>• System logs updated</div>
-        </div>
-      );
-    } else if (
-      actionLower.includes("generate") ||
-      actionLower.includes("create")
-    ) {
-      return (
-        <div className="text-sm text-brand-muted">
-          <div className="mb-2 font-semibold text-brand-success">
-            ✓ Generation Complete
-          </div>
-          <div>• Document ID: DOC-{Date.now()}</div>
-          <div>• Format: PDF</div>
-          <div>• Size: 2.3 MB</div>
-          <div>• Status: Ready for download</div>
-        </div>
-      );
-    } else if (actionLower.includes("update") || actionLower.includes("save")) {
-      return (
-        <div className="text-sm text-brand-muted">
-          <div className="mb-2 font-semibold text-brand-success">
-            ✓ Update Successful
-          </div>
-          <div>• Records updated: 15</div>
-          <div>• Database: Primary</div>
-          <div>• Timestamp: {new Date().toLocaleTimeString()}</div>
-        </div>
-      );
-    } else {
-      // Generic success message for other actions
-      return (
-        <div className="text-sm text-brand-muted">
-          <div className="mb-2 font-semibold text-brand-success">
-            ✓ Action Completed
-          </div>
-          <div>• Execution time: {Math.floor(Math.random() * 500) + 100}ms</div>
-          <div>• Status: Success</div>
-          <div>• Next step: Ready</div>
-        </div>
-      );
-    }
   };
 
   // Get platform link based on action type

@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import mockData from "../data/mockData.json"; // Import mockData
 
 // Interface for a Workflow Instance (Run History Item)
 interface WorkflowInstance {
@@ -27,7 +26,7 @@ interface WorkflowInstance {
 
 const RUN_HISTORY_STORAGE_KEY = "workflowRunHistory"; // New storage key for run instances
 
-// Function to get stored run history or fallback to mockData
+// Function to get stored run history or fallback to empty array
 function getStoredRunHistory(): WorkflowInstance[] {
   const stored = localStorage.getItem(RUN_HISTORY_STORAGE_KEY);
   if (stored) {
@@ -39,11 +38,11 @@ function getStoredRunHistory(): WorkflowInstance[] {
       }
     } catch (e) {
       console.error("Failed to parse run history from localStorage", e);
-      // Fallback to mockData if parsing fails or data is invalid
+      // Fallback to empty array if parsing fails or data is invalid
     }
   }
-  // Fallback to workflowInstances from mockData if nothing in localStorage or if it's invalid
-  return mockData.workflowInstances || [];
+  // Fallback to empty array if nothing in localStorage or if it's invalid
+  return [];
 }
 
 // Function to save run history (Potentially to be used when new runs occur)
@@ -74,7 +73,7 @@ export default function WorkflowRunHistoryPage() {
 
   // Determine if the displayed history is the fallback mock data
   const isMockData =
-    JSON.stringify(runHistory) === JSON.stringify(mockData.workflowInstances || []);
+    JSON.stringify(runHistory) === JSON.stringify([]);
 
   // Helper function to get display status
   const getDisplayStatus = (run: WorkflowInstance) => {

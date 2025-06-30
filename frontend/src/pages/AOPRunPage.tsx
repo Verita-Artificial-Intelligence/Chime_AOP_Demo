@@ -1,7 +1,6 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import { useLocation, useNavigate, useParams } from "react-router-dom";
 import { AIAgentExecutionSimulation } from "../components/AIAgentExecutionSimulation";
-import mockData from "../data/mockData.json"; // Ensure mockData is imported
 
 // Interface for a runnable agent configuration
 interface RunnableAgentConfig {
@@ -39,7 +38,7 @@ const RUN_HISTORY_STORAGE_KEY = "workflowRunHistory";
 // Helper to get WorkflowInstance data (similar to WorkflowRunHistoryPage)
 function getWorkflowInstanceById(id: string): WorkflowInstance | undefined {
   const storedHistory = localStorage.getItem(RUN_HISTORY_STORAGE_KEY);
-  let instances: WorkflowInstance[] = mockData.aopsInstances || [];
+  let instances: WorkflowInstance[] = [];
   if (storedHistory) {
     try {
       const parsed = JSON.parse(storedHistory);
@@ -51,10 +50,34 @@ function getWorkflowInstanceById(id: string): WorkflowInstance | undefined {
         "Error parsing workflowRunHistory from localStorage on WorkflowRunPage",
         e
       );
-      // If error, mockData.aopsInstances is already set as default
+      // If error, empty array is already set as default
     }
   }
   return instances.find((inst) => inst.id === id);
+}
+
+// Load instances from localStorage or default to empty array
+function loadAOPSInstances(): WorkflowInstance[] {
+  const storedInstancesStr = localStorage.getItem("aopsInstances");
+  
+  if (storedInstancesStr) {
+    try {
+      const storedInstances = JSON.parse(storedInstancesStr);
+      // Return stored instances if they're a valid array
+      if (Array.isArray(storedInstances)) {
+        return storedInstances;
+      }
+    } catch (e) {
+      console.error("Failed to parse stored instances:", e);
+    }
+  }
+  
+  // Default to empty array
+  let instances: WorkflowInstance[] = [];
+  
+  // ... existing code ...
+  // If error, empty array is already set as default
+  return instances;
 }
 
 export default function WorkflowRunPage() {
