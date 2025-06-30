@@ -52,9 +52,9 @@ export function HomePage() {
         <h1 className="text-4xl font-bold text-brand-dark mb-3">
           {content.welcomeMessage}
         </h1>
-        <p className="text-lg text-brand-dark mb-6">
+        <p className="text-lg text-brand-dark">
           Streamline your operations with powerful automation tools. Build,
-          manage, and monitor your automated workflows all in one place.
+          manage, and monitor your automated workflows here.
         </p>
       </div>
 
