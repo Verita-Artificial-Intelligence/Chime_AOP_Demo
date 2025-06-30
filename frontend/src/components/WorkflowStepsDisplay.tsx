@@ -10,6 +10,8 @@ import {
   ClockIcon,
 } from "@heroicons/react/24/outline";
 import { CheckIcon } from "@heroicons/react/24/solid";
+import { SiGmail, SiSlack } from "react-icons/si";
+import { FaCircle } from "react-icons/fa";
 
 interface WorkflowStep {
   step: number;
@@ -23,16 +25,52 @@ interface WorkflowStep {
 interface WorkflowStepsDisplayProps {
   steps: WorkflowStep[];
   title: string;
+  templateId?: string;
   onComplete?: () => void;
 }
 
 export const WorkflowStepsDisplay: React.FC<WorkflowStepsDisplayProps> = ({
   steps,
   title,
+  templateId,
   onComplete,
 }) => {
   const [currentStep, setCurrentStep] = useState(0);
   const [isCompleted, setIsCompleted] = useState(false);
+  const [isPaused, setIsPaused] = useState(false);
+  const [stepVerifications, setStepVerifications] = useState<Record<string, string>>({});
+
+  // Load verification settings from localStorage
+  useEffect(() => {
+    if (templateId) {
+      const savedCustomizations = localStorage.getItem(`workflow-custom-${templateId}`);
+      if (savedCustomizations) {
+        try {
+          const customizations = JSON.parse(savedCustomizations);
+          if (customizations.stepVerifications) {
+            setStepVerifications(customizations.stepVerifications);
+          }
+        } catch (e) {
+          console.error("Error loading verification settings:", e);
+        }
+      }
+    }
+  }, [templateId]);
+
+  // Check if current step requires verification
+  const currentStepRequiresVerification = () => {
+    if (currentStep === 0 || currentStep > steps.length) return false;
+    const step = steps[currentStep - 1];
+    const verificationType = stepVerifications[step.step] || "none";
+    return verificationType !== "none";
+  };
+
+  // Get verification type for current step
+  const getCurrentVerificationType = () => {
+    if (currentStep === 0 || currentStep > steps.length) return "none";
+    const step = steps[currentStep - 1];
+    return stepVerifications[step.step] || "none";
+  };
 
   useEffect(() => {
     // Start the animation after a short delay
@@ -43,8 +81,14 @@ export const WorkflowStepsDisplay: React.FC<WorkflowStepsDisplayProps> = ({
       return () => clearTimeout(timer);
     }
 
-    // Animate through steps
-    if (currentStep > 0 && currentStep <= steps.length && !isCompleted) {
+    // Check if we need to pause for verification
+    if (currentStep > 0 && currentStep <= steps.length && !isCompleted && !isPaused) {
+      if (currentStepRequiresVerification()) {
+        setIsPaused(true);
+        return;
+      }
+
+      // Animate through steps
       const timer = setTimeout(() => {
         if (currentStep === steps.length) {
           setIsCompleted(true);
@@ -57,7 +101,20 @@ export const WorkflowStepsDisplay: React.FC<WorkflowStepsDisplayProps> = ({
       }, 1500);
       return () => clearTimeout(timer);
     }
-  }, [currentStep, steps.length, isCompleted, onComplete]);
+  }, [currentStep, steps.length, isCompleted, isPaused, onComplete]);
+
+  const handleVerificationComplete = () => {
+    setIsPaused(false);
+    // Move to next step
+    if (currentStep === steps.length) {
+      setIsCompleted(true);
+      if (onComplete) {
+        onComplete();
+      }
+    } else {
+      setCurrentStep(currentStep + 1);
+    }
+  };
 
   const getActionIcon = (action: string) => {
     const actionLower = action.toLowerCase();
@@ -97,6 +154,94 @@ export const WorkflowStepsDisplay: React.FC<WorkflowStepsDisplayProps> = ({
     } else {
       return "bg-gray-100 text-gray-600";
     }
+  };
+
+  const getVerificationUI = (verificationType: string, step: WorkflowStep) => {
+    const verificationConfigs = {
+      simple: { 
+        icon: FaCircle, 
+        color: 'text-blue-600', 
+        bgColor: 'bg-blue-50', 
+        borderColor: 'border-blue-200',
+        buttonColor: 'bg-blue-600 hover:bg-blue-700',
+        title: 'Simple Verification Required'
+      },
+      gmail: { 
+        icon: SiGmail, 
+        color: 'text-red-600', 
+        bgColor: 'bg-red-50', 
+        borderColor: 'border-red-200',
+        buttonColor: 'bg-red-600 hover:bg-red-700',
+        title: 'Gmail Verification Required'
+      },
+      slack: { 
+        icon: SiSlack, 
+        color: 'text-purple-600', 
+        bgColor: 'bg-purple-50', 
+        borderColor: 'border-purple-200',
+        buttonColor: 'bg-purple-600 hover:bg-purple-700',
+        title: 'Slack Verification Required'
+      },
+    };
+
+    const config = verificationConfigs[verificationType as keyof typeof verificationConfigs] || verificationConfigs.simple;
+    const Icon = config.icon;
+
+    return (
+      <div className={`mt-4 border rounded-lg p-4 ${config.bgColor} ${config.borderColor}`}>
+        <div className="flex items-center mb-3">
+          <Icon className={`h-5 w-5 ${config.color} mr-2`} />
+          <span className={`text-sm font-semibold ${config.color}`}>
+            {config.title}
+          </span>
+        </div>
+        <p className="text-sm text-gray-700 mb-3">
+          {verificationType === 'gmail' ? 
+            'Please check your Gmail for the verification request and confirm this action.' :
+           verificationType === 'slack' ?
+            'Please check your Slack for the verification request and confirm this action.' :
+            `Please verify this action: ${step.heading || step.element_description}`}
+        </p>
+        <div className="flex flex-col sm:flex-row gap-2">
+          {verificationType === 'gmail' && (
+            <a
+              href="https://mail.google.com"
+              target="_blank"
+              rel="noopener noreferrer"
+              className={`flex-1 px-4 py-2 text-white rounded-md text-center text-sm font-medium transition-colors ${config.buttonColor}`}
+            >
+              Open Gmail →
+            </a>
+          )}
+          {verificationType === 'slack' && (
+            <a
+              href="https://slack.com"
+              target="_blank"
+              rel="noopener noreferrer"
+              className={`flex-1 px-4 py-2 text-white rounded-md text-center text-sm font-medium transition-colors ${config.buttonColor}`}
+            >
+              Open Slack →
+            </a>
+          )}
+          {verificationType === 'simple' && (
+            <a
+              href="http://localhost:3001"
+              target="_blank"
+              rel="noopener noreferrer"
+              className={`flex-1 px-4 py-2 text-white rounded-md text-center text-sm font-medium transition-colors ${config.buttonColor}`}
+            >
+              Open Chime Platform →
+            </a>
+          )}
+          <button
+            onClick={handleVerificationComplete}
+            className="flex-1 px-4 py-2 bg-green-600 text-white rounded-md hover:bg-green-700 text-sm font-medium transition-colors"
+          >
+            ✓ Verification Complete
+          </button>
+        </div>
+      </div>
+    );
   };
 
   const startTime = new Date().toLocaleString();
@@ -139,6 +284,7 @@ export const WorkflowStepsDisplay: React.FC<WorkflowStepsDisplayProps> = ({
             const stepNumber = index + 1;
             const isActive = stepNumber <= currentStep;
             const isCurrent = stepNumber === currentStep;
+            const requiresVerification = stepVerifications[step.step] && stepVerifications[step.step] !== "none";
 
             return (
               <div
@@ -179,6 +325,11 @@ export const WorkflowStepsDisplay: React.FC<WorkflowStepsDisplayProps> = ({
                       >
                         {step.action.toUpperCase()}
                       </span>
+                      {requiresVerification && (
+                        <span className="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-yellow-100 text-yellow-700">
+                          Verification Required
+                        </span>
+                      )}
                     </div>
                     <p className="text-sm text-gray-700 mb-1 break-words">
                       {step.heading || step.element_description}
@@ -197,11 +348,16 @@ export const WorkflowStepsDisplay: React.FC<WorkflowStepsDisplayProps> = ({
                         {step.element_type}
                       </span>
                     </div>
+                    
+                    {/* Show verification UI if this is the current step and verification is required */}
+                    {isCurrent && isPaused && requiresVerification && (
+                      getVerificationUI(stepVerifications[step.step], step)
+                    )}
                   </div>
                   {isActive && stepNumber < currentStep && (
                     <CheckCircleIcon className="h-5 w-5 text-green-500 flex-shrink-0" />
                   )}
-                  {isCurrent && (
+                  {isCurrent && !isPaused && (
                     <div className="flex-shrink-0">
                       <div className="animate-pulse">
                         <ClockIcon className="h-5 w-5 text-brand-primary" />

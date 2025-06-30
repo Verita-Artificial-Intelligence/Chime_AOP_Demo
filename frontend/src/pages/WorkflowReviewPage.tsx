@@ -11,6 +11,8 @@ import {
   HashtagIcon,
   ChevronDownIcon,
 } from "@heroicons/react/24/outline";
+import { SiGmail, SiSlack } from "react-icons/si";
+import { FaSquare, FaCircle } from "react-icons/fa";
 
 interface WorkflowStep {
   step: number;
@@ -24,6 +26,87 @@ interface WorkflowStep {
 interface EditingState {
   [stepNumber: number]: boolean;
 }
+
+interface VerificationState {
+  [stepNumber: number]: string;
+}
+
+interface VerificationOption {
+  value: string;
+  label: string;
+  icon: React.ElementType;
+}
+
+const verificationOptions: VerificationOption[] = [
+  { value: "none", label: "No Verification", icon: FaSquare },
+  { value: "simple", label: "Simple Verification", icon: FaCircle },
+  { value: "gmail", label: "Gmail Verification", icon: SiGmail },
+  { value: "slack", label: "Slack Verification", icon: SiSlack },
+];
+
+const VerificationDropdown: React.FC<{
+  value: string;
+  onChange: (value: string) => void;
+  disabled?: boolean;
+  stepNumber: number;
+}> = ({ value, onChange, disabled = false, stepNumber }) => {
+  const [isOpen, setIsOpen] = useState(false);
+  const dropdownRef = React.useRef<HTMLDivElement>(null);
+  const currentOption = verificationOptions.find((opt) => opt.value === value) || verificationOptions[0];
+
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
+        setIsOpen(false);
+      }
+    };
+
+    if (isOpen) {
+      document.addEventListener("mousedown", handleClickOutside);
+      return () => document.removeEventListener("mousedown", handleClickOutside);
+    }
+  }, [isOpen]);
+
+  return (
+    <div ref={dropdownRef} className="relative">
+      <button
+        type="button"
+        onClick={() => !disabled && setIsOpen(!isOpen)}
+        disabled={disabled}
+        className={`flex items-center gap-2 px-3 py-1.5 text-sm border rounded-md transition-colors min-w-[180px] ${
+          disabled 
+            ? "border-gray-200 bg-gray-50 text-gray-400 cursor-not-allowed" 
+            : "border-gray-300 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-brand-primary"
+        }`}
+      >
+        {currentOption.icon && <currentOption.icon className="h-4 w-4" />}
+        <span className="flex-1 text-left">{currentOption.label}</span>
+        <ChevronDownIcon className={`h-4 w-4 transition-transform ${isOpen ? "rotate-180" : ""}`} />
+      </button>
+
+      {isOpen && !disabled && (
+        <div className="absolute top-full left-0 right-0 mt-1 bg-white border border-gray-300 rounded-md shadow-lg z-10 overflow-hidden">
+          {verificationOptions.map((option) => (
+            <button
+              key={option.value}
+              type="button"
+              onClick={() => {
+                onChange(option.value);
+                setIsOpen(false);
+              }}
+              className={`flex items-center gap-2 w-full px-3 py-2 text-sm hover:bg-gray-50 transition-colors ${
+                option.value === value ? "bg-brand-light text-brand-primary" : ""
+              }`}
+            >
+              {option.icon && <option.icon className="h-4 w-4" />}
+              <span>{option.label}</span>
+            </button>
+          ))}
+        </div>
+      )}
+    </div>
+  );
+};
 
 const getActionIcon = (action: string) => {
   switch (action.toLowerCase()) {
@@ -169,12 +252,13 @@ export const WorkflowReviewPage: React.FC = () => {
   const navigate = useNavigate();
   const location = useLocation();
   const { templateId, templateTitle, jsonFile } = location.state || {};
-
+  
   const [workflowData, setWorkflowData] = useState<WorkflowStep[]>([]);
   const [isEditMode, setIsEditMode] = useState(false);
   const [editingSteps, setEditingSteps] = useState<EditingState>({});
   const [isLoading, setIsLoading] = useState(true);
   const [expandedSteps, setExpandedSteps] = useState<Set<number>>(new Set());
+  const [stepVerifications, setStepVerifications] = useState<VerificationState>({});
 
   useEffect(() => {
     if (!templateId || !jsonFile) {
@@ -190,6 +274,26 @@ export const WorkflowReviewPage: React.FC = () => {
         );
         const data = mockData.default;
         setWorkflowData(data);
+        
+        // Load saved customizations including verifications
+        const savedCustomizations = localStorage.getItem(`workflow-custom-${templateId}`);
+        if (savedCustomizations) {
+          const customizations = JSON.parse(savedCustomizations);
+          if (customizations.stepVerifications) {
+            setStepVerifications(customizations.stepVerifications);
+          }
+          if (customizations.workflowData) {
+            setWorkflowData(customizations.workflowData);
+          }
+        } else {
+          // Initialize all steps with "none" verification
+          const initialVerifications: VerificationState = {};
+          data.forEach((step: WorkflowStep) => {
+            initialVerifications[step.step] = "none";
+          });
+          setStepVerifications(initialVerifications);
+        }
+        
         setIsLoading(false);
       } catch (error) {
         console.error("Error loading workflow data:", error);
@@ -207,6 +311,7 @@ export const WorkflowReviewPage: React.FC = () => {
         templateTitle,
         jsonFile,
         workflowSteps: workflowData,
+        stepVerifications,
         isRunning: true,
       },
     });
@@ -228,6 +333,7 @@ export const WorkflowReviewPage: React.FC = () => {
     const customizations = {
       templateId,
       workflowData,
+      stepVerifications,
       lastModified: new Date().toISOString(),
     };
     localStorage.setItem(
@@ -242,6 +348,13 @@ export const WorkflowReviewPage: React.FC = () => {
     );
     setWorkflowData(updatedData);
     setEditingSteps({ ...editingSteps, [stepNumber]: false });
+  };
+
+  const handleVerificationChange = (stepNumber: number, value: string) => {
+    setStepVerifications({
+      ...stepVerifications,
+      [stepNumber]: value,
+    });
   };
 
   const toggleStepEdit = (stepNumber: number) => {
@@ -361,7 +474,7 @@ export const WorkflowReviewPage: React.FC = () => {
           <h3 className="text-lg font-semibold text-gray-900 mb-4">
             Workflow Steps
           </h3>
-
+          
           <div className="space-y-3">
             {workflowData.map((step) => {
               const ActionIcon = getActionIcon(step.action);
@@ -421,6 +534,15 @@ export const WorkflowReviewPage: React.FC = () => {
                                 {step.value}
                               </p>
                             )}
+                            <div className="mt-3 flex items-center gap-3">
+                              <span className="text-sm text-gray-700">Verification:</span>
+                              <VerificationDropdown
+                                value={stepVerifications[step.step] || "none"}
+                                onChange={(value) => handleVerificationChange(step.step, value)}
+                                disabled={!isEditMode}
+                                stepNumber={step.step}
+                              />
+                            </div>
                           </div>
                           {isEditMode && (
                             <div className="flex items-center gap-2">
