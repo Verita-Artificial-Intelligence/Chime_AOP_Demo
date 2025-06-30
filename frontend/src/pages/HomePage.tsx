@@ -1,11 +1,12 @@
 import React from "react";
 import { Link } from "react-router-dom";
 import {
-  BoltIcon,
   TableCellsIcon,
-  CircleStackIcon,
-  CpuChipIcon,
   ArrowRightIcon,
+  DocumentArrowUpIcon,
+  PlayCircleIcon,
+  ClockIcon,
+  ChatBubbleBottomCenterTextIcon,
 } from "@heroicons/react/24/outline";
 import content from "../config/content";
 
@@ -14,33 +15,33 @@ const quickAccessItems = [
     name: "Workflow Templates",
     href: "/workflow/templates",
     description: "Browse pre-built automation templates for common workflows.",
-    icon: BoltIcon,
+    icon: TableCellsIcon,
   },
   {
     name: "Workflow Chat",
     href: "/workflow/builder",
     description:
       "Use a chat interface to guide you through building a workflow.",
-    icon: BoltIcon,
+    icon: ChatBubbleBottomCenterTextIcon,
+  },
+  {
+    name: "Upload SOP",
+    href: "/workflow/sop-to-workflow",
+    description:
+      "Convert your SOPs and screen recordings into automated workflows.",
+    icon: DocumentArrowUpIcon,
   },
   {
     name: "Active Workflows",
     href: "/workflow/active-runs",
     description: "Check the status and history of your workflow executions.",
-    icon: CircleStackIcon,
+    icon: PlayCircleIcon,
   },
   {
-    name: "Explore Integrations",
-    href: "/integrations",
-    description:
-      "Browse and manage connections to various data sources and services.",
-    icon: CircleStackIcon,
-  },
-  {
-    name: "Security Settings",
-    href: "/security",
-    description: "Manage outh tokens, permissions, and security settings.",
-    icon: CpuChipIcon,
+    name: "Workflow History",
+    href: "/workflow/run",
+    description: "View and analyze past workflow runs and performance metrics.",
+    icon: ClockIcon,
   },
 ];
 

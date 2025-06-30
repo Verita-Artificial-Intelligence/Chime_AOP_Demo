@@ -9,9 +9,9 @@ import { templateConfigs } from "../data/templateConfigs";
 
 // Map template IDs to icons
 const iconMap: Record<string, React.ElementType> = {
-  'credit-dispute-credit-bureau': CreditCardIcon,
-  'direct-dispute-member': UserIcon,
-  'complex-dispute-equifax': MagnifyingGlassIcon,
+  "credit-dispute-credit-bureau": CreditCardIcon,
+  "direct-dispute-member": UserIcon,
+  "complex-dispute-equifax": MagnifyingGlassIcon,
 };
 
 export const WorkflowTemplatesPage: React.FC = () => {
@@ -19,16 +19,16 @@ export const WorkflowTemplatesPage: React.FC = () => {
   const [selectedTemplate, setSelectedTemplate] = useState<any>(null);
 
   const handleTemplateClick = (templateId: string) => {
-    const template = templateConfigs.find(t => t.id === templateId);
+    const template = templateConfigs.find((t) => t.id === templateId);
 
     if (template) {
       // Navigate to workflow review page with the template
-      navigate('/workflow/review', { 
-        state: { 
+      navigate("/workflow/review", {
+        state: {
           templateId: template.id,
           templateTitle: template.title,
-          jsonFile: template.jsonFile 
-        } 
+          jsonFile: template.jsonFile,
+        },
       });
     }
   };
@@ -48,33 +48,19 @@ export const WorkflowTemplatesPage: React.FC = () => {
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
         {templateConfigs.map((template, index) => {
           const IconComponent = iconMap[template.id] || MagnifyingGlassIcon;
-          
+
           return (
             <div
               key={template.id}
               onClick={() => handleTemplateClick(template.id)}
-              className={`bg-white rounded-lg shadow-sm border ${
-                index === 0 ? "border-brand-primary border-2" : "border-gray-200"
-              } p-6 hover:shadow-lg transition-all cursor-pointer group h-full flex flex-col`}
+              className={`bg-white rounded-lg shadow-sm border border-gray-200 p-6 hover:shadow-lg transition-all cursor-pointer group h-full flex flex-col`}
             >
-              {index === 0 && (
-                <div className="mb-3">
-                  <span className="px-3 py-1 bg-brand-primary text-brand-dark text-xs font-medium rounded-full">
-                    Recommended
-                  </span>
-                </div>
-              )}
-
               <div className="flex items-start mb-4">
                 <div
-                  className={`p-3 rounded-lg ${
-                    index === 0 ? "bg-brand-light" : "bg-gray-100"
-                  } group-hover:bg-brand-light transition-colors`}
+                  className={`p-3 rounded-lg bg-gray-100 group-hover:bg-brand-light transition-colors`}
                 >
                   <IconComponent
-                    className={`h-6 w-6 ${
-                      index === 0 ? "text-brand-primary" : "text-gray-600"
-                    } group-hover:text-brand-primary`}
+                    className={`h-6 w-6 text-gray-600 group-hover:text-brand-primary`}
                   />
                 </div>
               </div>
@@ -107,7 +93,8 @@ export const WorkflowTemplatesPage: React.FC = () => {
           Need a custom template?
         </h2>
         <p className="text-gray-600 mb-4">
-          Contact your administrator to request custom workflow templates for your specific needs.
+          Contact your administrator to request custom workflow templates for
+          your specific needs.
         </p>
       </div>
     </div>
