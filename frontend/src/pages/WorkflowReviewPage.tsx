@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
+import ReactDOM from "react-dom";
 import {
   PlayIcon,
   ClockIcon,
@@ -51,60 +52,115 @@ const VerificationDropdown: React.FC<{
   stepNumber: number;
 }> = ({ value, onChange, disabled = false, stepNumber }) => {
   const [isOpen, setIsOpen] = useState(false);
+  const [dropdownPosition, setDropdownPosition] = useState({
+    top: 0,
+    left: 0,
+    width: 0,
+  });
+  const buttonRef = React.useRef<HTMLButtonElement>(null);
   const dropdownRef = React.useRef<HTMLDivElement>(null);
-  const currentOption = verificationOptions.find((opt) => opt.value === value) || verificationOptions[0];
+
+  const currentOption =
+    verificationOptions.find((opt) => opt.value === value) ||
+    verificationOptions[0];
 
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
-      if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
+      if (
+        dropdownRef.current &&
+        !dropdownRef.current.contains(event.target as Node) &&
+        buttonRef.current &&
+        !buttonRef.current.contains(event.target as Node)
+      ) {
         setIsOpen(false);
       }
     };
 
     if (isOpen) {
       document.addEventListener("mousedown", handleClickOutside);
-      return () => document.removeEventListener("mousedown", handleClickOutside);
+      return () =>
+        document.removeEventListener("mousedown", handleClickOutside);
     }
   }, [isOpen]);
 
+  useEffect(() => {
+    if (isOpen && buttonRef.current) {
+      const rect = buttonRef.current.getBoundingClientRect();
+      const spaceBelow = window.innerHeight - rect.bottom;
+      const dropdownHeight = 160; // Approximate height for 4 items
+
+      // Position dropdown above if not enough space below
+      if (spaceBelow < dropdownHeight && rect.top > dropdownHeight) {
+        setDropdownPosition({
+          top: rect.top - dropdownHeight,
+          left: rect.left,
+          width: rect.width,
+        });
+      } else {
+        setDropdownPosition({
+          top: rect.bottom + 4,
+          left: rect.left,
+          width: rect.width,
+        });
+      }
+    }
+  }, [isOpen]);
+
+  const dropdownMenu = isOpen && !disabled && (
+    <div
+      ref={dropdownRef}
+      className="fixed bg-white border border-gray-300 rounded-md shadow-lg overflow-hidden"
+      style={{
+        top: `${dropdownPosition.top}px`,
+        left: `${dropdownPosition.left}px`,
+        width: `${dropdownPosition.width}px`,
+        zIndex: 9999,
+      }}
+    >
+      {verificationOptions.map((option) => (
+        <button
+          key={option.value}
+          type="button"
+          onClick={() => {
+            onChange(option.value);
+            setIsOpen(false);
+          }}
+          className={`flex items-center gap-2 w-full px-3 py-2 text-sm hover:bg-gray-50 transition-colors ${
+            option.value === value
+              ? "bg-brand-primaryLight text-brand-primary"
+              : ""
+          }`}
+        >
+          {option.icon && <option.icon className="h-4 w-4" />}
+          <span>{option.label}</span>
+        </button>
+      ))}
+    </div>
+  );
+
   return (
-    <div ref={dropdownRef} className="relative">
+    <>
       <button
+        ref={buttonRef}
         type="button"
         onClick={() => !disabled && setIsOpen(!isOpen)}
         disabled={disabled}
         className={`flex items-center gap-2 px-3 py-1.5 text-sm border rounded-md transition-colors min-w-[180px] ${
-          disabled 
-            ? "border-gray-200 bg-gray-50 text-gray-400 cursor-not-allowed" 
+          disabled
+            ? "border-gray-200 bg-gray-50 text-gray-400 cursor-not-allowed"
             : "border-gray-300 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-brand-primary"
         }`}
       >
         {currentOption.icon && <currentOption.icon className="h-4 w-4" />}
         <span className="flex-1 text-left">{currentOption.label}</span>
-        <ChevronDownIcon className={`h-4 w-4 transition-transform ${isOpen ? "rotate-180" : ""}`} />
+        <ChevronDownIcon
+          className={`h-4 w-4 transition-transform ${
+            isOpen ? "rotate-180" : ""
+          }`}
+        />
       </button>
-
-      {isOpen && !disabled && (
-        <div className="absolute top-full left-0 right-0 mt-1 bg-white border border-gray-300 rounded-md shadow-lg z-10 overflow-hidden">
-          {verificationOptions.map((option) => (
-            <button
-              key={option.value}
-              type="button"
-              onClick={() => {
-                onChange(option.value);
-                setIsOpen(false);
-              }}
-              className={`flex items-center gap-2 w-full px-3 py-2 text-sm hover:bg-gray-50 transition-colors ${
-                option.value === value ? "bg-brand-light text-brand-primary" : ""
-              }`}
-            >
-              {option.icon && <option.icon className="h-4 w-4" />}
-              <span>{option.label}</span>
-            </button>
-          ))}
-        </div>
-      )}
-    </div>
+      {ReactDOM.createPortal(dropdownMenu, document.body)}
+    </>
   );
 };
 
@@ -160,7 +216,7 @@ const StepEditor: React.FC<{
           </button>
           <button
             onClick={handleSave}
-            className="px-4 py-2 bg-brand-primary text-white rounded-md hover:bg-brand-hover transition-colors flex items-center gap-2"
+            className="px-4 py-2 bg-brand-primary text-white rounded-md hover:bg-brand-primaryDark transition-colors flex items-center gap-2"
           >
             <CheckIcon className="h-4 w-4" />
             Save
@@ -252,13 +308,15 @@ export const WorkflowReviewPage: React.FC = () => {
   const navigate = useNavigate();
   const location = useLocation();
   const { templateId, templateTitle, jsonFile } = location.state || {};
-  
+
   const [workflowData, setWorkflowData] = useState<WorkflowStep[]>([]);
   const [isEditMode, setIsEditMode] = useState(false);
   const [editingSteps, setEditingSteps] = useState<EditingState>({});
   const [isLoading, setIsLoading] = useState(true);
   const [expandedSteps, setExpandedSteps] = useState<Set<number>>(new Set());
-  const [stepVerifications, setStepVerifications] = useState<VerificationState>({});
+  const [stepVerifications, setStepVerifications] = useState<VerificationState>(
+    {}
+  );
 
   useEffect(() => {
     if (!templateId || !jsonFile) {
@@ -274,9 +332,11 @@ export const WorkflowReviewPage: React.FC = () => {
         );
         const data = mockData.default;
         setWorkflowData(data);
-        
+
         // Load saved customizations including verifications
-        const savedCustomizations = localStorage.getItem(`workflow-custom-${templateId}`);
+        const savedCustomizations = localStorage.getItem(
+          `workflow-custom-${templateId}`
+        );
         if (savedCustomizations) {
           const customizations = JSON.parse(savedCustomizations);
           if (customizations.stepVerifications) {
@@ -293,7 +353,7 @@ export const WorkflowReviewPage: React.FC = () => {
           });
           setStepVerifications(initialVerifications);
         }
-        
+
         setIsLoading(false);
       } catch (error) {
         console.error("Error loading workflow data:", error);
@@ -453,7 +513,7 @@ export const WorkflowReviewPage: React.FC = () => {
               ) : (
                 <button
                   onClick={handleCustomize}
-                  className="px-4 py-2 border border-brand-primary text-brand-primary rounded-md hover:bg-brand-light transition-colors flex items-center gap-2"
+                  className="px-4 py-2 border border-brand-primary text-brand-primary rounded-md hover:bg-brand-primaryLight transition-colors flex items-center gap-2"
                 >
                   <PencilIcon className="h-4 w-4" />
                   Customize
@@ -461,7 +521,7 @@ export const WorkflowReviewPage: React.FC = () => {
               )}
               <button
                 onClick={handleRunWorkflow}
-                className="px-6 py-2 bg-brand-primary text-white rounded-md hover:bg-brand-hover transition-colors flex items-center gap-2 font-semibold"
+                className="px-6 py-2 bg-brand-primary text-white rounded-md hover:bg-brand-primaryDark transition-colors flex items-center gap-2 font-semibold"
               >
                 <PlayIcon className="h-4 w-4" />
                 Run Workflow
@@ -474,7 +534,7 @@ export const WorkflowReviewPage: React.FC = () => {
           <h3 className="text-lg font-semibold text-gray-900 mb-4">
             Workflow Steps
           </h3>
-          
+
           <div className="space-y-3">
             {workflowData.map((step) => {
               const ActionIcon = getActionIcon(step.action);
@@ -484,7 +544,7 @@ export const WorkflowReviewPage: React.FC = () => {
               return (
                 <div
                   key={step.step}
-                  className="border border-gray-200 rounded-lg overflow-hidden"
+                  className="border border-gray-200 rounded-lg"
                 >
                   {isEditing ? (
                     <StepEditor
@@ -535,10 +595,14 @@ export const WorkflowReviewPage: React.FC = () => {
                               </p>
                             )}
                             <div className="mt-3 flex items-center gap-3">
-                              <span className="text-sm text-gray-700">Verification:</span>
+                              <span className="text-sm text-gray-700">
+                                Verification:
+                              </span>
                               <VerificationDropdown
                                 value={stepVerifications[step.step] || "none"}
-                                onChange={(value) => handleVerificationChange(step.step, value)}
+                                onChange={(value) =>
+                                  handleVerificationChange(step.step, value)
+                                }
                                 disabled={!isEditMode}
                                 stepNumber={step.step}
                               />
@@ -551,7 +615,7 @@ export const WorkflowReviewPage: React.FC = () => {
                                   e.stopPropagation();
                                   toggleStepEdit(step.step);
                                 }}
-                                className="p-2 text-brand-primary hover:bg-brand-light rounded-md transition-colors"
+                                className="p-2 text-brand-primary hover:bg-brand-primaryLight rounded-md transition-colors"
                               >
                                 <PencilIcon className="h-4 w-4" />
                               </button>

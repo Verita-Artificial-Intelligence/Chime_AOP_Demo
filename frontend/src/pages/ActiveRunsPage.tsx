@@ -377,10 +377,10 @@ export const ActiveRunsPage: React.FC = () => {
     return (
       <div className="max-w-4xl mx-auto">
         <div className="mb-8">
-          <h1 className="text-2xl font-bold text-gray-800 mb-1">
+          <h1 className="text-2xl font-bold text-brand-heading mb-1">
             SOP Workflow Execution
           </h1>
-          <p className="text-gray-600">Processing uploaded SOP documents</p>
+          <p className="text-brand-muted">Processing uploaded SOP documents</p>
         </div>
 
         <div className="bg-white rounded-lg shadow-sm border border-brand-border p-6">
@@ -494,7 +494,7 @@ export const ActiveRunsPage: React.FC = () => {
                   className={`px-6 py-3 rounded-md font-medium transition-colors flex items-center gap-2 ${
                     isDownloading
                       ? "bg-gray-300 text-gray-500 cursor-not-allowed"
-                      : "bg-brand-primary text-white hover:bg-brand-primaryHover"
+                      : "bg-brand-primary text-white hover:bg-brand-primaryDark"
                   }`}
                 >
                   <DocumentArrowDownIcon className="h-5 w-5" />
@@ -528,28 +528,28 @@ export const ActiveRunsPage: React.FC = () => {
   return (
     <div className="max-w-7xl mx-auto">
       <div className="mb-8">
-        <h1 className="text-3xl font-bold text-gray-900 mb-2">
+        <h1 className="text-3xl font-bold text-brand-heading">
           Active Workflows
         </h1>
-        <p className="text-gray-600">
-          Monitor your currently executing automation workflows
+        <p className="text-brand-muted mt-1">
+          Monitor and manage your running workflows
         </p>
       </div>
 
       <div className="bg-white rounded-lg shadow-sm p-12 text-center">
-        <div className="mx-auto w-16 h-16 bg-gray-100 rounded-full flex items-center justify-center mb-4">
-          <PlayIcon className="h-8 w-8 text-gray-400" />
+        <div className="mx-auto w-16 h-16 bg-brand-primaryLight rounded-full flex items-center justify-center mb-4">
+          <PlayIcon className="h-8 w-8 text-brand-primary" />
         </div>
-        <h2 className="text-xl font-semibold text-gray-900 mb-2">
+        <h2 className="text-xl font-semibold text-brand-heading mb-2">
           No workflows are currently running
         </h2>
-        <p className="text-gray-600 mb-6">
+        <p className="text-brand-muted mb-6">
           Start a new automation workflow from templates
         </p>
         <div className="flex gap-4 justify-center">
           <button
             onClick={() => navigate("/workflow/templates")}
-            className="px-4 py-2 bg-brand-primary text-brand-dark rounded-md hover:bg-brand-hover transition-colors font-semibold"
+            className="px-4 py-2 bg-brand-primary text-white rounded-md hover:bg-brand-primaryDark transition-colors font-semibold"
           >
             Browse Templates
           </button>

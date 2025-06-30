@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { 
-  XMarkIcon, 
+import {
+  XMarkIcon,
   ClockIcon,
   CheckCircleIcon,
   DocumentTextIcon,
@@ -90,13 +90,13 @@ export default function WorkflowRunHistoryPage() {
       }
     };
 
-    window.addEventListener('storage', handleStorageChange);
-    
+    window.addEventListener("storage", handleStorageChange);
+
     // Also check periodically for changes made in the same tab
     const interval = setInterval(loadHistory, 2000);
 
     return () => {
-      window.removeEventListener('storage', handleStorageChange);
+      window.removeEventListener("storage", handleStorageChange);
       clearInterval(interval);
     };
   }, []);
@@ -153,8 +153,7 @@ export default function WorkflowRunHistoryPage() {
   };
 
   // Determine if the displayed history is the fallback mock data
-  const isMockData =
-    JSON.stringify(runHistory) === JSON.stringify([]);
+  const isMockData = JSON.stringify(runHistory) === JSON.stringify([]);
 
   // Helper function to get display status
   const getDisplayStatus = (run: WorkflowInstance) => {
@@ -189,7 +188,7 @@ export default function WorkflowRunHistoryPage() {
         </div>
         {/* Button to navigate to Workflow templates page */}
         <button
-          className="mt-4 sm:mt-0 px-6 py-2.5 bg-brand-primary text-brand-dark rounded-md text-sm font-semibold hover:bg-brand-hover transition-all duration-200 whitespace-nowrap"
+          className="mt-4 sm:mt-0 px-6 py-2.5 bg-brand-primary text-white rounded-md text-sm font-semibold hover:bg-brand-primaryDark transition-all duration-200 whitespace-nowrap"
           onClick={() => navigate("/workflow/templates")} // Navigate to the Workflow templates
         >
           Browse Templates
@@ -236,9 +235,7 @@ export default function WorkflowRunHistoryPage() {
             >
               <div className="flex flex-col sm:flex-row justify-between items-start mb-3">
                 <div>
-                  <h2
-                    className="text-xl font-semibold text-brand-heading"
-                  >
+                  <h2 className="text-xl font-semibold text-brand-heading">
                     {run.name}
                   </h2>
                   <p className="text-sm text-brand-muted opacity-70">
@@ -291,7 +288,7 @@ export default function WorkflowRunHistoryPage() {
 
               <div className="mt-4 flex justify-between">
                 <button
-                  className="text-sm text-brand-primary hover:text-brand-primaryHover hover:underline font-medium"
+                  className="text-sm text-brand-primary hover:text-brand-primaryDark hover:underline font-medium"
                   onClick={() => handleViewDetails(run)}
                 >
                   View Details
@@ -316,9 +313,12 @@ export default function WorkflowRunHistoryPage() {
             <div className="p-6 border-b border-gray-200">
               <div className="flex justify-between items-start">
                 <div>
-                  <h2 className="text-2xl font-bold text-gray-900">{selectedRun.name}</h2>
+                  <h2 className="text-2xl font-bold text-gray-900">
+                    {selectedRun.name}
+                  </h2>
                   <p className="text-sm text-gray-600 mt-1">
-                    Completed on {new Date(selectedRun.lastRun).toLocaleString()}
+                    Completed on{" "}
+                    {new Date(selectedRun.lastRun).toLocaleString()}
                   </p>
                 </div>
                 <button
@@ -333,13 +333,18 @@ export default function WorkflowRunHistoryPage() {
             <div className="p-6 overflow-y-auto max-h-[calc(90vh-200px)]">
               {selectedRun.metrics && (
                 <div className="mb-6 p-4 bg-gray-50 rounded-lg">
-                  <h3 className="text-lg font-semibold text-gray-900 mb-3">Execution Metrics</h3>
+                  <h3 className="text-lg font-semibold text-gray-900 mb-3">
+                    Execution Metrics
+                  </h3>
                   <div className="grid grid-cols-2 gap-4">
                     {Object.entries(selectedRun.metrics).map(([key, value]) => (
                       <div key={key} className="flex items-center gap-2">
                         <ClockIcon className="h-4 w-4 text-gray-400" />
                         <span className="text-sm font-medium text-gray-700">
-                          {key.replace(/([A-Z])/g, " $1").replace(/^./, (str) => str.toUpperCase())}:
+                          {key
+                            .replace(/([A-Z])/g, " $1")
+                            .replace(/^./, (str) => str.toUpperCase())}
+                          :
                         </span>
                         <span className="text-sm text-gray-900">{value}</span>
                       </div>
@@ -360,7 +365,11 @@ export default function WorkflowRunHistoryPage() {
                         className="border border-gray-200 rounded-lg p-4 hover:border-gray-300 transition-colors"
                       >
                         <div className="flex items-start gap-3">
-                          <div className={`flex-shrink-0 w-8 h-8 rounded-full flex items-center justify-center ${getActionColor(step.action)}`}>
+                          <div
+                            className={`flex-shrink-0 w-8 h-8 rounded-full flex items-center justify-center ${getActionColor(
+                              step.action
+                            )}`}
+                          >
                             {getActionIcon(step.action)}
                           </div>
                           <div className="flex-1">
@@ -368,7 +377,11 @@ export default function WorkflowRunHistoryPage() {
                               <span className="text-sm font-semibold text-gray-900">
                                 Step {step.step}
                               </span>
-                              <span className={`inline-flex items-center px-2 py-0.5 rounded text-xs font-medium ${getActionColor(step.action)}`}>
+                              <span
+                                className={`inline-flex items-center px-2 py-0.5 rounded text-xs font-medium ${getActionColor(
+                                  step.action
+                                )}`}
+                              >
                                 {step.action.toUpperCase()}
                               </span>
                             </div>
@@ -377,15 +390,21 @@ export default function WorkflowRunHistoryPage() {
                             </p>
                             {step.value && (
                               <div className="flex items-center gap-2 mt-1">
-                                <span className="text-xs text-gray-500">Value:</span>
+                                <span className="text-xs text-gray-500">
+                                  Value:
+                                </span>
                                 <code className="text-xs bg-gray-100 px-2 py-1 rounded">
                                   {step.value}
                                 </code>
                               </div>
                             )}
                             <div className="flex items-center gap-2 mt-1">
-                              <span className="text-xs text-gray-500">Element:</span>
-                              <span className="text-xs text-gray-600">{step.element_type}</span>
+                              <span className="text-xs text-gray-500">
+                                Element:
+                              </span>
+                              <span className="text-xs text-gray-600">
+                                {step.element_type}
+                              </span>
                             </div>
                           </div>
                         </div>
