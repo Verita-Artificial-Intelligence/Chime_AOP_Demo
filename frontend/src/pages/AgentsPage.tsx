@@ -1,7 +1,27 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { 
+  XMarkIcon, 
+  ClockIcon,
+  CheckCircleIcon,
+  DocumentTextIcon,
+  CursorArrowRaysIcon,
+  ClipboardDocumentCheckIcon,
+  PencilSquareIcon,
+  ArrowRightIcon,
+  InformationCircleIcon,
+} from "@heroicons/react/24/outline";
 
 // Interface for a Workflow Instance (Run History Item)
+interface WorkflowStep {
+  step: number;
+  action: string;
+  element_description: string;
+  element_type: string;
+  value?: string;
+  heading?: string;
+}
+
 interface WorkflowInstance {
   id: string;
   name: string;
@@ -15,12 +35,7 @@ interface WorkflowInstance {
     details: string;
   }>;
   metrics?: Record<string, string | undefined>; // Allow undefined for metric values
-  // These fields from the old Agent interface might not be directly applicable
-  // or could be derived/linked if needed.
-  // workflow: string;
-  // dataSources: string[];
-  // actions: string[];
-  // llm: string;
+  steps?: WorkflowStep[]; // Store the workflow steps
   createdAt?: string; // lastRun could serve a similar purpose or use original createdAt if available
 }
 
@@ -55,20 +70,86 @@ export default function WorkflowRunHistoryPage() {
   const [runHistory, setRunHistory] = useState<WorkflowInstance[]>(
     getStoredRunHistory()
   );
+  const [selectedRun, setSelectedRun] = useState<WorkflowInstance | null>(null);
+  const [showDetailsModal, setShowDetailsModal] = useState(false);
   const navigate = useNavigate();
 
-  // This useEffect is for persisting changes if we allow modifications (e.g., deleting history)
-  // For now, it just ensures consistency if we were to modify runHistory state.
+  // Load run history from localStorage on component mount and when storage changes
   useEffect(() => {
-    // If we were to modify the state (e.g. delete an item), this would save it.
-    // saveRunHistory(runHistory);
-    // For now, we primarily load from mockData or whatever is in localStorage initially.
-  }, [runHistory]);
+    const loadHistory = () => {
+      setRunHistory(getStoredRunHistory());
+    };
+
+    // Load initial data
+    loadHistory();
+
+    // Listen for storage changes (when new workflows complete)
+    const handleStorageChange = (e: StorageEvent) => {
+      if (e.key === RUN_HISTORY_STORAGE_KEY) {
+        loadHistory();
+      }
+    };
+
+    window.addEventListener('storage', handleStorageChange);
+    
+    // Also check periodically for changes made in the same tab
+    const interval = setInterval(loadHistory, 2000);
+
+    return () => {
+      window.removeEventListener('storage', handleStorageChange);
+      clearInterval(interval);
+    };
+  }, []);
 
   const handleDeleteRun = (id: string) => {
     const updatedHistory = runHistory.filter((run) => run.id !== id);
     setRunHistory(updatedHistory);
     saveRunHistory(updatedHistory); // Save after deletion
+  };
+
+  const handleViewDetails = (run: WorkflowInstance) => {
+    setSelectedRun(run);
+    setShowDetailsModal(true);
+  };
+
+  const getActionIcon = (action: string) => {
+    const actionLower = action.toLowerCase();
+    switch (actionLower) {
+      case "type":
+        return <DocumentTextIcon className="h-4 w-4" />;
+      case "click":
+        return <CursorArrowRaysIcon className="h-4 w-4" />;
+      case "check":
+        return <CheckCircleIcon className="h-4 w-4" />;
+      case "select":
+        return <ClipboardDocumentCheckIcon className="h-4 w-4" />;
+      case "scroll":
+        return <ArrowRightIcon className="h-4 w-4" />;
+      case "copy":
+        return <PencilSquareIcon className="h-4 w-4" />;
+      default:
+        return <InformationCircleIcon className="h-4 w-4" />;
+    }
+  };
+
+  const getActionColor = (action: string) => {
+    const actionLower = action.toLowerCase();
+    switch (actionLower) {
+      case "type":
+        return "bg-blue-100 text-blue-600";
+      case "click":
+        return "bg-green-100 text-green-600";
+      case "check":
+        return "bg-purple-100 text-purple-600";
+      case "select":
+        return "bg-yellow-100 text-yellow-600";
+      case "scroll":
+        return "bg-orange-100 text-orange-600";
+      case "copy":
+        return "bg-pink-100 text-pink-600";
+      default:
+        return "bg-gray-100 text-gray-600";
+    }
   };
 
   // Determine if the displayed history is the fallback mock data
@@ -208,47 +289,13 @@ export default function WorkflowRunHistoryPage() {
                   ))}
               </div>
 
-              {run.runHistory && run.runHistory.length > 0 && (
-                <div className="mt-4">
-                  <h4 className="text-sm font-semibold text-brand-heading mb-2">
-                    Recent Activity:
-                  </h4>
-                  <ul className="space-y-2 max-h-32 overflow-y-auto border rounded-md p-3 bg-brand-light">
-                    {run.runHistory.slice(0, 5).map(
-                      (
-                        historyItem,
-                        index // Show latest 5 for brevity
-                      ) => (
-                        <li
-                          key={index}
-                          className="text-xs text-brand-muted border-b border-brand-border pb-1 last:border-b-0 last:pb-0"
-                        >
-                          <span
-                            className={`font-medium ${
-                              historyItem.status.toLowerCase() === "success"
-                                ? "text-green-600"
-                                : historyItem.status.toLowerCase() === "failed"
-                                ? "text-red-600"
-                                : "text-yellow-600"
-                            }`}
-                          >
-                            {historyItem.status}:
-                          </span>{" "}
-                          {historyItem.details}
-                          <span className="text-brand-muted opacity-50">
-                            (
-                            {new Date(
-                              historyItem.timestamp
-                            ).toLocaleTimeString()}
-                            )
-                          </span>
-                        </li>
-                      )
-                    )}
-                  </ul>
-                </div>
-              )}
-              <div className="mt-4 flex justify-end">
+              <div className="mt-4 flex justify-between">
+                <button
+                  className="text-sm text-brand-primary hover:text-brand-primaryHover hover:underline font-medium"
+                  onClick={() => handleViewDetails(run)}
+                >
+                  View Details
+                </button>
                 <button
                   className="text-xs text-brand-danger hover:text-red-700 hover:underline"
                   onClick={() => handleDeleteRun(run.id)}
@@ -261,6 +308,100 @@ export default function WorkflowRunHistoryPage() {
           );
         })}
       </div>
+
+      {/* Details Modal */}
+      {showDetailsModal && selectedRun && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
+          <div className="bg-white rounded-lg max-w-4xl w-full max-h-[90vh] overflow-hidden">
+            <div className="p-6 border-b border-gray-200">
+              <div className="flex justify-between items-start">
+                <div>
+                  <h2 className="text-2xl font-bold text-gray-900">{selectedRun.name}</h2>
+                  <p className="text-sm text-gray-600 mt-1">
+                    Completed on {new Date(selectedRun.lastRun).toLocaleString()}
+                  </p>
+                </div>
+                <button
+                  onClick={() => setShowDetailsModal(false)}
+                  className="p-2 hover:bg-gray-100 rounded-lg transition-colors"
+                >
+                  <XMarkIcon className="h-5 w-5 text-gray-500" />
+                </button>
+              </div>
+            </div>
+
+            <div className="p-6 overflow-y-auto max-h-[calc(90vh-200px)]">
+              {selectedRun.metrics && (
+                <div className="mb-6 p-4 bg-gray-50 rounded-lg">
+                  <h3 className="text-lg font-semibold text-gray-900 mb-3">Execution Metrics</h3>
+                  <div className="grid grid-cols-2 gap-4">
+                    {Object.entries(selectedRun.metrics).map(([key, value]) => (
+                      <div key={key} className="flex items-center gap-2">
+                        <ClockIcon className="h-4 w-4 text-gray-400" />
+                        <span className="text-sm font-medium text-gray-700">
+                          {key.replace(/([A-Z])/g, " $1").replace(/^./, (str) => str.toUpperCase())}:
+                        </span>
+                        <span className="text-sm text-gray-900">{value}</span>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              )}
+
+              {selectedRun.steps && selectedRun.steps.length > 0 ? (
+                <div>
+                  <h3 className="text-lg font-semibold text-gray-900 mb-4">
+                    Workflow Steps ({selectedRun.steps.length})
+                  </h3>
+                  <div className="space-y-3">
+                    {selectedRun.steps.map((step, index) => (
+                      <div
+                        key={step.step}
+                        className="border border-gray-200 rounded-lg p-4 hover:border-gray-300 transition-colors"
+                      >
+                        <div className="flex items-start gap-3">
+                          <div className={`flex-shrink-0 w-8 h-8 rounded-full flex items-center justify-center ${getActionColor(step.action)}`}>
+                            {getActionIcon(step.action)}
+                          </div>
+                          <div className="flex-1">
+                            <div className="flex items-center gap-2 mb-1">
+                              <span className="text-sm font-semibold text-gray-900">
+                                Step {step.step}
+                              </span>
+                              <span className={`inline-flex items-center px-2 py-0.5 rounded text-xs font-medium ${getActionColor(step.action)}`}>
+                                {step.action.toUpperCase()}
+                              </span>
+                            </div>
+                            <p className="text-sm text-gray-700 mb-1">
+                              {step.heading || step.element_description}
+                            </p>
+                            {step.value && (
+                              <div className="flex items-center gap-2 mt-1">
+                                <span className="text-xs text-gray-500">Value:</span>
+                                <code className="text-xs bg-gray-100 px-2 py-1 rounded">
+                                  {step.value}
+                                </code>
+                              </div>
+                            )}
+                            <div className="flex items-center gap-2 mt-1">
+                              <span className="text-xs text-gray-500">Element:</span>
+                              <span className="text-xs text-gray-600">{step.element_type}</span>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              ) : (
+                <p className="text-gray-500 text-center py-8">
+                  No step details available for this workflow run.
+                </p>
+              )}
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }

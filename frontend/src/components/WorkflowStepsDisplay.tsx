@@ -8,6 +8,8 @@ import {
   PencilSquareIcon,
   ArrowRightIcon,
   ClockIcon,
+  PauseIcon,
+  PlayIcon,
 } from "@heroicons/react/24/outline";
 import { CheckIcon } from "@heroicons/react/24/solid";
 import { SiGmail, SiSlack } from "react-icons/si";
@@ -38,7 +40,9 @@ export const WorkflowStepsDisplay: React.FC<WorkflowStepsDisplayProps> = ({
   const [currentStep, setCurrentStep] = useState(0);
   const [isCompleted, setIsCompleted] = useState(false);
   const [isPaused, setIsPaused] = useState(false);
+  const [isManuallyPaused, setIsManuallyPaused] = useState(false);
   const [stepVerifications, setStepVerifications] = useState<Record<string, string>>({});
+  const [startTime] = useState(new Date());
 
   // Load verification settings from localStorage
   useEffect(() => {
@@ -81,8 +85,8 @@ export const WorkflowStepsDisplay: React.FC<WorkflowStepsDisplayProps> = ({
       return () => clearTimeout(timer);
     }
 
-    // Check if we need to pause for verification
-    if (currentStep > 0 && currentStep <= steps.length && !isCompleted && !isPaused) {
+    // Check if we need to pause for verification or manual pause
+    if (currentStep > 0 && currentStep <= steps.length && !isCompleted && !isPaused && !isManuallyPaused) {
       if (currentStepRequiresVerification()) {
         setIsPaused(true);
         return;
@@ -92,6 +96,8 @@ export const WorkflowStepsDisplay: React.FC<WorkflowStepsDisplayProps> = ({
       const timer = setTimeout(() => {
         if (currentStep === steps.length) {
           setIsCompleted(true);
+          // Save to history when completed
+          saveToHistory();
           if (onComplete) {
             onComplete();
           }
@@ -101,7 +107,35 @@ export const WorkflowStepsDisplay: React.FC<WorkflowStepsDisplayProps> = ({
       }, 1500);
       return () => clearTimeout(timer);
     }
-  }, [currentStep, steps.length, isCompleted, isPaused, onComplete]);
+  }, [currentStep, steps.length, isCompleted, isPaused, isManuallyPaused, onComplete]);
+
+  const saveToHistory = () => {
+    const runHistory = JSON.parse(localStorage.getItem("workflowRunHistory") || "[]");
+    const newRun = {
+      id: `run-${Date.now()}`,
+      name: title,
+      description: `Automated workflow with ${steps.length} steps`,
+      category: "AUTOMATED WORKFLOW",
+      status: "Completed",
+      lastRun: new Date().toISOString(),
+      runHistory: [{
+        timestamp: new Date().toISOString(),
+        status: "Success",
+        details: `Workflow completed with ${steps.length} steps`,
+      }],
+      metrics: {
+        totalSteps: steps.length.toString(),
+        completionTime: `${Math.floor((new Date().getTime() - startTime.getTime()) / 1000)} seconds`,
+      },
+      steps: steps,
+    };
+    runHistory.unshift(newRun);
+    localStorage.setItem("workflowRunHistory", JSON.stringify(runHistory));
+  };
+
+  const handlePauseResume = () => {
+    setIsManuallyPaused(!isManuallyPaused);
+  };
 
   const handleVerificationComplete = () => {
     setIsPaused(false);
@@ -244,13 +278,37 @@ export const WorkflowStepsDisplay: React.FC<WorkflowStepsDisplayProps> = ({
     );
   };
 
-  const startTime = new Date().toLocaleString();
-
   return (
     <div className="max-w-5xl mx-auto">
       <div className="mb-8">
-        <h1 className="text-2xl font-bold text-gray-800 mb-1">{title}</h1>
-        <p className="text-gray-600">Start time: {startTime}</p>
+        <div className="flex justify-between items-center">
+          <div>
+            <h1 className="text-2xl font-bold text-gray-800 mb-1">{title}</h1>
+            <p className="text-gray-600">Start time: {startTime.toLocaleString()}</p>
+          </div>
+          {!isCompleted && currentStep > 0 && (
+            <button
+              onClick={handlePauseResume}
+              className={`px-4 py-2 rounded-md flex items-center gap-2 font-medium transition-colors ${
+                isManuallyPaused
+                  ? "bg-green-600 text-white hover:bg-green-700"
+                  : "bg-yellow-600 text-white hover:bg-yellow-700"
+              }`}
+            >
+              {isManuallyPaused ? (
+                <>
+                  <PlayIcon className="h-5 w-5" />
+                  Resume Workflow
+                </>
+              ) : (
+                <>
+                  <PauseIcon className="h-5 w-5" />
+                  Pause Workflow
+                </>
+              )}
+            </button>
+          )}
+        </div>
       </div>
 
       <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6">

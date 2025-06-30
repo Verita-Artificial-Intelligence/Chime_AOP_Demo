@@ -77,6 +77,7 @@ export const ActiveRunsPage: React.FC = () => {
     WorkflowStep[] | null
   >(null);
   const [currentStep, setCurrentStep] = useState(0);
+  const [sopStartTime] = useState(new Date());
 
   // Check if we're coming from SOP to Workflow
   useEffect(() => {
@@ -103,6 +104,29 @@ export const ActiveRunsPage: React.FC = () => {
         setCurrentStep(currentStep + 1);
       }, 2000);
       return () => clearTimeout(timer);
+    } else if (sopToWorkflowData && currentStep === sopToWorkflowData.length) {
+      // Save SOP workflow to history when completed
+      const runHistory = JSON.parse(localStorage.getItem("workflowRunHistory") || "[]");
+      const newRun = {
+        id: `sop-run-${Date.now()}`,
+        name: "SOP Workflow Execution",
+        description: `Automated workflow from uploaded SOP with ${sopToWorkflowData.length} steps`,
+        category: "SOP CONVERSION",
+        status: "Completed",
+        lastRun: new Date().toISOString(),
+        runHistory: [{
+          timestamp: new Date().toISOString(),
+          status: "Success",
+          details: `SOP workflow completed with ${sopToWorkflowData.length} steps`,
+        }],
+        metrics: {
+          totalSteps: sopToWorkflowData.length.toString(),
+          completionTime: `${Math.floor((new Date().getTime() - sopStartTime.getTime()) / 1000)} seconds`,
+        },
+        steps: sopToWorkflowData,
+      };
+      runHistory.unshift(newRun);
+      localStorage.setItem("workflowRunHistory", JSON.stringify(runHistory));
     }
   }, [currentStep, sopToWorkflowData]);
 
