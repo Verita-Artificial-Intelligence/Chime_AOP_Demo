@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import {
   CheckCircleIcon,
   DocumentTextIcon,
@@ -10,10 +10,14 @@ import {
   ClockIcon,
   PauseIcon,
   PlayIcon,
+  DocumentArrowDownIcon,
 } from "@heroicons/react/24/outline";
 import { CheckIcon } from "@heroicons/react/24/solid";
 import { SiGmail, SiSlack } from "react-icons/si";
 import { FaCircle } from "react-icons/fa";
+import html2canvas from "html2canvas";
+import jsPDF from "jspdf";
+import { useNavigate } from "react-router-dom";
 
 interface WorkflowStep {
   step: number;
@@ -37,12 +41,15 @@ export const WorkflowStepsDisplay: React.FC<WorkflowStepsDisplayProps> = ({
   templateId,
   onComplete,
 }) => {
+  const navigate = useNavigate();
+  const workflowRef = useRef<HTMLDivElement>(null);
   const [currentStep, setCurrentStep] = useState(0);
   const [isCompleted, setIsCompleted] = useState(false);
   const [isPaused, setIsPaused] = useState(false);
   const [isManuallyPaused, setIsManuallyPaused] = useState(false);
   const [stepVerifications, setStepVerifications] = useState<Record<string, string>>({});
   const [startTime] = useState(new Date());
+  const [isDownloading, setIsDownloading] = useState(false);
 
   // Load verification settings from localStorage
   useEffect(() => {
@@ -98,16 +105,13 @@ export const WorkflowStepsDisplay: React.FC<WorkflowStepsDisplayProps> = ({
           setIsCompleted(true);
           // Save to history when completed
           saveToHistory();
-          if (onComplete) {
-            onComplete();
-          }
         } else {
           setCurrentStep(currentStep + 1);
         }
       }, 1500);
       return () => clearTimeout(timer);
     }
-  }, [currentStep, steps.length, isCompleted, isPaused, isManuallyPaused, onComplete]);
+  }, [currentStep, steps.length, isCompleted, isPaused, isManuallyPaused]);
 
   const saveToHistory = () => {
     const runHistory = JSON.parse(localStorage.getItem("workflowRunHistory") || "[]");
@@ -142,12 +146,72 @@ export const WorkflowStepsDisplay: React.FC<WorkflowStepsDisplayProps> = ({
     // Move to next step
     if (currentStep === steps.length) {
       setIsCompleted(true);
-      if (onComplete) {
-        onComplete();
-      }
     } else {
       setCurrentStep(currentStep + 1);
     }
+  };
+
+  const handleDownloadReport = async () => {
+    if (!workflowRef.current) return;
+    
+    setIsDownloading(true);
+    
+    try {
+      // Wait a bit for any animations to complete
+      await new Promise(resolve => setTimeout(resolve, 500));
+      
+      // Capture the workflow UI
+      const canvas = await html2canvas(workflowRef.current, {
+        scale: 2,
+        logging: false,
+        backgroundColor: '#ffffff',
+        windowWidth: workflowRef.current.scrollWidth,
+        windowHeight: workflowRef.current.scrollHeight,
+      });
+      
+      // Create PDF
+      const pdf = new jsPDF({
+        orientation: 'portrait',
+        unit: 'mm',
+        format: 'a4',
+      });
+      
+      // Add title and metadata
+      pdf.setFontSize(20);
+      pdf.text(title, 20, 20);
+      
+      pdf.setFontSize(12);
+      pdf.text(`Completed on: ${new Date().toLocaleString()}`, 20, 30);
+      pdf.text(`Total Steps: ${steps.length}`, 20, 37);
+      pdf.text(`Execution Time: ${Math.floor((new Date().getTime() - startTime.getTime()) / 1000)} seconds`, 20, 44);
+      
+      // Add captured workflow UI
+      const imgWidth = 170; // A4 width minus margins
+      const imgHeight = (canvas.height * imgWidth) / canvas.width;
+      
+      pdf.addImage(
+        canvas.toDataURL('image/png'),
+        'PNG',
+        20,
+        55,
+        imgWidth,
+        imgHeight
+      );
+      
+      // Save PDF
+      const fileName = `${title.replace(/\s+/g, '_')}_Report_${new Date().getTime()}.pdf`;
+      pdf.save(fileName);
+      
+    } catch (error) {
+      console.error('Error generating PDF:', error);
+      alert('Failed to generate PDF report. Please try again.');
+    } finally {
+      setIsDownloading(false);
+    }
+  };
+
+  const handleViewHistory = () => {
+    navigate("/workflow/run");
   };
 
   const getActionIcon = (action: string) => {
@@ -279,7 +343,7 @@ export const WorkflowStepsDisplay: React.FC<WorkflowStepsDisplayProps> = ({
   };
 
   return (
-    <div className="max-w-5xl mx-auto">
+    <div className="max-w-5xl mx-auto" ref={workflowRef}>
       <div className="mb-8">
         <div className="flex justify-between items-center">
           <div>
@@ -429,12 +493,46 @@ export const WorkflowStepsDisplay: React.FC<WorkflowStepsDisplayProps> = ({
         </div>
 
         {isCompleted && (
-          <div className="mt-6 text-center">
-            <div className="inline-flex items-center gap-2 px-4 py-2 bg-green-100 text-green-700 rounded-lg">
-              <CheckCircleIcon className="h-5 w-5" />
-              <span className="font-medium">
-                Workflow Completed Successfully
-              </span>
+          <div className="mt-6">
+            <div className="text-center mb-6">
+              <div className="inline-flex items-center gap-2 px-6 py-3 bg-green-100 text-green-700 rounded-lg mb-2">
+                <CheckCircleIcon className="h-6 w-6" />
+                <span className="font-semibold text-lg">
+                  Workflow Completed Successfully
+                </span>
+              </div>
+              <p className="text-gray-600 text-sm mt-2">
+                All {steps.length} steps have been executed successfully
+              </p>
+            </div>
+            
+            <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
+              <button
+                onClick={handleDownloadReport}
+                disabled={isDownloading}
+                className={`px-6 py-3 rounded-md font-medium transition-colors flex items-center gap-2 ${
+                  isDownloading
+                    ? "bg-gray-300 text-gray-500 cursor-not-allowed"
+                    : "bg-brand-primary text-white hover:bg-brand-primaryHover"
+                }`}
+              >
+                <DocumentArrowDownIcon className="h-5 w-5" />
+                {isDownloading ? "Generating Report..." : "Download PDF Report"}
+              </button>
+              
+              <button
+                onClick={handleViewHistory}
+                className="px-6 py-3 border border-brand-primary text-brand-primary rounded-md hover:bg-brand-light transition-colors font-medium"
+              >
+                View Workflow History
+              </button>
+              
+              <button
+                onClick={() => navigate("/workflow/templates")}
+                className="px-6 py-3 border border-gray-300 text-gray-700 rounded-md hover:bg-gray-50 transition-colors font-medium"
+              >
+                Back to Templates
+              </button>
             </div>
           </div>
         )}
