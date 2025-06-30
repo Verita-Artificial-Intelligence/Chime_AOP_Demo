@@ -8,7 +8,6 @@ import {
   PlayIcon,
 } from "@heroicons/react/24/outline";
 import { llmService } from "../services/llmService";
-import { WorkflowReview } from "../components/WorkflowReview";
 
 interface AgentConfig {
   id: string;
@@ -95,24 +94,17 @@ export function WorkflowBuilderPage() {
   useEffect(() => {
     const templateId = searchParams.get("template");
     if (templateId && TEMPLATE_CONFIGS[templateId]) {
-      // For template initialization, we'll handle it differently to avoid duplicates
       const template = TEMPLATE_CONFIGS[templateId];
-      setShowAISuggestions(false);
-      // Only add the initial user message
-      setMessages([
-        {
-          id: Date.now().toString(),
-          sender: "user",
-          text: `I want to: ${template.title}`,
-          timestamp: new Date().toISOString(),
-        },
-      ]);
-      // Then trigger the build process after a short delay
-      setTimeout(() => {
-        handlePromptSelectFromTemplate(template);
-      }, 500);
+      // Redirect directly to workflow review page
+      navigate('/workflow/review', { 
+        state: { 
+          templateId: template.id,
+          templateTitle: template.title,
+          jsonFile: templateConfigs.find(t => t.id === template.id)?.jsonFile
+        } 
+      });
     }
-  }, [searchParams]);
+  }, [searchParams, navigate]);
 
   const scrollToBottom = () => {
     chatEndRef.current?.scrollIntoView({ behavior: "smooth" });
@@ -140,72 +132,35 @@ export function WorkflowBuilderPage() {
   };
 
   const handlePromptSelectFromTemplate = async (prompt: MockPrompt) => {
-    if (isBuilding) return;
-    setIsBuilding(true);
-
-    // Don't add user message as it's already added in the template initialization
-    addMessage("agent", `Okay, let's build a workflow for: "${prompt.title}".`);
-    await new Promise((resolve) => setTimeout(resolve, 1000));
-
-    addMessage(
-      "agent",
-      `Configuring workflow: ${prompt.title}...`
-    );
-    await new Promise((resolve) => setTimeout(resolve, 1500));
-
-    const finalAgentConfig: AgentConfig = {
-      id: prompt.config.workflow + "-" + Date.now(),
-      name: prompt.title,
-      workflow: prompt.config.workflow,
-      dataSources: [],
-      actions: [],
-      llm: "default",
-      verificationRequired: "no",
-      createdAt: new Date().toISOString(),
-    };
-
-    addMessage(
-      "system",
-      `Workflow Configuration for "${prompt.title}" is complete!`,
-      finalAgentConfig
-    );
-
-    setIsBuilding(false);
+    // This function is no longer needed since we redirect in useEffect
+    // But keeping it for consistency if called elsewhere
+    const templateConfig = templateConfigs.find(t => t.id === prompt.id);
+    
+    if (templateConfig) {
+      navigate('/workflow/review', { 
+        state: { 
+          templateId: templateConfig.id,
+          templateTitle: templateConfig.title,
+          jsonFile: templateConfig.jsonFile
+        } 
+      });
+    }
   };
 
   const handlePromptSelect = async (prompt: MockPrompt) => {
-    if (isBuilding) return;
-    setIsBuilding(true);
-    setShowAISuggestions(false);
-    addMessage("user", `I want to: ${prompt.title}`);
-
-    addMessage("agent", `Okay, let's build a workflow for: "${prompt.title}".`);
-    await new Promise((resolve) => setTimeout(resolve, 1000));
-
-    addMessage(
-      "agent",
-      `Configuring workflow: ${prompt.title}...`
-    );
-    await new Promise((resolve) => setTimeout(resolve, 1500));
-
-    const finalAgentConfig: AgentConfig = {
-      id: prompt.config.workflow + "-" + Date.now(),
-      name: prompt.title,
-      workflow: prompt.config.workflow,
-      dataSources: [],
-      actions: [],
-      llm: "default",
-      verificationRequired: "no",
-      createdAt: new Date().toISOString(),
-    };
-
-    addMessage(
-      "system",
-      `Workflow Configuration for "${prompt.title}" is complete!`,
-      finalAgentConfig
-    );
-
-    setIsBuilding(false);
+    // Find the template config to get the jsonFile
+    const templateConfig = templateConfigs.find(t => t.id === prompt.id);
+    
+    if (templateConfig) {
+      // Redirect directly to workflow review page
+      navigate('/workflow/review', { 
+        state: { 
+          templateId: templateConfig.id,
+          templateTitle: templateConfig.title,
+          jsonFile: templateConfig.jsonFile
+        } 
+      });
+    }
   };
 
   const handleFileSelect = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -476,20 +431,30 @@ export function WorkflowBuilderPage() {
         "aopAgents",
         JSON.stringify([...storedAgents, agentConfig])
       );
-      addMessage("system", `Agent "${agentConfig.name}" saved successfully!`);
-      setMessages((prev) => prev.filter((msg) => msg.id !== "save-button"));
       
-      // Show review component instead of navigating
-      setReviewConfig({
-        id: agentConfig.id,
-        name: agentConfig.name,
-        workflow: agentConfig.workflow,
-        dataSources: agentConfig.dataSources,
-        actions: agentConfig.actions,
-        llm: agentConfig.llm,
-        estimatedCompletion: "15-20 mins",
-      });
-      setShowReview(true);
+      // Find the template config for redirection
+      const templateConfig = templateConfigs.find(t => t.id === agentConfig.workflow);
+      
+      if (templateConfig) {
+        // Redirect to workflow review page
+        navigate('/workflow/review', { 
+          state: { 
+            templateId: templateConfig.id,
+            templateTitle: templateConfig.title,
+            jsonFile: templateConfig.jsonFile
+          } 
+        });
+      } else {
+        // For custom workflows, redirect to review with custom config
+        navigate('/workflow/review', { 
+          state: { 
+            templateId: agentConfig.workflow,
+            templateTitle: agentConfig.name,
+            jsonFile: null,
+            customConfig: agentConfig
+          } 
+        });
+      }
     } catch (error) {
       console.error("Failed to save agent:", error);
       addMessage(
@@ -498,29 +463,6 @@ export function WorkflowBuilderPage() {
       );
     }
   };
-
-  // If showing review, render the review component
-  if (showReview && reviewConfig) {
-    return (
-      <div className="container mx-auto max-w-5xl p-4">
-        <div className="mb-8">
-          <h1 className="text-3xl font-bold text-gray-900 mb-2">
-            Review Your Workflow
-          </h1>
-          <p className="text-gray-600">
-            Review and customize your automation workflow before execution
-          </p>
-        </div>
-        <WorkflowReview 
-          config={reviewConfig} 
-          onCancel={() => {
-            setShowReview(false);
-            setReviewConfig(null);
-          }}
-        />
-      </div>
-    );
-  }
 
   return (
     <div className="container mx-auto max-w-3xl p-4 flex flex-col h-[calc(100vh-100px)] bg-brand-card">
