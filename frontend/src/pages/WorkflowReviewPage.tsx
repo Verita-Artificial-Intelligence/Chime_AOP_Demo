@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
+import ReactDOM from "react-dom";
 import {
   PlayIcon,
   ClockIcon,
@@ -51,7 +52,14 @@ const VerificationDropdown: React.FC<{
   stepNumber: number;
 }> = ({ value, onChange, disabled = false, stepNumber }) => {
   const [isOpen, setIsOpen] = useState(false);
+  const [dropdownPosition, setDropdownPosition] = useState({
+    top: 0,
+    left: 0,
+    width: 0,
+  });
+  const buttonRef = React.useRef<HTMLButtonElement>(null);
   const dropdownRef = React.useRef<HTMLDivElement>(null);
+
   const currentOption =
     verificationOptions.find((opt) => opt.value === value) ||
     verificationOptions[0];
@@ -60,7 +68,9 @@ const VerificationDropdown: React.FC<{
     const handleClickOutside = (event: MouseEvent) => {
       if (
         dropdownRef.current &&
-        !dropdownRef.current.contains(event.target as Node)
+        !dropdownRef.current.contains(event.target as Node) &&
+        buttonRef.current &&
+        !buttonRef.current.contains(event.target as Node)
       ) {
         setIsOpen(false);
       }
@@ -73,9 +83,65 @@ const VerificationDropdown: React.FC<{
     }
   }, [isOpen]);
 
+  useEffect(() => {
+    if (isOpen && buttonRef.current) {
+      const rect = buttonRef.current.getBoundingClientRect();
+      const spaceBelow = window.innerHeight - rect.bottom;
+      const dropdownHeight = 160; // Approximate height for 4 items
+
+      // Position dropdown above if not enough space below
+      if (spaceBelow < dropdownHeight && rect.top > dropdownHeight) {
+        setDropdownPosition({
+          top: rect.top - dropdownHeight,
+          left: rect.left,
+          width: rect.width,
+        });
+      } else {
+        setDropdownPosition({
+          top: rect.bottom + 4,
+          left: rect.left,
+          width: rect.width,
+        });
+      }
+    }
+  }, [isOpen]);
+
+  const dropdownMenu = isOpen && !disabled && (
+    <div
+      ref={dropdownRef}
+      className="fixed bg-white border border-gray-300 rounded-md shadow-lg overflow-hidden"
+      style={{
+        top: `${dropdownPosition.top}px`,
+        left: `${dropdownPosition.left}px`,
+        width: `${dropdownPosition.width}px`,
+        zIndex: 9999,
+      }}
+    >
+      {verificationOptions.map((option) => (
+        <button
+          key={option.value}
+          type="button"
+          onClick={() => {
+            onChange(option.value);
+            setIsOpen(false);
+          }}
+          className={`flex items-center gap-2 w-full px-3 py-2 text-sm hover:bg-gray-50 transition-colors ${
+            option.value === value
+              ? "bg-brand-primaryLight text-brand-primary"
+              : ""
+          }`}
+        >
+          {option.icon && <option.icon className="h-4 w-4" />}
+          <span>{option.label}</span>
+        </button>
+      ))}
+    </div>
+  );
+
   return (
-    <div ref={dropdownRef} className="relative">
+    <>
       <button
+        ref={buttonRef}
         type="button"
         onClick={() => !disabled && setIsOpen(!isOpen)}
         disabled={disabled}
@@ -93,30 +159,8 @@ const VerificationDropdown: React.FC<{
           }`}
         />
       </button>
-
-      {isOpen && !disabled && (
-        <div className="absolute top-full left-0 right-0 mt-1 bg-white border border-gray-300 rounded-md shadow-lg z-10 overflow-hidden">
-          {verificationOptions.map((option) => (
-            <button
-              key={option.value}
-              type="button"
-              onClick={() => {
-                onChange(option.value);
-                setIsOpen(false);
-              }}
-              className={`flex items-center gap-2 w-full px-3 py-2 text-sm hover:bg-gray-50 transition-colors ${
-                option.value === value
-                  ? "bg-brand-primaryLight text-brand-primary"
-                  : ""
-              }`}
-            >
-              {option.icon && <option.icon className="h-4 w-4" />}
-              <span>{option.label}</span>
-            </button>
-          ))}
-        </div>
-      )}
-    </div>
+      {ReactDOM.createPortal(dropdownMenu, document.body)}
+    </>
   );
 };
 
@@ -500,7 +544,7 @@ export const WorkflowReviewPage: React.FC = () => {
               return (
                 <div
                   key={step.step}
-                  className="border border-gray-200 rounded-lg overflow-hidden"
+                  className="border border-gray-200 rounded-lg"
                 >
                   {isEditing ? (
                     <StepEditor
