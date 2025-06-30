@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from "react";
 import { useNavigate, useSearchParams } from "react-router-dom";
-import mockData from "../data/mockData.json"; // Assuming mockData is accessible
+import { templateConfigs } from "../data/templateConfigs";
 import {
   SparklesIcon,
   PaperClipIcon,
@@ -8,7 +8,6 @@ import {
   PlayIcon,
 } from "@heroicons/react/24/outline";
 import { llmService } from "../services/llmService";
-import { WorkflowReview } from "../components/WorkflowReview";
 
 interface AgentConfig {
   id: string;
@@ -50,153 +49,33 @@ interface MockPrompt {
 }
 
 // AI-generated suggestions based on "history"
-const AI_SUGGESTIONS: MockPrompt[] = [
-  {
-    id: "ai-fcra-acdv",
-    title: "FCRA - Respond to ACDV case, Apply response code, Respond to consumer",
-    description:
-      "Based on your compliance needs, automate the Fair Credit Reporting Act (FCRA) response process for ACDV cases, including verification, investigation, escalation handling, and consumer communication.",
-    config: {
-      workflow: "fcra-acdv-response",
-      dataSources: [
-        "ACDV Case Management System",
-        "B-Point Verification Database",
-        "Dispute Code Repository",
-        "Compliance Database",
-        "OSCAR System",
-        "Consumer Communication System",
-      ],
-      actions: [
-        "Receive ACDV case",
-        "Perform B-Point verification",
-        "Investigate dispute code",
-        "Evaluate escalation requirements",
-        "Notify Fraud-Ops",
-        "Notify Legal/Compliance",
-        "Process through AI Agent",
-        "Save case to OSCAR system",
-        "Send member acknowledgment",
-        "Submit final response",
-        "Apply admin notation",
-        "Close case",
-      ],
-      llm: "compliance-llm",
-    },
+const AI_SUGGESTIONS: MockPrompt[] = templateConfigs.map(template => ({
+  id: template.id,
+  title: template.title,
+  description: template.description,
+  config: {
+    workflow: template.id,
+    dataSources: [],
+    actions: [],
+    llm: "default",
   },
-  {
-    id: "ai-fcra-indirect",
-    title: "FCRA - Complete an ACDV indirect dispute",
-    description:
-      "Based on your compliance needs, automate the Fair Credit Reporting Act (FCRA) process for handling indirect disputes, including verification, AI processing, and response generation.",
-    config: {
-      workflow: "fcra-indirect-dispute",
-      dataSources: [
-        "Email Communication System",
-        "Dispute Management Database",
-        "Identity Verification System",
-        "Account Information Database",
-        "B-Point Verification System",
-        "Balance & Tradeline Database",
-        "AI Processing Engine",
-        "FCRA Response Templates",
-        "Internal Notes System",
-        "Dispute Status Tracker",
-      ],
-      actions: [
-        "Check case email status",
-        "Review dispute content",
-        "Verify ID verification",
-        "Verify account info",
-        "Verify B-point",
-        "Balance vs tradeline check",
-        "Process through AI Agent",
-        "Draft FCRA response",
-        "Human-in-the-loop: Review drafted response (Verification needed)",
-        "Verify internal notes",
-        "Update dispute status",
-        "Human-in-the-loop: Final review before case save (Verification needed)",
-        "Save case",
-      ],
-      llm: "compliance-llm",
-    },
-  },
-];
+}));
 
 // Template configurations
-const TEMPLATE_CONFIGS: { [key: string]: MockPrompt } = {
-  "fcra-acdv-response": {
-    id: "template-fcra",
-    title: "FCRA - Respond to ACDV case, Apply response code, Respond to consumer",
-    description:
-      "Comprehensive FCRA compliance workflow for handling ACDV cases with automated verification, investigation, and response processes.",
+const TEMPLATE_CONFIGS: { [key: string]: MockPrompt } = templateConfigs.reduce((acc, template) => {
+  acc[template.id] = {
+    id: template.id,
+    title: template.title,
+    description: template.description,
     config: {
-      workflow: "fcra-acdv-response",
-      dataSources: [
-        "ACDV Case Management System",
-        "B-Point Verification Database",
-        "Dispute Code Repository",
-        "Compliance Database",
-        "OSCAR System",
-        "Consumer Communication System",
-      ],
-      actions: [
-        "Receive ACDV case",
-        "Perform B-Point verification",
-        "Investigate dispute code",
-        "Evaluate escalation requirements",
-        "Notify Fraud-Ops (if escalated)",
-        "Notify Legal/Compliance (if escalated)",
-        "Process through AI Agent",
-        "Save case to OSCAR system",
-        "Send member acknowledgment",
-        "Human-in-the-loop: Review before final response (Verification needed)",
-        "Submit final response",
-        "Apply admin notation",
-        "Human-in-the-loop: Final approval before case closure (Verification needed)",
-        "Close case",
-      ],
-      llm: "compliance-llm",
+      workflow: template.id,
+      dataSources: [],
+      actions: [],
+      llm: "default",
     },
-  },
-  // Add other template configurations as needed
-  "fcra-indirect-dispute": {
-    id: "template-fcra-indirect",
-    title: "FCRA - Complete an ACDV indirect dispute",
-    description:
-      "Comprehensive FCRA workflow for handling indirect disputes with automated verification and response generation.",
-    config: {
-      workflow: "fcra-indirect-dispute",
-      dataSources: [
-        "Email Communication System",
-        "Dispute Management Database",
-        "Identity Verification System",
-        "Account Information Database",
-        "B-Point Verification System",
-        "Balance & Tradeline Database",
-        "AI Processing Engine",
-        "FCRA Response Templates",
-        "Internal Notes System",
-        "Dispute Status Tracker",
-      ],
-      actions: [
-        "Check case email status",
-        "Review dispute content",
-        "Verify ID verification",
-        "Verify account info",
-        "Verify B-point",
-        "Balance vs tradeline check",
-        "Process through AI Agent",
-        "Draft FCRA response",
-        "Human-in-the-loop: Review drafted response (Verification needed)",
-        "Verify internal notes",
-        "Update dispute status",
-        "Human-in-the-loop: Final review before case save (Verification needed)",
-        "Save case",
-      ],
-      llm: "compliance-llm",
-    },
-  },
-};
+  };
+  return acc;
+}, {} as { [key: string]: MockPrompt });
 
 export function WorkflowBuilderPage() {
   const [messages, setMessages] = useState<ChatMessage[]>([]);
@@ -215,24 +94,17 @@ export function WorkflowBuilderPage() {
   useEffect(() => {
     const templateId = searchParams.get("template");
     if (templateId && TEMPLATE_CONFIGS[templateId]) {
-      // For template initialization, we'll handle it differently to avoid duplicates
       const template = TEMPLATE_CONFIGS[templateId];
-      setShowAISuggestions(false);
-      // Only add the initial user message
-      setMessages([
-        {
-          id: Date.now().toString(),
-          sender: "user",
-          text: `I want to: ${template.title}`,
-          timestamp: new Date().toISOString(),
-        },
-      ]);
-      // Then trigger the build process after a short delay
-      setTimeout(() => {
-        handlePromptSelectFromTemplate(template);
-      }, 500);
+      // Redirect directly to workflow review page
+      navigate('/workflow/review', { 
+        state: { 
+          templateId: template.id,
+          templateTitle: template.title,
+          jsonFile: templateConfigs.find(t => t.id === template.id)?.jsonFile
+        } 
+      });
     }
-  }, [searchParams]);
+  }, [searchParams, navigate]);
 
   const scrollToBottom = () => {
     chatEndRef.current?.scrollIntoView({ behavior: "smooth" });
@@ -260,130 +132,35 @@ export function WorkflowBuilderPage() {
   };
 
   const handlePromptSelectFromTemplate = async (prompt: MockPrompt) => {
-    if (isBuilding) return;
-    setIsBuilding(true);
-
-    // Don't add user message as it's already added in the template initialization
-    addMessage("agent", `Okay, let's build a workflow for: "${prompt.title}".`);
-    await new Promise((resolve) => setTimeout(resolve, 1000));
-
-    const workflowDetails = mockData.workflows.find(
-      (wf) => wf.id === prompt.config.workflow
-    );
-    addMessage(
-      "agent",
-      `Selecting workflow: ${
-        workflowDetails?.name || prompt.config.workflow
-      }...`
-    );
-    await new Promise((resolve) => setTimeout(resolve, 1500));
-
-    for (const ds of prompt.config.dataSources) {
-      addMessage("agent", `Adding Data Source: ${ds}...`);
-      await new Promise((resolve) => setTimeout(resolve, 700));
+    // This function is no longer needed since we redirect in useEffect
+    // But keeping it for consistency if called elsewhere
+    const templateConfig = templateConfigs.find(t => t.id === prompt.id);
+    
+    if (templateConfig) {
+      navigate('/workflow/review', { 
+        state: { 
+          templateId: templateConfig.id,
+          templateTitle: templateConfig.title,
+          jsonFile: templateConfig.jsonFile
+        } 
+      });
     }
-
-    if (prompt.config.actions.length > 0) {
-      for (const action of prompt.config.actions) {
-        addMessage("agent", `Adding Action: ${action}...`);
-        await new Promise((resolve) => setTimeout(resolve, 700));
-      }
-    } else {
-      addMessage("agent", `No specific actions required for this workflow.`);
-      await new Promise((resolve) => setTimeout(resolve, 700));
-    }
-
-    const llmDetails = mockData.llmOptions.find(
-      (llm) => llm.id === prompt.config.llm
-    );
-    addMessage(
-      "agent",
-      `Selecting LLM: ${llmDetails?.name || prompt.config.llm}...`
-    );
-    await new Promise((resolve) => setTimeout(resolve, 1000));
-
-    const finalAgentConfig: AgentConfig = {
-      id: prompt.config.workflow + "-" + Date.now(),
-      name: prompt.title,
-      workflow: prompt.config.workflow,
-      dataSources: prompt.config.dataSources,
-      actions: prompt.config.actions,
-      llm: prompt.config.llm,
-      verificationRequired: "no",
-      createdAt: new Date().toISOString(),
-    };
-
-    addMessage(
-      "system",
-      `Workflow Configuration for "${prompt.title}" is complete!`,
-      finalAgentConfig
-    );
-
-    setIsBuilding(false);
   };
 
   const handlePromptSelect = async (prompt: MockPrompt) => {
-    if (isBuilding) return;
-    setIsBuilding(true);
-    setShowAISuggestions(false);
-    addMessage("user", `I want to: ${prompt.title}`);
-
-    addMessage("agent", `Okay, let's build a workflow for: "${prompt.title}".`);
-    await new Promise((resolve) => setTimeout(resolve, 1000));
-
-    const workflowDetails = mockData.workflows.find(
-      (wf) => wf.id === prompt.config.workflow
-    );
-    addMessage(
-      "agent",
-      `Selecting workflow: ${
-        workflowDetails?.name || prompt.config.workflow
-      }...`
-    );
-    await new Promise((resolve) => setTimeout(resolve, 1500));
-
-    for (const ds of prompt.config.dataSources) {
-      addMessage("agent", `Adding Data Source: ${ds}...`);
-      await new Promise((resolve) => setTimeout(resolve, 700));
+    // Find the template config to get the jsonFile
+    const templateConfig = templateConfigs.find(t => t.id === prompt.id);
+    
+    if (templateConfig) {
+      // Redirect directly to workflow review page
+      navigate('/workflow/review', { 
+        state: { 
+          templateId: templateConfig.id,
+          templateTitle: templateConfig.title,
+          jsonFile: templateConfig.jsonFile
+        } 
+      });
     }
-
-    if (prompt.config.actions.length > 0) {
-      for (const action of prompt.config.actions) {
-        addMessage("agent", `Adding Action: ${action}...`);
-        await new Promise((resolve) => setTimeout(resolve, 700));
-      }
-    } else {
-      addMessage("agent", `No specific actions required for this workflow.`);
-      await new Promise((resolve) => setTimeout(resolve, 700));
-    }
-
-    const llmDetails = mockData.llmOptions.find(
-      (llm) => llm.id === prompt.config.llm
-    );
-    addMessage(
-      "agent",
-      `Selecting LLM: ${llmDetails?.name || prompt.config.llm}...`
-    );
-    await new Promise((resolve) => setTimeout(resolve, 1000));
-
-    const finalAgentConfig: AgentConfig = {
-      id: prompt.config.workflow + "-" + Date.now(),
-      name: prompt.title,
-      workflow: prompt.config.workflow,
-      dataSources: prompt.config.dataSources,
-      actions: prompt.config.actions,
-      llm: prompt.config.llm,
-      verificationRequired: "no",
-      createdAt: new Date().toISOString(),
-    };
-
-    addMessage(
-      "system",
-      `Workflow Configuration for "${prompt.title}" is complete!`,
-      finalAgentConfig
-    );
-
-    setIsBuilding(false);
   };
 
   const handleFileSelect = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -469,28 +246,37 @@ export function WorkflowBuilderPage() {
     const lowerCaseMessage = userMessage.toLowerCase();
 
     if (
-      (lowerCaseMessage.includes("fcra") || lowerCaseMessage.includes("acdv") || lowerCaseMessage.includes("credit dispute")) &&
-      !lowerCaseMessage.includes("not") &&
-      !lowerCaseMessage.includes("except")
+      (lowerCaseMessage.includes("credit") && lowerCaseMessage.includes("bureau")) ||
+      (lowerCaseMessage.includes("credit dispute") && lowerCaseMessage.includes("bureau"))
     ) {
-      // Trigger FCRA ACDV response workflow
-      const fcraPrompt = AI_SUGGESTIONS.find(
-        (s) => s.id === "ai-fcra-acdv"
+      // Trigger Credit Dispute through Credit Bureau workflow
+      const creditBureauPrompt = AI_SUGGESTIONS.find(
+        (s) => s.id === "credit-dispute-credit-bureau"
       );
-      if (fcraPrompt) {
-        handlePromptSelect(fcraPrompt);
+      if (creditBureauPrompt) {
+        handlePromptSelect(creditBureauPrompt);
       }
     } else if (
-      (lowerCaseMessage.includes("indirect") || lowerCaseMessage.includes("email dispute") || lowerCaseMessage.includes("consumer dispute")) &&
-      !lowerCaseMessage.includes("not") &&
-      !lowerCaseMessage.includes("except")
+      lowerCaseMessage.includes("direct") && lowerCaseMessage.includes("member") ||
+      lowerCaseMessage.includes("direct dispute")
     ) {
-      // Trigger FCRA indirect dispute workflow
-      const indirectPrompt = AI_SUGGESTIONS.find(
-        (s) => s.id === "ai-fcra-indirect"
+      // Trigger Direct Dispute from Member workflow
+      const directPrompt = AI_SUGGESTIONS.find(
+        (s) => s.id === "direct-dispute-member"
       );
-      if (indirectPrompt) {
-        handlePromptSelect(indirectPrompt);
+      if (directPrompt) {
+        handlePromptSelect(directPrompt);
+      }
+    } else if (
+      lowerCaseMessage.includes("complex") && lowerCaseMessage.includes("equifax") ||
+      lowerCaseMessage.includes("equifax dispute")
+    ) {
+      // Trigger Complex Dispute via Equifax workflow
+      const complexPrompt = AI_SUGGESTIONS.find(
+        (s) => s.id === "complex-dispute-equifax"
+      );
+      if (complexPrompt) {
+        handlePromptSelect(complexPrompt);
       }
     } else {
       // For any other input, use LLM to generate workflow
@@ -645,20 +431,30 @@ export function WorkflowBuilderPage() {
         "aopAgents",
         JSON.stringify([...storedAgents, agentConfig])
       );
-      addMessage("system", `Agent "${agentConfig.name}" saved successfully!`);
-      setMessages((prev) => prev.filter((msg) => msg.id !== "save-button"));
       
-      // Show review component instead of navigating
-      setReviewConfig({
-        id: agentConfig.id,
-        name: agentConfig.name,
-        workflow: agentConfig.workflow,
-        dataSources: agentConfig.dataSources,
-        actions: agentConfig.actions,
-        llm: agentConfig.llm,
-        estimatedCompletion: "15-20 mins",
-      });
-      setShowReview(true);
+      // Find the template config for redirection
+      const templateConfig = templateConfigs.find(t => t.id === agentConfig.workflow);
+      
+      if (templateConfig) {
+        // Redirect to workflow review page
+        navigate('/workflow/review', { 
+          state: { 
+            templateId: templateConfig.id,
+            templateTitle: templateConfig.title,
+            jsonFile: templateConfig.jsonFile
+          } 
+        });
+      } else {
+        // For custom workflows, redirect to review with custom config
+        navigate('/workflow/review', { 
+          state: { 
+            templateId: agentConfig.workflow,
+            templateTitle: agentConfig.name,
+            jsonFile: null,
+            customConfig: agentConfig
+          } 
+        });
+      }
     } catch (error) {
       console.error("Failed to save agent:", error);
       addMessage(
@@ -667,29 +463,6 @@ export function WorkflowBuilderPage() {
       );
     }
   };
-
-  // If showing review, render the review component
-  if (showReview && reviewConfig) {
-    return (
-      <div className="container mx-auto max-w-5xl p-4">
-        <div className="mb-8">
-          <h1 className="text-3xl font-bold text-gray-900 mb-2">
-            Review Your Workflow
-          </h1>
-          <p className="text-gray-600">
-            Review and customize your automation workflow before execution
-          </p>
-        </div>
-        <WorkflowReview 
-          config={reviewConfig} 
-          onCancel={() => {
-            setShowReview(false);
-            setReviewConfig(null);
-          }}
-        />
-      </div>
-    );
-  }
 
   return (
     <div className="container mx-auto max-w-3xl p-4 flex flex-col h-[calc(100vh-100px)] bg-brand-card">

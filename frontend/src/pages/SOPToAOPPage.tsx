@@ -1,7 +1,7 @@
 import React, { useState, useCallback } from "react";
 import { useNavigate } from "react-router-dom";
 import { ArrowUpTrayIcon, DocumentIcon } from "@heroicons/react/24/outline";
-import content from "../config/content";
+import { templateConfigs } from "../data/templateConfigs";
 
 export const SOPToWorkflowPage: React.FC = () => {
   const navigate = useNavigate();
@@ -72,71 +72,19 @@ export const SOPToWorkflowPage: React.FC = () => {
       // Simulate API call - replace with actual endpoint
       await new Promise((resolve) => setTimeout(resolve, 2000));
 
-      // Store the agent journey data in sessionStorage for the active runs page
-      const steps = [
-        {
-          step: 1,
-          action: "type",
-          element_description:
-            "The 'Actual Payment Amount' input field on the ACDV form.",
-          element_type: "textfield",
-          value: "40",
-        },
-        {
-          step: 2,
-          action: "type",
-          element_description:
-            "The 'Date of Last Payment' input field on the ACDV form.",
-          element_type: "textfield",
-          value: "2025-01-01",
-        },
-        {
-          step: 3,
-          action: "check",
-          element_description:
-            "Checkbox for 'Name' under the PII Verification Checklist.",
-          element_type: "checkbox",
-        },
-        {
-          step: 4,
-          action: "check",
-          element_description:
-            "Checkbox for 'SSN' under the PII Verification Checklist.",
-          element_type: "checkbox",
-        },
-        {
-          step: 5,
-          action: "check",
-          element_description:
-            "Checkbox for 'Address' under the PII Verification Checklist.",
-          element_type: "checkbox",
-        },
-        {
-          step: 6,
-          action: "check",
-          element_description:
-            "Checkbox for 'Date of Birth' under the PII Verification Checklist.",
-          element_type: "checkbox",
-        },
-        {
-          step: 7,
-          action: "check",
-          element_description:
-            "Checkbox for 'Account Number' under the PII Verification Checklist.",
-          element_type: "checkbox",
-        },
-        {
-          step: 8,
-          action: "click",
-          element_description: "The 'Submit eOSCAR update' button.",
-          element_type: "button",
-        },
-      ];
+      // Select a random template from the available templates
+      const randomTemplate =
+        templateConfigs[Math.floor(Math.random() * templateConfigs.length)];
 
-      sessionStorage.setItem("sopToWorkflowData", JSON.stringify(steps));
-
-      // Navigate to the active runs page with a parameter
-      navigate("/workflow/active-runs?source=sop-to-workflow");
+      // Navigate to the workflow review page with the random template
+      navigate("/workflow/review", {
+        state: {
+          templateId: randomTemplate.id,
+          templateTitle: randomTemplate.title,
+          jsonFile: randomTemplate.jsonFile,
+          fromSOP: true,
+        },
+      });
     } catch (error) {
       console.error("Upload failed:", error);
       // Handle error appropriately

@@ -5,6 +5,10 @@ import {
   ClockIcon,
   PencilIcon,
   CheckIcon,
+  XMarkIcon,
+  DocumentTextIcon,
+  CursorArrowRaysIcon,
+  HashtagIcon,
   ChevronDownIcon,
 } from "@heroicons/react/24/outline";
 import { SiGmail, SiSlack } from "react-icons/si";
@@ -19,13 +23,12 @@ interface WorkflowStep {
   heading: string;
 }
 
-interface ProcessedStep {
-  id: string;
-  type: "dataSource" | "action" | "verification";
-  title: string;
-  description: string;
-  originalStep?: WorkflowStep;
-  verification?: string;
+interface EditingState {
+  [stepNumber: number]: boolean;
+}
+
+interface VerificationState {
+  [stepNumber: number]: string;
 }
 
 interface VerificationOption {
@@ -44,8 +47,9 @@ const verificationOptions: VerificationOption[] = [
 const VerificationDropdown: React.FC<{
   value: string;
   onChange: (value: string) => void;
-  className?: string;
-}> = ({ value, onChange, className = "" }) => {
+  disabled?: boolean;
+  stepNumber: number;
+}> = ({ value, onChange, disabled = false, stepNumber }) => {
   const [isOpen, setIsOpen] = useState(false);
   const dropdownRef = React.useRef<HTMLDivElement>(null);
   const currentOption = verificationOptions.find((opt) => opt.value === value) || verificationOptions[0];
@@ -64,18 +68,23 @@ const VerificationDropdown: React.FC<{
   }, [isOpen]);
 
   return (
-    <div ref={dropdownRef} className={`relative ${className}`}>
+    <div ref={dropdownRef} className="relative">
       <button
         type="button"
-        onClick={() => setIsOpen(!isOpen)}
-        className="flex items-center gap-2 px-3 py-1.5 text-sm border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-brand-primary bg-white hover:bg-gray-50 transition-colors min-w-[180px]"
+        onClick={() => !disabled && setIsOpen(!isOpen)}
+        disabled={disabled}
+        className={`flex items-center gap-2 px-3 py-1.5 text-sm border rounded-md transition-colors min-w-[180px] ${
+          disabled 
+            ? "border-gray-200 bg-gray-50 text-gray-400 cursor-not-allowed" 
+            : "border-gray-300 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-brand-primary"
+        }`}
       >
         {currentOption.icon && <currentOption.icon className="h-4 w-4" />}
         <span className="flex-1 text-left">{currentOption.label}</span>
         <ChevronDownIcon className={`h-4 w-4 transition-transform ${isOpen ? "rotate-180" : ""}`} />
       </button>
 
-      {isOpen && (
+      {isOpen && !disabled && (
         <div className="absolute top-full left-0 right-0 mt-1 bg-white border border-gray-300 rounded-md shadow-lg z-10 overflow-hidden">
           {verificationOptions.map((option) => (
             <button
@@ -99,120 +108,157 @@ const VerificationDropdown: React.FC<{
   );
 };
 
+const getActionIcon = (action: string) => {
+  switch (action.toLowerCase()) {
+    case "click":
+      return CursorArrowRaysIcon;
+    case "type":
+      return DocumentTextIcon;
+    case "select":
+      return ChevronDownIcon;
+    default:
+      return HashtagIcon;
+  }
+};
+
+const getActionColor = (action: string) => {
+  switch (action.toLowerCase()) {
+    case "click":
+      return "bg-blue-100 text-blue-700 border-blue-200";
+    case "type":
+      return "bg-green-100 text-green-700 border-green-200";
+    case "select":
+      return "bg-purple-100 text-purple-700 border-purple-200";
+    default:
+      return "bg-gray-100 text-gray-700 border-gray-200";
+  }
+};
+
+const StepEditor: React.FC<{
+  step: WorkflowStep;
+  onUpdate: (updatedStep: WorkflowStep) => void;
+  onCancel: () => void;
+}> = ({ step, onUpdate, onCancel }) => {
+  const [editedStep, setEditedStep] = useState(step);
+
+  const handleSave = () => {
+    onUpdate(editedStep);
+  };
+
+  return (
+    <div className="bg-white border-2 border-brand-primary rounded-lg p-6 space-y-4">
+      <div className="flex items-center justify-between mb-4">
+        <h4 className="text-lg font-semibold text-gray-900">
+          Edit Step {step.step}
+        </h4>
+        <div className="flex items-center gap-2">
+          <button
+            onClick={onCancel}
+            className="px-3 py-1 text-gray-600 hover:text-gray-800 transition-colors"
+          >
+            <XMarkIcon className="h-5 w-5" />
+          </button>
+          <button
+            onClick={handleSave}
+            className="px-4 py-2 bg-brand-primary text-white rounded-md hover:bg-brand-hover transition-colors flex items-center gap-2"
+          >
+            <CheckIcon className="h-4 w-4" />
+            Save
+          </button>
+        </div>
+      </div>
+
+      <div className="grid grid-cols-2 gap-4">
+        <div>
+          <label className="block text-sm font-medium text-gray-700 mb-1">
+            Action
+          </label>
+          <input
+            type="text"
+            value={editedStep.action}
+            onChange={(e) =>
+              setEditedStep({ ...editedStep, action: e.target.value })
+            }
+            className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-brand-primary"
+          />
+        </div>
+
+        <div>
+          <label className="block text-sm font-medium text-gray-700 mb-1">
+            Element Type
+          </label>
+          <input
+            type="text"
+            value={editedStep.element_type}
+            onChange={(e) =>
+              setEditedStep({ ...editedStep, element_type: e.target.value })
+            }
+            className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-brand-primary"
+          />
+        </div>
+
+        <div className="col-span-2">
+          <label className="block text-sm font-medium text-gray-700 mb-1">
+            Heading
+          </label>
+          <input
+            type="text"
+            value={editedStep.heading}
+            onChange={(e) =>
+              setEditedStep({ ...editedStep, heading: e.target.value })
+            }
+            className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-brand-primary"
+          />
+        </div>
+
+        <div className="col-span-2">
+          <label className="block text-sm font-medium text-gray-700 mb-1">
+            Element Description
+          </label>
+          <textarea
+            value={editedStep.element_description}
+            onChange={(e) =>
+              setEditedStep({
+                ...editedStep,
+                element_description: e.target.value,
+              })
+            }
+            rows={3}
+            className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-brand-primary"
+          />
+        </div>
+
+        {editedStep.value !== undefined && (
+          <div className="col-span-2">
+            <label className="block text-sm font-medium text-gray-700 mb-1">
+              Value
+            </label>
+            <input
+              type="text"
+              value={editedStep.value}
+              onChange={(e) =>
+                setEditedStep({ ...editedStep, value: e.target.value })
+              }
+              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-brand-primary"
+            />
+          </div>
+        )}
+      </div>
+    </div>
+  );
+};
+
 export const WorkflowReviewPage: React.FC = () => {
   const navigate = useNavigate();
   const location = useLocation();
   const { templateId, templateTitle, jsonFile } = location.state || {};
   
   const [workflowData, setWorkflowData] = useState<WorkflowStep[]>([]);
-  const [processedSteps, setProcessedSteps] = useState<ProcessedStep[]>([]);
   const [isEditMode, setIsEditMode] = useState(false);
-  const [stepVerifications, setStepVerifications] = useState<Record<string, string>>({});
+  const [editingSteps, setEditingSteps] = useState<EditingState>({});
   const [isLoading, setIsLoading] = useState(true);
-
-  // Process workflow data to group by data sources and actions
-  const processWorkflowSteps = (data: WorkflowStep[]): ProcessedStep[] => {
-    const steps: ProcessedStep[] = [];
-    
-    // Define data sources based on template
-    if (templateId === "credit-dispute-credit-bureau") {
-      // Add data source steps
-      steps.push({
-        id: "ds-1",
-        type: "dataSource",
-        title: "Data Source: ACDV Case Management System",
-        description: "Connect and retrieve data from ACDV Case Management System",
-      });
-      
-      steps.push({
-        id: "ds-2",
-        type: "dataSource",
-        title: "Data Source: B-Point Verification Database",
-        description: "Connect and retrieve data from B-Point Verification Database",
-      });
-      
-      steps.push({
-        id: "ds-3",
-        type: "dataSource",
-        title: "Data Source: Dispute Code Repository",
-        description: "Connect and retrieve data from Dispute Code Repository",
-      });
-      
-      steps.push({
-        id: "ds-4",
-        type: "dataSource",
-        title: "Data Source: Compliance Database",
-        description: "Connect and retrieve data from Compliance Database",
-      });
-    } else if (templateId === "direct-dispute-member") {
-      steps.push({
-        id: "ds-1",
-        type: "dataSource",
-        title: "Data Source: Zendesk Support System",
-        description: "Connect and retrieve data from Zendesk Support System",
-      });
-      
-      steps.push({
-        id: "ds-2",
-        type: "dataSource",
-        title: "Data Source: Penny Member Database",
-        description: "Connect and retrieve data from Penny Member Database",
-      });
-      
-      steps.push({
-        id: "ds-3",
-        type: "dataSource",
-        title: "Data Source: Looker Analytics",
-        description: "Connect and retrieve data from Looker Analytics",
-      });
-    } else if (templateId === "complex-dispute-equifax") {
-      steps.push({
-        id: "ds-1",
-        type: "dataSource",
-        title: "Data Source: e-OSCAR System",
-        description: "Connect and retrieve data from e-OSCAR System",
-      });
-      
-      steps.push({
-        id: "ds-2",
-        type: "dataSource",
-        title: "Data Source: Penny Database",
-        description: "Connect and retrieve data from Penny Database",
-      });
-      
-      steps.push({
-        id: "ds-3",
-        type: "dataSource",
-        title: "Data Source: Looker Reports",
-        description: "Connect and retrieve data from Looker Reports",
-      });
-      
-      steps.push({
-        id: "ds-4",
-        type: "dataSource",
-        title: "Data Source: Zendesk Tickets",
-        description: "Connect and retrieve data from Zendesk Tickets",
-      });
-    }
-    
-    // Add key action steps from the workflow
-    const keyActions = data.filter(step => 
-      step.action === "click" && 
-      (step.element_type === "button" || step.heading.includes("Submit") || step.heading.includes("Create"))
-    );
-    
-    keyActions.forEach((action, index) => {
-      steps.push({
-        id: `action-${index + 1}`,
-        type: "action",
-        title: `Action: ${action.heading.replace("Clicked button for ", "").replace("Clicked ", "")}`,
-        description: action.element_description,
-        originalStep: action,
-      });
-    });
-    
-    return steps;
-  };
+  const [expandedSteps, setExpandedSteps] = useState<Set<number>>(new Set());
+  const [stepVerifications, setStepVerifications] = useState<VerificationState>({});
 
   useEffect(() => {
     if (!templateId || !jsonFile) {
@@ -223,23 +269,30 @@ export const WorkflowReviewPage: React.FC = () => {
     // Load workflow data from JSON file
     const loadWorkflowData = async () => {
       try {
-        // For now, we'll use the imported JSON data directly
-        // In a real app, this would be loaded from the server
-        const mockData = await import(`../data/${jsonFile.replace('.json', '').replaceAll(' ', '-')}.json`);
+        const mockData = await import(
+          `../data/${jsonFile.replace(".json", "").replaceAll(" ", "-")}.json`
+        );
         const data = mockData.default;
-        
         setWorkflowData(data);
-        const processed = processWorkflowSteps(data);
-        setProcessedSteps(processed);
         
-        // Set default verifications for critical actions
-        const defaultVerifications: Record<string, string> = {};
-        processed.forEach((step) => {
-          if (step.type === "action" && step.title.toLowerCase().includes("submit")) {
-            defaultVerifications[step.id] = "simple";
+        // Load saved customizations including verifications
+        const savedCustomizations = localStorage.getItem(`workflow-custom-${templateId}`);
+        if (savedCustomizations) {
+          const customizations = JSON.parse(savedCustomizations);
+          if (customizations.stepVerifications) {
+            setStepVerifications(customizations.stepVerifications);
           }
-        });
-        setStepVerifications(defaultVerifications);
+          if (customizations.workflowData) {
+            setWorkflowData(customizations.workflowData);
+          }
+        } else {
+          // Initialize all steps with "none" verification
+          const initialVerifications: VerificationState = {};
+          data.forEach((step: WorkflowStep) => {
+            initialVerifications[step.step] = "none";
+          });
+          setStepVerifications(initialVerifications);
+        }
         
         setIsLoading(false);
       } catch (error) {
@@ -266,37 +319,59 @@ export const WorkflowReviewPage: React.FC = () => {
 
   const handleCustomize = () => {
     setIsEditMode(true);
+    // Expand first 5 steps by default when entering edit mode
+    const defaultExpanded = new Set(
+      workflowData.slice(0, 5).map((step) => step.step)
+    );
+    setExpandedSteps(defaultExpanded);
   };
 
   const handleSaveCustomization = () => {
     setIsEditMode(false);
+    setEditingSteps({});
     // Save customizations to local storage
     const customizations = {
       templateId,
+      workflowData,
       stepVerifications,
       lastModified: new Date().toISOString(),
     };
-    localStorage.setItem(`workflow-custom-${templateId}`, JSON.stringify(customizations));
+    localStorage.setItem(
+      `workflow-custom-${templateId}`,
+      JSON.stringify(customizations)
+    );
   };
 
-  const handleStepVerificationChange = (stepId: string, value: string) => {
-    setStepVerifications(prev => ({
-      ...prev,
-      [stepId]: value,
-    }));
+  const handleStepUpdate = (stepNumber: number, updatedStep: WorkflowStep) => {
+    const updatedData = workflowData.map((step) =>
+      step.step === stepNumber ? updatedStep : step
+    );
+    setWorkflowData(updatedData);
+    setEditingSteps({ ...editingSteps, [stepNumber]: false });
   };
 
-  const getStepBadge = (type: string) => {
-    switch (type) {
-      case "dataSource":
-        return "bg-blue-100 text-blue-700 border-blue-200";
-      case "action":
-        return "bg-green-100 text-green-700 border-green-200";
-      case "verification":
-        return "bg-purple-100 text-purple-700 border-purple-200";
-      default:
-        return "bg-gray-100 text-gray-700 border-gray-200";
+  const handleVerificationChange = (stepNumber: number, value: string) => {
+    setStepVerifications({
+      ...stepVerifications,
+      [stepNumber]: value,
+    });
+  };
+
+  const toggleStepEdit = (stepNumber: number) => {
+    setEditingSteps({
+      ...editingSteps,
+      [stepNumber]: !editingSteps[stepNumber],
+    });
+  };
+
+  const toggleStepExpanded = (stepNumber: number) => {
+    const newExpanded = new Set(expandedSteps);
+    if (newExpanded.has(stepNumber)) {
+      newExpanded.delete(stepNumber);
+    } else {
+      newExpanded.add(stepNumber);
     }
+    setExpandedSteps(newExpanded);
   };
 
   if (isLoading) {
@@ -306,7 +381,7 @@ export const WorkflowReviewPage: React.FC = () => {
           <div className="h-8 bg-gray-200 rounded w-1/3 mb-4"></div>
           <div className="h-4 bg-gray-200 rounded w-1/2 mb-8"></div>
           <div className="space-y-4">
-            {[1, 2, 3, 4].map(i => (
+            {[1, 2, 3, 4].map((i) => (
               <div key={i} className="h-20 bg-gray-200 rounded"></div>
             ))}
           </div>
@@ -315,20 +390,31 @@ export const WorkflowReviewPage: React.FC = () => {
     );
   }
 
-  const estimatedTime = workflowData.length > 50 ? "30-40 mins" : workflowData.length > 30 ? "20-30 mins" : "15-20 mins";
+  const estimatedTime =
+    workflowData.length > 50
+      ? "30-40 mins"
+      : workflowData.length > 30
+      ? "20-30 mins"
+      : "15-20 mins";
 
   return (
     <div className="max-w-7xl mx-auto">
       <div className="mb-8">
-        <h1 className="text-3xl font-bold text-gray-900 mb-2">Review Your Workflow</h1>
-        <p className="text-gray-600">Review and customize your automation workflow before execution</p>
+        <h1 className="text-3xl font-bold text-gray-900 mb-2">
+          Review Your Workflow
+        </h1>
+        <p className="text-gray-600">
+          Review and customize your automation workflow before execution
+        </p>
       </div>
 
       <div className="bg-white rounded-lg shadow-sm border border-gray-200 mb-6">
         <div className="p-6 border-b border-gray-200">
           <div className="flex items-start justify-between">
             <div>
-              <h2 className="text-xl font-semibold text-gray-900 mb-2">{templateTitle}</h2>
+              <h2 className="text-xl font-semibold text-gray-900 mb-2">
+                {templateTitle}
+              </h2>
               <div className="flex items-center gap-4 text-sm text-gray-600">
                 <span className="flex items-center gap-1">
                   <ClockIcon className="h-4 w-4" />
@@ -348,7 +434,10 @@ export const WorkflowReviewPage: React.FC = () => {
               {isEditMode ? (
                 <>
                   <button
-                    onClick={() => setIsEditMode(false)}
+                    onClick={() => {
+                      setIsEditMode(false);
+                      setEditingSteps({});
+                    }}
                     className="px-4 py-2 border border-gray-300 text-gray-700 rounded-md hover:bg-gray-50 transition-colors"
                   >
                     Cancel
@@ -382,46 +471,144 @@ export const WorkflowReviewPage: React.FC = () => {
         </div>
 
         <div className="p-6">
-          <h3 className="text-lg font-semibold text-gray-900 mb-4">Workflow Steps</h3>
+          <h3 className="text-lg font-semibold text-gray-900 mb-4">
+            Workflow Steps
+          </h3>
           
-          <div className="space-y-4">
-            {processedSteps.map((step, index) => (
-              <div key={step.id} className="flex items-start gap-4 p-4 border border-gray-200 rounded-lg hover:border-gray-300 transition-colors">
-                <div className={`flex items-center justify-center w-8 h-8 rounded-full text-white text-sm font-semibold ${
-                  step.type === "dataSource" ? "bg-blue-500" : "bg-green-500"
-                }`}>
-                  {index + 1}
-                </div>
-                <div className="flex-1">
-                  <div className="flex items-center gap-3 mb-1">
-                    <h4 className="font-semibold text-gray-900">{step.title}</h4>
-                    {step.type === "action" && step.title.toLowerCase().includes("submit") && (
-                      <span className="px-2 py-1 bg-red-100 text-red-700 text-xs font-medium rounded-full">
-                        Critical
-                      </span>
-                    )}
-                  </div>
-                  <p className="text-sm text-gray-600">{step.description}</p>
-                  {isEditMode && step.type === "action" && (
-                    <div className="mt-3 flex items-center gap-3">
-                      <span className="text-sm text-gray-700">Verification:</span>
-                      <VerificationDropdown
-                        value={stepVerifications[step.id] || "none"}
-                        onChange={(value) => handleStepVerificationChange(step.id, value)}
-                      />
-                    </div>
+          <div className="space-y-3">
+            {workflowData.map((step) => {
+              const ActionIcon = getActionIcon(step.action);
+              const isExpanded = expandedSteps.has(step.step);
+              const isEditing = editingSteps[step.step];
+
+              return (
+                <div
+                  key={step.step}
+                  className="border border-gray-200 rounded-lg overflow-hidden"
+                >
+                  {isEditing ? (
+                    <StepEditor
+                      step={step}
+                      onUpdate={(updatedStep) =>
+                        handleStepUpdate(step.step, updatedStep)
+                      }
+                      onCancel={() => toggleStepEdit(step.step)}
+                    />
+                  ) : (
+                    <>
+                      <div
+                        className={`p-4 ${
+                          isEditMode ? "cursor-pointer hover:bg-gray-50" : ""
+                        } transition-colors`}
+                        onClick={() =>
+                          isEditMode && toggleStepExpanded(step.step)
+                        }
+                      >
+                        <div className="flex items-start gap-4">
+                          <div className="flex items-center justify-center w-10 h-10 rounded-full bg-brand-primary text-white text-sm font-semibold flex-shrink-0">
+                            {step.step}
+                          </div>
+                          <div className="flex-1 min-w-0">
+                            <div className="flex items-center gap-3 mb-2">
+                              <ActionIcon className="h-5 w-5 text-gray-600" />
+                              <h4 className="font-semibold text-gray-900">
+                                {step.heading}
+                              </h4>
+                              <span
+                                className={`inline-flex px-2.5 py-0.5 text-xs font-medium rounded-full border ${getActionColor(
+                                  step.action
+                                )}`}
+                              >
+                                {step.action}
+                              </span>
+                              <span className="inline-flex px-2.5 py-0.5 text-xs font-medium rounded-full bg-gray-100 text-gray-700 border border-gray-200">
+                                {step.element_type}
+                              </span>
+                            </div>
+                            <p className="text-sm text-gray-600">
+                              {step.element_description}
+                            </p>
+                            {step.value && (
+                              <p className="text-sm text-gray-500 mt-1">
+                                <span className="font-medium">Value:</span>{" "}
+                                {step.value}
+                              </p>
+                            )}
+                            <div className="mt-3 flex items-center gap-3">
+                              <span className="text-sm text-gray-700">Verification:</span>
+                              <VerificationDropdown
+                                value={stepVerifications[step.step] || "none"}
+                                onChange={(value) => handleVerificationChange(step.step, value)}
+                                disabled={!isEditMode}
+                                stepNumber={step.step}
+                              />
+                            </div>
+                          </div>
+                          {isEditMode && (
+                            <div className="flex items-center gap-2">
+                              <button
+                                onClick={(e) => {
+                                  e.stopPropagation();
+                                  toggleStepEdit(step.step);
+                                }}
+                                className="p-2 text-brand-primary hover:bg-brand-light rounded-md transition-colors"
+                              >
+                                <PencilIcon className="h-4 w-4" />
+                              </button>
+                              <ChevronDownIcon
+                                className={`h-5 w-5 text-gray-400 transition-transform ${
+                                  isExpanded ? "rotate-180" : ""
+                                }`}
+                              />
+                            </div>
+                          )}
+                        </div>
+                      </div>
+
+                      {isEditMode && isExpanded && (
+                        <div className="px-4 pb-4 pt-0 bg-gray-50 border-t border-gray-200">
+                          <div className="grid grid-cols-2 gap-3 text-sm">
+                            <div>
+                              <span className="text-gray-500">Action:</span>
+                              <span className="ml-2 font-medium text-gray-900">
+                                {step.action}
+                              </span>
+                            </div>
+                            <div>
+                              <span className="text-gray-500">
+                                Element Type:
+                              </span>
+                              <span className="ml-2 font-medium text-gray-900">
+                                {step.element_type}
+                              </span>
+                            </div>
+                            <div className="col-span-2">
+                              <span className="text-gray-500">
+                                Description:
+                              </span>
+                              <span className="ml-2 font-medium text-gray-900">
+                                {step.element_description}
+                              </span>
+                            </div>
+                            {step.value && (
+                              <div className="col-span-2">
+                                <span className="text-gray-500">Value:</span>
+                                <span className="ml-2 font-medium text-gray-900">
+                                  {step.value}
+                                </span>
+                              </div>
+                            )}
+                          </div>
+                        </div>
+                      )}
+                    </>
                   )}
                 </div>
-                <div>
-                  <span className={`inline-flex px-3 py-1 text-xs font-medium rounded-full border ${getStepBadge(step.type)}`}>
-                    {step.type === "dataSource" ? "Data Source" : "Action"}
-                  </span>
-                </div>
-              </div>
-            ))}
+              );
+            })}
           </div>
         </div>
       </div>
     </div>
   );
-}; 
+};
