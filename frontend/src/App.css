@@ -2,21 +2,24 @@
 .chat-container::-webkit-scrollbar {
   width: 6px;
 }
+
 .chat-container::-webkit-scrollbar-track {
-  background: #ECF9EE;
+  background: #E5F7FF;
   border-radius: 10px;
 }
+
 .chat-container::-webkit-scrollbar-thumb {
-  background: #1EC677;
+  background: #04BAF7;
   border-radius: 10px;
 }
+
 .chat-container::-webkit-scrollbar-thumb:hover {
-  background: #0D4029;
+  background: #0396D1;
 }
 
 /* Gradient text styling with new color scheme */
 .text-gradient {
-  background: linear-gradient(90deg, #1EC677, #0D4029, #ECF9EE);
+  background: linear-gradient(90deg, #04BAF7, #8F04FF, #FF006D);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
@@ -26,10 +29,13 @@
 
 /* Progress Tracker Animations */
 @keyframes subtle-pulse {
-  0%, 100% {
+
+  0%,
+  100% {
     opacity: 1;
     transform: scale(1);
   }
+
   50% {
     opacity: 0.9;
     transform: scale(1.05);

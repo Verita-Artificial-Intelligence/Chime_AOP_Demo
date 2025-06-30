@@ -96,7 +96,9 @@ export const SOPToWorkflowPage: React.FC = () => {
   return (
     <div className="max-w-4xl mx-auto">
       <div className="mb-8">
-        <h1 className="text-3xl font-bold text-brand-dark mb-2">Upload SOP</h1>
+        <h1 className="text-3xl font-bold text-brand-heading mb-2">
+          Upload SOP
+        </h1>
         <p className="text-brand-muted">
           Upload your Standard Operating Procedure documents and
           screenrecordings to automatically convert them into workflows
@@ -105,10 +107,10 @@ export const SOPToWorkflowPage: React.FC = () => {
 
       <div className="bg-white rounded-lg shadow-sm border border-brand-border p-8">
         <div
-          className={`relative border-2 border-dashed rounded-lg p-12 text-center transition-colors ${
+          className={`border-2 border-dashed rounded-lg p-12 text-center transition-colors ${
             isDragging
-              ? "border-brand-primary bg-brand-light"
-              : "border-gray-300 hover:border-gray-400"
+              ? "border-brand-primary bg-brand-primaryLight"
+              : "border-gray-300 hover:border-brand-primary"
           }`}
           onDragEnter={handleDragEnter}
           onDragOver={handleDragOver}
@@ -128,7 +130,7 @@ export const SOPToWorkflowPage: React.FC = () => {
 
           <label
             htmlFor="file-upload"
-            className="cursor-pointer text-brand-primary hover:text-brand-primaryHover font-medium"
+            className="cursor-pointer text-brand-primary hover:text-brand-primaryDark font-medium"
           >
             Click to upload
           </label>
@@ -142,7 +144,7 @@ export const SOPToWorkflowPage: React.FC = () => {
 
         {files.length > 0 && (
           <div className="mt-6">
-            <h3 className="text-sm font-medium text-brand-dark mb-3">
+            <h3 className="text-sm font-medium text-brand-heading mb-3">
               Selected Files ({files.length})
             </h3>
             <div className="space-y-2 max-h-60 overflow-y-auto">
@@ -178,10 +180,10 @@ export const SOPToWorkflowPage: React.FC = () => {
           <button
             onClick={handleSubmit}
             disabled={files.length === 0 || isUploading}
-            className={`px-6 py-2 rounded-md font-medium transition-colors ${
+            className={`px-6 py-3 rounded-md font-semibold transition-colors ${
               files.length === 0 || isUploading
                 ? "bg-gray-300 text-gray-500 cursor-not-allowed"
-                : "bg-brand-primary text-white hover:bg-brand-primaryHover"
+                : "bg-brand-primary text-white hover:bg-brand-primaryDark"
             }`}
           >
             {isUploading ? "Uploading..." : "Submit"}

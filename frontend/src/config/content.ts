@@ -38,9 +38,9 @@ const content: ContentConfig = {
 
   // Brand colors
   colors: {
-    primary: "#1EC677", // Chime's primary green
-    primaryHover: "#17a85f", // Darker shade for hover
-    secondary: "#6B7280", // Gray
+    primary: "#04BAF7", // Bright Sky Blue
+    primaryHover: "#0396D1", // Darker blue for hover
+    secondary: "#FFDD04", // Vivid Yellow
     background: "#FFFFFF", // White background
   },
 };

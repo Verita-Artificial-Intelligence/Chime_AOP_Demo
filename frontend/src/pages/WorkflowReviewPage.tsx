@@ -52,18 +52,24 @@ const VerificationDropdown: React.FC<{
 }> = ({ value, onChange, disabled = false, stepNumber }) => {
   const [isOpen, setIsOpen] = useState(false);
   const dropdownRef = React.useRef<HTMLDivElement>(null);
-  const currentOption = verificationOptions.find((opt) => opt.value === value) || verificationOptions[0];
+  const currentOption =
+    verificationOptions.find((opt) => opt.value === value) ||
+    verificationOptions[0];
 
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
-      if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
+      if (
+        dropdownRef.current &&
+        !dropdownRef.current.contains(event.target as Node)
+      ) {
         setIsOpen(false);
       }
     };
 
     if (isOpen) {
       document.addEventListener("mousedown", handleClickOutside);
-      return () => document.removeEventListener("mousedown", handleClickOutside);
+      return () =>
+        document.removeEventListener("mousedown", handleClickOutside);
     }
   }, [isOpen]);
 
@@ -74,14 +80,18 @@ const VerificationDropdown: React.FC<{
         onClick={() => !disabled && setIsOpen(!isOpen)}
         disabled={disabled}
         className={`flex items-center gap-2 px-3 py-1.5 text-sm border rounded-md transition-colors min-w-[180px] ${
-          disabled 
-            ? "border-gray-200 bg-gray-50 text-gray-400 cursor-not-allowed" 
+          disabled
+            ? "border-gray-200 bg-gray-50 text-gray-400 cursor-not-allowed"
             : "border-gray-300 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-brand-primary"
         }`}
       >
         {currentOption.icon && <currentOption.icon className="h-4 w-4" />}
         <span className="flex-1 text-left">{currentOption.label}</span>
-        <ChevronDownIcon className={`h-4 w-4 transition-transform ${isOpen ? "rotate-180" : ""}`} />
+        <ChevronDownIcon
+          className={`h-4 w-4 transition-transform ${
+            isOpen ? "rotate-180" : ""
+          }`}
+        />
       </button>
 
       {isOpen && !disabled && (
@@ -95,7 +105,9 @@ const VerificationDropdown: React.FC<{
                 setIsOpen(false);
               }}
               className={`flex items-center gap-2 w-full px-3 py-2 text-sm hover:bg-gray-50 transition-colors ${
-                option.value === value ? "bg-brand-light text-brand-primary" : ""
+                option.value === value
+                  ? "bg-brand-primaryLight text-brand-primary"
+                  : ""
               }`}
             >
               {option.icon && <option.icon className="h-4 w-4" />}
@@ -160,7 +172,7 @@ const StepEditor: React.FC<{
           </button>
           <button
             onClick={handleSave}
-            className="px-4 py-2 bg-brand-primary text-white rounded-md hover:bg-brand-hover transition-colors flex items-center gap-2"
+            className="px-4 py-2 bg-brand-primary text-white rounded-md hover:bg-brand-primaryDark transition-colors flex items-center gap-2"
           >
             <CheckIcon className="h-4 w-4" />
             Save
@@ -252,13 +264,15 @@ export const WorkflowReviewPage: React.FC = () => {
   const navigate = useNavigate();
   const location = useLocation();
   const { templateId, templateTitle, jsonFile } = location.state || {};
-  
+
   const [workflowData, setWorkflowData] = useState<WorkflowStep[]>([]);
   const [isEditMode, setIsEditMode] = useState(false);
   const [editingSteps, setEditingSteps] = useState<EditingState>({});
   const [isLoading, setIsLoading] = useState(true);
   const [expandedSteps, setExpandedSteps] = useState<Set<number>>(new Set());
-  const [stepVerifications, setStepVerifications] = useState<VerificationState>({});
+  const [stepVerifications, setStepVerifications] = useState<VerificationState>(
+    {}
+  );
 
   useEffect(() => {
     if (!templateId || !jsonFile) {
@@ -274,9 +288,11 @@ export const WorkflowReviewPage: React.FC = () => {
         );
         const data = mockData.default;
         setWorkflowData(data);
-        
+
         // Load saved customizations including verifications
-        const savedCustomizations = localStorage.getItem(`workflow-custom-${templateId}`);
+        const savedCustomizations = localStorage.getItem(
+          `workflow-custom-${templateId}`
+        );
         if (savedCustomizations) {
           const customizations = JSON.parse(savedCustomizations);
           if (customizations.stepVerifications) {
@@ -293,7 +309,7 @@ export const WorkflowReviewPage: React.FC = () => {
           });
           setStepVerifications(initialVerifications);
         }
-        
+
         setIsLoading(false);
       } catch (error) {
         console.error("Error loading workflow data:", error);
@@ -453,7 +469,7 @@ export const WorkflowReviewPage: React.FC = () => {
               ) : (
                 <button
                   onClick={handleCustomize}
-                  className="px-4 py-2 border border-brand-primary text-brand-primary rounded-md hover:bg-brand-light transition-colors flex items-center gap-2"
+                  className="px-4 py-2 border border-brand-primary text-brand-primary rounded-md hover:bg-brand-primaryLight transition-colors flex items-center gap-2"
                 >
                   <PencilIcon className="h-4 w-4" />
                   Customize
@@ -461,7 +477,7 @@ export const WorkflowReviewPage: React.FC = () => {
               )}
               <button
                 onClick={handleRunWorkflow}
-                className="px-6 py-2 bg-brand-primary text-white rounded-md hover:bg-brand-hover transition-colors flex items-center gap-2 font-semibold"
+                className="px-6 py-2 bg-brand-primary text-white rounded-md hover:bg-brand-primaryDark transition-colors flex items-center gap-2 font-semibold"
               >
                 <PlayIcon className="h-4 w-4" />
                 Run Workflow
@@ -474,7 +490,7 @@ export const WorkflowReviewPage: React.FC = () => {
           <h3 className="text-lg font-semibold text-gray-900 mb-4">
             Workflow Steps
           </h3>
-          
+
           <div className="space-y-3">
             {workflowData.map((step) => {
               const ActionIcon = getActionIcon(step.action);
@@ -535,10 +551,14 @@ export const WorkflowReviewPage: React.FC = () => {
                               </p>
                             )}
                             <div className="mt-3 flex items-center gap-3">
-                              <span className="text-sm text-gray-700">Verification:</span>
+                              <span className="text-sm text-gray-700">
+                                Verification:
+                              </span>
                               <VerificationDropdown
                                 value={stepVerifications[step.step] || "none"}
-                                onChange={(value) => handleVerificationChange(step.step, value)}
+                                onChange={(value) =>
+                                  handleVerificationChange(step.step, value)
+                                }
                                 disabled={!isEditMode}
                                 stepNumber={step.step}
                               />
@@ -551,7 +571,7 @@ export const WorkflowReviewPage: React.FC = () => {
                                   e.stopPropagation();
                                   toggleStepEdit(step.step);
                                 }}
-                                className="p-2 text-brand-primary hover:bg-brand-light rounded-md transition-colors"
+                                className="p-2 text-brand-primary hover:bg-brand-primaryLight rounded-md transition-colors"
                               >
                                 <PencilIcon className="h-4 w-4" />
                               </button>

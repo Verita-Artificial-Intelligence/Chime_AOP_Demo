@@ -498,8 +498,10 @@ export const WorkflowStepsDisplay: React.FC<WorkflowStepsDisplayProps> = ({
       <div className="mb-8">
         <div className="flex justify-between items-center">
           <div>
-            <h1 className="text-2xl font-bold text-gray-800 mb-1">{title}</h1>
-            <p className="text-gray-600">
+            <h1 className="text-2xl font-bold text-brand-heading mb-1">
+              {title}
+            </h1>
+            <p className="text-brand-muted">
               Start time: {startTime.toLocaleString()}
             </p>
           </div>
@@ -528,14 +530,14 @@ export const WorkflowStepsDisplay: React.FC<WorkflowStepsDisplayProps> = ({
         </div>
       </div>
 
-      <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
+      <div className="bg-white rounded-lg shadow-sm border border-brand-border p-6">
         <div className="mb-6">
           <div className="flex items-center justify-between mb-2">
-            <span className="text-sm font-medium text-gray-700">
+            <span className="text-sm font-medium text-brand-heading">
               Progress: Step {Math.min(currentStep, steps.length)} of{" "}
               {steps.length}
             </span>
-            <span className="text-sm text-gray-600">
+            <span className="text-sm text-brand-muted">
               {Math.round(
                 (Math.min(currentStep, steps.length) / steps.length) * 100
               )}
@@ -669,7 +671,7 @@ export const WorkflowStepsDisplay: React.FC<WorkflowStepsDisplayProps> = ({
                 className={`px-6 py-3 rounded-md font-medium transition-colors flex items-center gap-2 ${
                   isDownloading
                     ? "bg-gray-300 text-gray-500 cursor-not-allowed"
-                    : "bg-brand-primary text-white hover:bg-brand-primaryHover"
+                    : "bg-brand-primary text-white hover:bg-brand-primaryDark"
                 }`}
               >
                 <DocumentArrowDownIcon className="h-5 w-5" />

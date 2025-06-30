@@ -51,7 +51,7 @@ export const Layout: React.FC<LayoutProps> = ({ children }) => {
       <aside className="w-64 bg-brand-sidebar border-r border-brand-sidebarBorder flex flex-col">
         <div className="p-4 border-b border-brand-sidebarBorder">
           <Link to="/">
-            <h1 className="text-2xl font-bold text-brand-dark hover:text-brand-primary transition-colors">
+            <h1 className="text-2xl font-bold text-gradient hover:opacity-80 transition-opacity">
               Verita AI
             </h1>
           </Link>
@@ -74,7 +74,7 @@ export const Layout: React.FC<LayoutProps> = ({ children }) => {
                   }
                 >
                   <summary
-                    className={`flex items-center justify-between px-4 py-2.5 text-sm font-medium text-brand-dark rounded-md cursor-pointer hover:bg-brand-light transition-colors ${
+                    className={`flex items-center justify-between px-4 py-2.5 text-sm font-medium text-brand-text rounded-md cursor-pointer hover:bg-brand-light hover:text-brand-primary transition-colors ${
                       item.subItems.some(
                         (sub) =>
                           location.pathname === sub.href ||
@@ -98,7 +98,7 @@ export const Layout: React.FC<LayoutProps> = ({ children }) => {
                           className={`block px-4 py-2 text-sm rounded-md transition-colors hover:bg-brand-light hover:text-brand-primary ${
                             location.pathname === subItem.href
                               ? "font-semibold text-brand-primary bg-brand-light"
-                              : "text-brand-dark"
+                              : "text-brand-text"
                           }`}
                         >
                           {subItem.name}
@@ -110,10 +110,10 @@ export const Layout: React.FC<LayoutProps> = ({ children }) => {
               ) : (
                 <Link
                   to={item.href!}
-                  className={`flex items-center px-4 py-2.5 text-sm font-medium rounded-md transition-colors hover:bg-brand-light ${
+                  className={`flex items-center px-4 py-2.5 text-sm font-medium rounded-md transition-colors hover:bg-brand-light hover:text-brand-primary ${
                     location.pathname === item.href
                       ? "text-brand-primary bg-brand-light font-semibold"
-                      : "text-brand-dark"
+                      : "text-brand-text"
                   }`}
                 >
                   <item.icon className="w-5 h-5 mr-3 flex-shrink-0" />
@@ -124,12 +124,10 @@ export const Layout: React.FC<LayoutProps> = ({ children }) => {
           ))}
         </nav>
         <div className="p-4 border-t border-brand-sidebarBorder">
-          <p className="text-xs text-brand-muted opacity-70">
-            {content.footerText}
-          </p>
+          <p className="text-xs text-brand-muted">{content.footerText}</p>
         </div>
       </aside>
-      <main className="flex-1 overflow-x-hidden overflow-y-auto bg-brand-card p-6 md:p-8">
+      <main className="flex-1 overflow-x-hidden overflow-y-auto bg-gray-50 p-6 md:p-8">
         {children}
       </main>
     </div>
