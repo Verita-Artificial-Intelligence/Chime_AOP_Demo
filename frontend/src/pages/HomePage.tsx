@@ -21,7 +21,7 @@ const quickAccessItems = [
     href: "/workflow/builder",
     description:
       "Use a chat interface to guide you through building a workflow.",
-    icon: BoltIcon, // Consider a different icon if you have one for chat/AI
+    icon: BoltIcon,
   },
   {
     name: "Active Workflows",

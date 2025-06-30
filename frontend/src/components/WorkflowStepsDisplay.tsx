@@ -225,7 +225,7 @@ export const WorkflowStepsDisplay: React.FC<WorkflowStepsDisplayProps> = ({
           )}
           {verificationType === 'simple' && (
             <a
-              href="http://localhost:3001"
+              href="https://chimetools.vercel.app/"
               target="_blank"
               rel="noopener noreferrer"
               className={`flex-1 px-4 py-2 text-white rounded-md text-center text-sm font-medium transition-colors ${config.buttonColor}`}

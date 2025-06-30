@@ -6,7 +6,6 @@ import {
   MagnifyingGlassIcon,
 } from "@heroicons/react/24/outline";
 import { templateConfigs } from "../data/templateConfigs";
-import { WorkflowReview } from "../components/WorkflowReview";
 
 // Map template IDs to icons
 const iconMap: Record<string, React.ElementType> = {
@@ -108,15 +107,8 @@ export const WorkflowTemplatesPage: React.FC = () => {
           Need a custom template?
         </h2>
         <p className="text-gray-600 mb-4">
-          Create your own automation workflow from scratch using our Workflow
-          Builder.
+          Contact your administrator to request custom workflow templates for your specific needs.
         </p>
-        <button
-          onClick={() => navigate("/workflow/builder")}
-          className="px-4 py-2 bg-brand-primary text-brand-dark rounded-md hover:bg-brand-hover transition-colors font-semibold"
-        >
-          Create Custom Workflow
-        </button>
       </div>
     </div>
   );

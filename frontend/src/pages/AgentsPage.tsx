@@ -106,12 +106,12 @@ export default function WorkflowRunHistoryPage() {
             View the execution history of your Automated Operation Procedures.
           </p>
         </div>
-        {/* Button to navigate to Workflow builder page */}
+        {/* Button to navigate to Workflow templates page */}
         <button
           className="mt-4 sm:mt-0 px-6 py-2.5 bg-brand-primary text-brand-dark rounded-md text-sm font-semibold hover:bg-brand-hover transition-all duration-200 whitespace-nowrap"
-          onClick={() => navigate("/workflow/builder")} // Navigate to the Workflow builder
+          onClick={() => navigate("/workflow/templates")} // Navigate to the Workflow templates
         >
-          Build New Workflow
+          Browse Templates
         </button>
       </div>
 
@@ -136,7 +136,7 @@ export default function WorkflowRunHistoryPage() {
             No Run History Found
           </h3>
           <p className="mt-1 text-sm text-brand-muted opacity-70">
-            Get started by building and running a workflow.
+            Get started by selecting a workflow template.
           </p>
         </div>
       )}
@@ -156,8 +156,7 @@ export default function WorkflowRunHistoryPage() {
               <div className="flex flex-col sm:flex-row justify-between items-start mb-3">
                 <div>
                   <h2
-                    className="text-xl font-semibold text-brand-heading hover:text-brand-primary cursor-pointer"
-                    onClick={() => navigate(`/workflow/run/${run.id}`)}
+                    className="text-xl font-semibold text-brand-heading"
                   >
                     {run.name}
                   </h2>
@@ -251,17 +250,11 @@ export default function WorkflowRunHistoryPage() {
               )}
               <div className="mt-4 flex justify-end">
                 <button
-                  className="text-xs text-brand-danger hover:text-red-700 hover:underline mr-4"
+                  className="text-xs text-brand-danger hover:text-red-700 hover:underline"
                   onClick={() => handleDeleteRun(run.id)}
                   title="Delete this run history"
                 >
                   Delete
-                </button>
-                <button
-                  className="px-4 py-1.5 bg-brand-primary text-brand-dark rounded-md text-xs font-semibold hover:bg-brand-hover transition-all duration-200"
-                  onClick={() => navigate(`/workflow/run/${run.id}`)} // Navigate to the specific run simulation/details page
-                >
-                  {isActive ? "View Progress" : "View Details"}
                 </button>
               </div>
             </div>
