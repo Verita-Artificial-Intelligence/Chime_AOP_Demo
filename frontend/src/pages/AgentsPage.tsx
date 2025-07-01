@@ -183,7 +183,7 @@ export default function WorkflowRunHistoryPage() {
             Workflow History
           </h1>
           <p className="text-brand-muted opacity-70 mt-1">
-            View the execution history of your Automated Operation Procedures.
+            View the execution history of your Agent Operating Procedures.
           </p>
         </div>
         {/* Button to navigate to Workflow templates page */}
