@@ -574,16 +574,6 @@ export const WorkflowReviewPage: React.FC = () => {
                               <h4 className="font-semibold text-gray-900">
                                 {step.heading}
                               </h4>
-                              <span
-                                className={`inline-flex px-2.5 py-0.5 text-xs font-medium rounded-full border ${getActionColor(
-                                  step.action
-                                )}`}
-                              >
-                                {step.action}
-                              </span>
-                              <span className="inline-flex px-2.5 py-0.5 text-xs font-medium rounded-full bg-gray-100 text-gray-700 border border-gray-200">
-                                {step.element_type}
-                              </span>
                             </div>
                             <p className="text-sm text-gray-600">
                               {step.element_description}

@@ -494,8 +494,8 @@ export const WorkflowStepsDisplay: React.FC<WorkflowStepsDisplayProps> = ({
   };
 
   return (
-    <div className="max-w-5xl mx-auto">
-      <div className="mb-8">
+    <div className="max-w-6xl mx-auto">
+      <div className="mb-10">
         <div className="flex justify-between items-center">
           <div>
             <h1 className="text-2xl font-bold text-brand-heading mb-1">
@@ -511,7 +511,7 @@ export const WorkflowStepsDisplay: React.FC<WorkflowStepsDisplayProps> = ({
               className={`px-4 py-2 rounded-md flex items-center gap-2 font-medium transition-colors ${
                 isManuallyPaused
                   ? "bg-green-600 text-white hover:bg-green-700"
-                  : "bg-yellow-600 text-white hover:bg-yellow-700"
+                  : "bg-brand-purple text-white hover:bg-brand-purpleDark"
               }`}
             >
               {isManuallyPaused ? (
