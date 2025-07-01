@@ -17,7 +17,7 @@ import { WorkflowTemplatesPage } from "./pages/WorkflowTemplatesPage";
 import { ActiveRunsPage } from "./pages/ActiveRunsPage";
 import { SecurityPage } from "./pages/SecurityPage";
 import { WorkflowReviewPage } from "./pages/WorkflowReviewPage";
-import { WorkflowBuilderPage } from "./pages/AOPBuilderPage";
+
 import { SOPToWorkflowPage } from "./pages/SOPToAOPPage";
 
 export function App() {
@@ -41,7 +41,7 @@ export function App() {
         <Route path="/workflow/templates" element={<WorkflowTemplatesPage />} />
         <Route path="/workflow/review" element={<WorkflowReviewPage />} />
         <Route path="/workflow/active-runs" element={<ActiveRunsPage />} />
-        <Route path="/workflow/builder" element={<WorkflowBuilderPage />} />
+        
         <Route
           path="/workflow/sop-to-workflow"
           element={<SOPToWorkflowPage />}

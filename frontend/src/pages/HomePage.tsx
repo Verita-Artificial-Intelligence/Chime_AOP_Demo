@@ -18,13 +18,7 @@ const quickAccessItems = [
     description: "Browse pre-built automation templates for common workflows.",
     icon: TableCellsIcon,
   },
-  {
-    name: "Workflow Chat",
-    href: "/workflow/builder",
-    description:
-      "Use a chat interface to guide you through building a workflow.",
-    icon: ChatBubbleBottomCenterTextIcon,
-  },
+
   {
     name: "Upload SOP",
     href: "/workflow/sop-to-workflow",
@@ -48,8 +42,8 @@ const quickAccessItems = [
 
 export function HomePage() {
   return (
-    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-      <div className="bg-brand-card p-8 rounded-xl border border-brand-border mb-8">
+    <div className="max-w-7xl mx-auto">
+      <div className="bg-brand-card p-8 rounded-xl border border-brand-border mb-10 shadow-sm">
         <h1 className="text-4xl font-bold text-brand-heading mb-3">
           {content.welcomeMessage}
         </h1>
@@ -64,7 +58,7 @@ export function HomePage() {
           <Link
             key={item.name}
             to={item.href}
-            className="block p-6 bg-brand-card rounded-lg transition-all duration-200 group border border-brand-border hover:border-brand-primary hover:shadow-lg"
+            className="block p-6 bg-brand-card rounded-xl transition-all duration-200 group border border-brand-border hover:border-brand-primary hover:shadow-lg"
           >
             <div className="flex items-start">
               <item.icon className="w-8 h-8 text-brand-primary mr-4 flex-shrink-0" />
@@ -75,7 +69,7 @@ export function HomePage() {
                 <p className="text-sm text-brand-muted mb-4">
                   {item.description}
                 </p>
-                <div className="flex items-center text-sm text-brand-primary font-medium">
+                <div className="inline-flex items-center text-sm text-brand-primary font-medium">
                   <span>Get Started</span>
                   <ChevronRightIcon className="h-4 w-4 ml-1" />
                 </div>

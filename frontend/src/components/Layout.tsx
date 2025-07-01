@@ -5,6 +5,7 @@ import {
   BoltIcon,
   CircleStackIcon,
   CogIcon,
+  UserCircleIcon,
 } from "@heroicons/react/24/outline";
 import { ChevronDownIcon } from "@heroicons/react/20/solid";
 import content from "../config/content";
@@ -29,7 +30,6 @@ const navItems: NavItem[] = [
     icon: BoltIcon,
     subItems: [
       { name: "Workflow Templates", href: "/workflow/templates" },
-      { name: "Workflow Chat", href: "/workflow/builder" },
       { name: "Upload SOP", href: "/workflow/sop-to-workflow" },
       { name: "Active Workflows", href: "/workflow/active-runs" },
       { name: "Workflow History", href: "/workflow/run" },
@@ -48,7 +48,7 @@ export const Layout: React.FC<LayoutProps> = ({ children }) => {
 
   return (
     <div className="flex h-screen bg-brand-background">
-      <aside className="w-64 bg-brand-sidebar border-r border-brand-sidebarBorder flex flex-col">
+      <aside className="w-64 bg-brand-primaryLight border-r border-brand-sidebarBorder flex flex-col">
         <div className="p-4 border-b border-brand-sidebarBorder">
           <Link to="/">
             <h1 className="text-2xl font-bold text-gradient hover:opacity-80 transition-opacity">
@@ -74,13 +74,13 @@ export const Layout: React.FC<LayoutProps> = ({ children }) => {
                   }
                 >
                   <summary
-                    className={`flex items-center justify-between px-4 py-2.5 text-sm font-medium text-brand-text rounded-md cursor-pointer hover:bg-brand-light hover:text-brand-primary transition-colors ${
+                    className={`flex items-center justify-between px-4 py-2.5 text-sm font-medium text-gray-700 rounded-md cursor-pointer hover:bg-white hover:text-brand-primary transition-all hover:shadow-sm ${
                       item.subItems.some(
                         (sub) =>
                           location.pathname === sub.href ||
                           location.pathname.startsWith(sub.href + "/")
                       )
-                        ? "bg-brand-light text-brand-primary"
+                        ? "bg-white text-brand-primary shadow-sm"
                         : ""
                     }`}
                   >
@@ -95,10 +95,10 @@ export const Layout: React.FC<LayoutProps> = ({ children }) => {
                       <li key={subItem.name}>
                         <Link
                           to={subItem.href}
-                          className={`block px-4 py-2 text-sm rounded-md transition-colors hover:bg-brand-light hover:text-brand-primary ${
+                          className={`block px-4 py-2 text-sm rounded-md transition-all hover:bg-white hover:text-brand-primary hover:shadow-sm ${
                             location.pathname === subItem.href
-                              ? "font-semibold text-brand-primary bg-brand-light"
-                              : "text-brand-text"
+                              ? "font-semibold text-brand-primary bg-white shadow-sm"
+                              : "text-gray-700"
                           }`}
                         >
                           {subItem.name}
@@ -110,10 +110,10 @@ export const Layout: React.FC<LayoutProps> = ({ children }) => {
               ) : (
                 <Link
                   to={item.href!}
-                  className={`flex items-center px-4 py-2.5 text-sm font-medium rounded-md transition-colors hover:bg-brand-light hover:text-brand-primary ${
+                  className={`flex items-center px-4 py-2.5 text-sm font-medium rounded-md transition-all hover:bg-white hover:text-brand-primary hover:shadow-sm ${
                     location.pathname === item.href
-                      ? "text-brand-primary bg-brand-light font-semibold"
-                      : "text-brand-text"
+                      ? "text-brand-primary bg-white font-semibold shadow-sm"
+                      : "text-gray-700"
                   }`}
                 >
                   <item.icon className="w-5 h-5 mr-3 flex-shrink-0" />
@@ -123,11 +123,23 @@ export const Layout: React.FC<LayoutProps> = ({ children }) => {
             </div>
           ))}
         </nav>
-        <div className="p-4 border-t border-brand-sidebarBorder">
-          <p className="text-xs text-brand-muted">{content.footerText}</p>
+        <div className="mt-auto">
+          <div className="p-4 border-t border-brand-sidebarBorder">
+            <button className="w-full flex items-center px-4 py-2.5 text-sm font-medium text-gray-700 rounded-md hover:bg-white hover:text-brand-primary hover:shadow-sm transition-all mb-2">
+              <CogIcon className="w-5 h-5 mr-3" />
+              Settings
+            </button>
+            <button className="w-full flex items-center px-4 py-2.5 text-sm font-medium text-gray-700 rounded-md hover:bg-white hover:text-brand-primary hover:shadow-sm transition-all">
+              <UserCircleIcon className="w-5 h-5 mr-3" />
+              Account
+            </button>
+          </div>
+          <div className="p-4 border-t border-brand-sidebarBorder">
+            <p className="text-xs text-brand-muted">{content.footerText}</p>
+          </div>
         </div>
       </aside>
-      <main className="flex-1 overflow-x-hidden overflow-y-auto bg-gray-50 p-6 md:p-8">
+      <main className="flex-1 overflow-x-hidden overflow-y-auto bg-gray-50 p-8 lg:p-12">
         {children}
       </main>
     </div>
