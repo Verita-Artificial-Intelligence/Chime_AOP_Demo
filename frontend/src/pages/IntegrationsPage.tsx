@@ -1,9 +1,5 @@
 import React, { useState } from "react";
-import {
-  MagnifyingGlassIcon,
-  XMarkIcon,
-  CheckCircleIcon,
-} from "@heroicons/react/24/outline";
+import { MagnifyingGlassIcon, XMarkIcon } from "@heroicons/react/24/outline";
 
 interface Integration {
   id: string;
@@ -11,7 +7,6 @@ interface Integration {
   description: string;
   category: string;
   logoUrl: string;
-  popular?: boolean;
   connected?: boolean;
 }
 
@@ -24,7 +19,6 @@ const mockIntegrations: Integration[] = [
     category: "CRM",
     logoUrl:
       "https://cdn.jsdelivr.net/gh/simple-icons/simple-icons@v9/icons/salesforce.svg",
-    popular: true,
     connected: false,
   },
   {
@@ -35,7 +29,6 @@ const mockIntegrations: Integration[] = [
     category: "Communication",
     logoUrl:
       "https://cdn.jsdelivr.net/gh/simple-icons/simple-icons@v9/icons/slack.svg",
-    popular: true,
     connected: true,
   },
   {
@@ -46,7 +39,6 @@ const mockIntegrations: Integration[] = [
     category: "Project Management",
     logoUrl:
       "https://cdn.jsdelivr.net/gh/simple-icons/simple-icons@v9/icons/jira.svg",
-    popular: true,
     connected: false,
   },
   {
@@ -142,7 +134,7 @@ export const IntegrationsPage: React.FC = () => {
 
   return (
     <div className="max-w-7xl mx-auto">
-      <div className="mb-8">
+      <div className="mb-10">
         <h1 className="text-3xl font-bold text-brand-heading mb-2">
           Integrations
         </h1>
@@ -186,11 +178,29 @@ export const IntegrationsPage: React.FC = () => {
         {filteredIntegrations.map((integration) => (
           <div
             key={integration.id}
-            className="bg-white rounded-lg border border-brand-border p-6 hover:shadow-lg hover:border-brand-primary transition-all duration-200 group relative"
+            className="bg-white rounded-xl border border-brand-border p-6 hover:shadow-lg hover:border-brand-primary transition-all duration-200 group relative"
           >
             {integration.connected && (
               <div className="absolute top-4 right-4">
-                <CheckCircleIcon className="h-5 w-5 text-brand-success" />
+                <div className="relative">
+                  <svg className="h-6 w-6" viewBox="0 0 24 24" fill="none">
+                    <circle
+                      cx="12"
+                      cy="12"
+                      r="10"
+                      stroke="black"
+                      strokeWidth="2"
+                      fill="black"
+                    />
+                    <path
+                      d="M8 12l3 3 5-6"
+                      stroke="#ADFF02"
+                      strokeWidth="2.5"
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                    />
+                  </svg>
+                </div>
               </div>
             )}
 
@@ -207,11 +217,6 @@ export const IntegrationsPage: React.FC = () => {
                   }}
                 />
               </div>
-              {integration.popular && (
-                <span className="px-2 py-1 bg-brand-secondary text-black text-xs font-medium rounded-full">
-                  Popular
-                </span>
-              )}
             </div>
 
             <h3 className="text-lg font-semibold text-brand-heading mb-2 group-hover:text-brand-primary transition-colors">
