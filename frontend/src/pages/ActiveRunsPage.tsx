@@ -14,6 +14,11 @@ import jsPDF from "jspdf";
 import creditDisputeBureauData from "../data/Credit-Dispute-through-Credit-Bureau.json";
 import directDisputeMemberData from "../data/Direct-Dispute-from-Member.json";
 import complexDisputeEquifaxData from "../data/Complex-Dispute-via-Equifax.json";
+import kycKybWorkflowData from "../data/kyc_kyb_workflow.json";
+import vendorWorkflowData from "../data/vendor_workflow.json";
+import vendorMaintenanceOffboardingData from "../data/vendor_maintenance_offboarding.json";
+import complianceOperationsWorkflowData from "../data/compliance_operations_workflow.json";
+import kycAuditWorkflowData from "../data/kyb_audit_workflow.json";
 
 interface WorkflowStep {
   step: number;
@@ -38,6 +43,11 @@ export const ActiveRunsPage: React.FC = () => {
     "credit-dispute-credit-bureau": creditDisputeBureauData,
     "direct-dispute-member": directDisputeMemberData,
     "complex-dispute-equifax": complexDisputeEquifaxData,
+    "kyc-kyb-workflow": kycKybWorkflowData,
+    "vendor-workflow": vendorWorkflowData,
+    "vendor-maintenance-offboarding": vendorMaintenanceOffboardingData,
+    "compliance-operations-workflow": complianceOperationsWorkflowData,
+    "kyb-audit-workflow": kycAuditWorkflowData,
   };
 
   // Check if we're coming from templates page with a template selection

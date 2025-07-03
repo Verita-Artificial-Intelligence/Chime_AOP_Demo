@@ -1,0 +1,332 @@
+[
+  {
+    "step": 1,
+    "action": "schedule",
+    "element_description": "Scheduled compliance workflow",
+    "element_type": "system"
+  },
+  {
+    "step": 2,
+    "action": "call",
+    "element_description": "Fetched active vendors",
+    "element_type": "api"
+  },
+  {
+    "step": 3,
+    "action": "loop",
+    "element_description": "Iterated vendor records",
+    "element_type": "system"
+  },
+  {
+    "step": 4,
+    "action": "call",
+    "element_description": "Called Stripe Identity API",
+    "element_type": "api"
+  },
+  {
+    "step": 5,
+    "action": "check",
+    "element_description": "Checked new high-risk flags",
+    "element_type": "system"
+  },
+  {
+    "step": 6,
+    "action": "update",
+    "element_description": "Set Compliance Status Alert",
+    "element_type": "system"
+  },
+  {
+    "step": 7,
+    "action": "create",
+    "element_description": "Created Asana alert task",
+    "element_type": "api"
+  },
+  {
+    "step": 8,
+    "action": "schedule",
+    "element_description": "Scheduled performance survey",
+    "element_type": "system"
+  },
+  {
+    "step": 9,
+    "action": "send",
+    "element_description": "Sent survey to owners",
+    "element_type": "api"
+  },
+  {
+    "step": 10,
+    "action": "submit",
+    "element_description": "Submitted performance review",
+    "element_type": "form"
+  },
+  {
+    "step": 11,
+    "action": "calc",
+    "element_description": "Calculated average review score",
+    "element_type": "system"
+  },
+  {
+    "step": 12,
+    "action": "check",
+    "element_description": "Checked if score below 3",
+    "element_type": "system"
+  },
+  {
+    "step": 13,
+    "action": "create",
+    "element_description": "Created Asana performance task",
+    "element_type": "api"
+  },
+  {
+    "step": 14,
+    "action": "schedule",
+    "element_description": "Scheduled review scan",
+    "element_type": "system"
+  },
+  {
+    "step": 15,
+    "action": "check",
+    "element_description": "Checked review due date",
+    "element_type": "system"
+  },
+  {
+    "step": 16,
+    "action": "call",
+    "element_description": "Fetched 12-month spend",
+    "element_type": "api"
+  },
+  {
+    "step": 17,
+    "action": "create",
+    "element_description": "Created Asana review task",
+    "element_type": "api"
+  },
+  {
+    "step": 18,
+    "action": "populate",
+    "element_description": "Added spend and links",
+    "element_type": "system"
+  },
+  {
+    "step": 19,
+    "action": "create",
+    "element_description": "Created security sub-task",
+    "element_type": "api"
+  },
+  {
+    "step": 20,
+    "action": "create",
+    "element_description": "Created legal sub-task",
+    "element_type": "api"
+  },
+  {
+    "step": 21,
+    "action": "complete",
+    "element_description": "Completed review sub-tasks",
+    "element_type": "manual"
+  },
+  {
+    "step": 22,
+    "action": "trigger",
+    "element_description": "Triggered summary generation",
+    "element_type": "system"
+  },
+  {
+    "step": 23,
+    "action": "merge",
+    "element_description": "Created Google Docs report",
+    "element_type": "system"
+  },
+  {
+    "step": 24,
+    "action": "save",
+    "element_description": "Saved PDF to Drive",
+    "element_type": "system"
+  },
+  {
+    "step": 25,
+    "action": "update",
+    "element_description": "Updated Last Review Date",
+    "element_type": "system"
+  },
+  {
+    "step": 26,
+    "action": "schedule",
+    "element_description": "Scheduled doc expiry check",
+    "element_type": "system"
+  },
+  {
+    "step": 27,
+    "action": "check",
+    "element_description": "Checked 60-day expiry",
+    "element_type": "system"
+  },
+  {
+    "step": 28,
+    "action": "send",
+    "element_description": "Sent renewal request",
+    "element_type": "api"
+  },
+  {
+    "step": 29,
+    "action": "check",
+    "element_description": "Checked 30-day pending doc",
+    "element_type": "system"
+  },
+  {
+    "step": 30,
+    "action": "send",
+    "element_description": "Sent reminder email",
+    "element_type": "api"
+  },
+  {
+    "step": 31,
+    "action": "check",
+    "element_description": "Checked 7-day pending doc",
+    "element_type": "system"
+  },
+  {
+    "step": 32,
+    "action": "create",
+    "element_description": "Created Asana follow-up task",
+    "element_type": "api"
+  },
+  {
+    "step": 33,
+    "action": "check",
+    "element_description": "Detected expired document",
+    "element_type": "system"
+  },
+  {
+    "step": 34,
+    "action": "update",
+    "element_description": "Marked vendor non-compliant",
+    "element_type": "system"
+  },
+  {
+    "step": 35,
+    "action": "create",
+    "element_description": "Created legal alert task",
+    "element_type": "api"
+  },
+  {
+    "step": 36,
+    "action": "call",
+    "element_description": "Flagged QuickBooks payment hold",
+    "element_type": "api"
+  },
+  {
+    "step": 37,
+    "action": "upload",
+    "element_description": "Vendor uploaded new doc",
+    "element_type": "portal"
+  },
+  {
+    "step": 38,
+    "action": "parse",
+    "element_description": "Parsed new expiry date",
+    "element_type": "system"
+  },
+  {
+    "step": 39,
+    "action": "update",
+    "element_description": "Cleared compliance flags",
+    "element_type": "system"
+  },
+  {
+    "step": 40,
+    "action": "close",
+    "element_description": "Closed all related tasks",
+    "element_type": "system"
+  },
+  {
+    "step": 41,
+    "action": "submit",
+    "element_description": "Submitted offboarding form",
+    "element_type": "form"
+  },
+  {
+    "step": 42,
+    "action": "create",
+    "element_description": "Created offboarding record",
+    "element_type": "system"
+  },
+  {
+    "step": 43,
+    "action": "read",
+    "element_description": "Read vendor profile",
+    "element_type": "system"
+  },
+  {
+    "step": 44,
+    "action": "route",
+    "element_description": "Routed sub-task generation",
+    "element_type": "system"
+  },
+  {
+    "step": 45,
+    "action": "create",
+    "element_description": "Created finance sub-task",
+    "element_type": "api"
+  },
+  {
+    "step": 46,
+    "action": "call",
+    "element_description": "Updated vendor inactive status",
+    "element_type": "api"
+  },
+  {
+    "step": 47,
+    "action": "check",
+    "element_description": "Checked if system access",
+    "element_type": "system"
+  },
+  {
+    "step": 48,
+    "action": "create",
+    "element_description": "Created IT security task",
+    "element_type": "api"
+  },
+  {
+    "step": 49,
+    "action": "call",
+    "element_description": "Revoked access in Okta",
+    "element_type": "api"
+  },
+  {
+    "step": 50,
+    "action": "create",
+    "element_description": "Created legal termination task",
+    "element_type": "api"
+  },
+  {
+    "step": 51,
+    "action": "create",
+    "element_description": "Created owner handover task",
+    "element_type": "api"
+  },
+  {
+    "step": 52,
+    "action": "wait",
+    "element_description": "Waited for all tasks done",
+    "element_type": "system"
+  },
+  {
+    "step": 53,
+    "action": "update",
+    "element_description": "Set status to Terminated",
+    "element_type": "system"
+  },
+  {
+    "step": 54,
+    "action": "save",
+    "element_description": "Saved offboarding report",
+    "element_type": "system"
+  },
+  {
+    "step": 55,
+    "action": "archive",
+    "element_description": "Archived vendor record",
+    "element_type": "system"
+  }
+]

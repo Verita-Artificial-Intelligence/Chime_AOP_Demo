@@ -1,0 +1,266 @@
+[
+  {
+    "step": 1,
+    "action": "fill",
+    "element_description": "Filled vendor request form",
+    "element_type": "form"
+  },
+  {
+    "step": 2,
+    "action": "submit",
+    "element_description": "Submitted vendor form",
+    "element_type": "button"
+  },
+  {
+    "step": 3,
+    "action": "create",
+    "element_description": "Created Airtable row",
+    "element_type": "system"
+  },
+  {
+    "step": 4,
+    "action": "generate",
+    "element_description": "Generated VendorID",
+    "element_type": "system"
+  },
+  {
+    "step": 5,
+    "action": "set",
+    "element_description": "Set status Pending Initiation",
+    "element_type": "system"
+  },
+  {
+    "step": 6,
+    "action": "trigger",
+    "element_description": "Triggered Zapier workflow",
+    "element_type": "system"
+  },
+  {
+    "step": 7,
+    "action": "send",
+    "element_description": "Sent portal email link",
+    "element_type": "api"
+  },
+  {
+    "step": 8,
+    "action": "login",
+    "element_description": "Vendor logged into portal",
+    "element_type": "portal"
+  },
+  {
+    "step": 9,
+    "action": "display",
+    "element_description": "Displayed checklist from Airtable",
+    "element_type": "system"
+  },
+  {
+    "step": 10,
+    "action": "upload",
+    "element_description": "Uploaded W-9 file",
+    "element_type": "file"
+  },
+  {
+    "step": 11,
+    "action": "upload",
+    "element_description": "Uploaded SOC 2 file",
+    "element_type": "file"
+  },
+  {
+    "step": 12,
+    "action": "upload",
+    "element_description": "Uploaded MSA document",
+    "element_type": "file"
+  },
+  {
+    "step": 13,
+    "action": "save",
+    "element_description": "Saved file to Drive",
+    "element_type": "system"
+  },
+  {
+    "step": 14,
+    "action": "update",
+    "element_description": "Updated Airtable with links",
+    "element_type": "system"
+  },
+  {
+    "step": 15,
+    "action": "check",
+    "element_description": "Checked off submission boxes",
+    "element_type": "system"
+  },
+  {
+    "step": 16,
+    "action": "update",
+    "element_description": "Set status Pending Review",
+    "element_type": "system"
+  },
+  {
+    "step": 17,
+    "action": "detect",
+    "element_description": "Detected MSA/NDA submitted",
+    "element_type": "system"
+  },
+  {
+    "step": 18,
+    "action": "create",
+    "element_description": "Created Asana legal task",
+    "element_type": "api"
+  },
+  {
+    "step": 19,
+    "action": "populate",
+    "element_description": "Populated legal task details",
+    "element_type": "system"
+  },
+  {
+    "step": 20,
+    "action": "review",
+    "element_description": "Lawyer reviewed documents",
+    "element_type": "manual"
+  },
+  {
+    "step": 21,
+    "action": "tag",
+    "element_description": "Tagged task Revisions Required",
+    "element_type": "manual"
+  },
+  {
+    "step": 22,
+    "action": "trigger",
+    "element_description": "Triggered webhook from Asana",
+    "element_type": "system"
+  },
+  {
+    "step": 23,
+    "action": "pull",
+    "element_description": "Pulled comments from Asana",
+    "element_type": "api"
+  },
+  {
+    "step": 24,
+    "action": "email",
+    "element_description": "Sent revision request email",
+    "element_type": "api"
+  },
+  {
+    "step": 25,
+    "action": "update",
+    "element_description": "Set Legal Status to Revisions",
+    "element_type": "system"
+  },
+  {
+    "step": 26,
+    "action": "reopen",
+    "element_description": "Reopened upload section",
+    "element_type": "portal"
+  },
+  {
+    "step": 27,
+    "action": "complete",
+    "element_description": "Marked task Complete",
+    "element_type": "manual"
+  },
+  {
+    "step": 28,
+    "action": "update",
+    "element_description": "Set Legal Status to Approved",
+    "element_type": "system"
+  },
+  {
+    "step": 29,
+    "action": "trigger",
+    "element_description": "Triggered Stripe Identity check",
+    "element_type": "api"
+  },
+  {
+    "step": 30,
+    "action": "verify",
+    "element_description": "Checked sanctions and watchlists",
+    "element_type": "api"
+  },
+  {
+    "step": 31,
+    "action": "write",
+    "element_description": "Wrote results to Airtable",
+    "element_type": "system"
+  },
+  {
+    "step": 32,
+    "action": "create",
+    "element_description": "Created security review task",
+    "element_type": "api"
+  },
+  {
+    "step": 33,
+    "action": "link",
+    "element_description": "Linked Airtable and SOC 2",
+    "element_type": "system"
+  },
+  {
+    "step": 34,
+    "action": "assess",
+    "element_description": "Reviewed risk and documents",
+    "element_type": "manual"
+  },
+  {
+    "step": 35,
+    "action": "set",
+    "element_description": "Set Risk Tier in Airtable",
+    "element_type": "manual"
+  },
+  {
+    "step": 36,
+    "action": "set",
+    "element_description": "Set Security Status Approved",
+    "element_type": "manual"
+  },
+  {
+    "step": 37,
+    "action": "check",
+    "element_description": "Checked if all approved",
+    "element_type": "system"
+  },
+  {
+    "step": 38,
+    "action": "update",
+    "element_description": "Updated status to Active",
+    "element_type": "system"
+  },
+  {
+    "step": 39,
+    "action": "email",
+    "element_description": "Sent final welcome email",
+    "element_type": "api"
+  },
+  {
+    "step": 40,
+    "action": "email",
+    "element_description": "Sent confirmation to team",
+    "element_type": "api"
+  },
+  {
+    "step": 41,
+    "action": "create",
+    "element_description": "Created vendor in QuickBooks",
+    "element_type": "api"
+  },
+  {
+    "step": 42,
+    "action": "create",
+    "element_description": "Created Okta user if needed",
+    "element_type": "api"
+  },
+  {
+    "step": 43,
+    "action": "track",
+    "element_description": "Logged vendor history in Airtable",
+    "element_type": "system"
+  },
+  {
+    "step": 44,
+    "action": "record",
+    "element_description": "Recorded API calls in Zapier",
+    "element_type": "system"
+  }
+]

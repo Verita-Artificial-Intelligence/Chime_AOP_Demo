@@ -1,0 +1,242 @@
+[
+  {
+    "step": 1,
+    "action": "read",
+    "element_description": "Read input business list",
+    "element_type": "file"
+  },
+  {
+    "step": 2,
+    "action": "store",
+    "element_description": "Stored credentials securely",
+    "element_type": "system"
+  },
+  {
+    "step": 3,
+    "action": "login",
+    "element_description": "Logged into Midesk",
+    "element_type": "rpa"
+  },
+  {
+    "step": 4,
+    "action": "search",
+    "element_description": "Searched business in Midesk",
+    "element_type": "rpa"
+  },
+  {
+    "step": 5,
+    "action": "navigate",
+    "element_description": "Opened KYB result pages",
+    "element_type": "rpa"
+  },
+  {
+    "step": 6,
+    "action": "screenshot",
+    "element_description": "Captured KYB flag pages",
+    "element_type": "rpa"
+  },
+  {
+    "step": 7,
+    "action": "login",
+    "element_description": "Logged into Sokir",
+    "element_type": "rpa"
+  },
+  {
+    "step": 8,
+    "action": "search",
+    "element_description": "Searched business owner",
+    "element_type": "rpa"
+  },
+  {
+    "step": 9,
+    "action": "navigate",
+    "element_description": "Viewed KYC and fraud pages",
+    "element_type": "rpa"
+  },
+  {
+    "step": 10,
+    "action": "screenshot",
+    "element_description": "Captured Sokir flags",
+    "element_type": "rpa"
+  },
+  {
+    "step": 11,
+    "action": "search",
+    "element_description": "Searched business on Google",
+    "element_type": "rpa"
+  },
+  {
+    "step": 12,
+    "action": "screenshot",
+    "element_description": "Captured general results",
+    "element_type": "rpa"
+  },
+  {
+    "step": 13,
+    "action": "search",
+    "element_description": "Searched lawsuits",
+    "element_type": "rpa"
+  },
+  {
+    "step": 14,
+    "action": "screenshot",
+    "element_description": "Captured lawsuit results",
+    "element_type": "rpa"
+  },
+  {
+    "step": 15,
+    "action": "search",
+    "element_description": "Searched settlements",
+    "element_type": "rpa"
+  },
+  {
+    "step": 16,
+    "action": "screenshot",
+    "element_description": "Captured settlement results",
+    "element_type": "rpa"
+  },
+  {
+    "step": 17,
+    "action": "search",
+    "element_description": "Searched news tab",
+    "element_type": "rpa"
+  },
+  {
+    "step": 18,
+    "action": "screenshot",
+    "element_description": "Captured news results",
+    "element_type": "rpa"
+  },
+  {
+    "step": 19,
+    "action": "check",
+    "element_description": "Checked address flag",
+    "element_type": "system"
+  },
+  {
+    "step": 20,
+    "action": "search",
+    "element_description": "Viewed address in Maps",
+    "element_type": "rpa"
+  },
+  {
+    "step": 21,
+    "action": "screenshot",
+    "element_description": "Captured Maps view",
+    "element_type": "rpa"
+  },
+  {
+    "step": 22,
+    "action": "check",
+    "element_description": "Checked name SoS flag",
+    "element_type": "system"
+  },
+  {
+    "step": 23,
+    "action": "search",
+    "element_description": "Searched business on SoS",
+    "element_type": "rpa"
+  },
+  {
+    "step": 24,
+    "action": "screenshot",
+    "element_description": "Captured SoS result",
+    "element_type": "rpa"
+  },
+  {
+    "step": 25,
+    "action": "login",
+    "element_description": "Logged into internal dashboard",
+    "element_type": "rpa"
+  },
+  {
+    "step": 26,
+    "action": "query",
+    "element_description": "Queried business data",
+    "element_type": "rpa"
+  },
+  {
+    "step": 27,
+    "action": "extract",
+    "element_description": "Exported internal data",
+    "element_type": "rpa"
+  },
+  {
+    "step": 28,
+    "action": "analyze",
+    "element_description": "Analyzed Midesk exceptions",
+    "element_type": "system"
+  },
+  {
+    "step": 29,
+    "action": "analyze",
+    "element_description": "Analyzed Sokir exceptions",
+    "element_type": "system"
+  },
+  {
+    "step": 30,
+    "action": "compare",
+    "element_description": "Cross-checked screenshots",
+    "element_type": "system"
+  },
+  {
+    "step": 31,
+    "action": "derive",
+    "element_description": "Derived risk and remediation",
+    "element_type": "system"
+  },
+  {
+    "step": 32,
+    "action": "save",
+    "element_description": "Saved screenshots with naming",
+    "element_type": "system"
+  },
+  {
+    "step": 33,
+    "action": "organize",
+    "element_description": "Stored files in Drive folder",
+    "element_type": "system"
+  },
+  {
+    "step": 34,
+    "action": "open",
+    "element_description": "Opened audit report template",
+    "element_type": "system"
+  },
+  {
+    "step": 35,
+    "action": "fill",
+    "element_description": "Filled audit data fields",
+    "element_type": "system"
+  },
+  {
+    "step": 36,
+    "action": "embed",
+    "element_description": "Linked screenshot evidence",
+    "element_type": "system"
+  },
+  {
+    "step": 37,
+    "action": "save",
+    "element_description": "Saved report as final version",
+    "element_type": "system"
+  },
+  {
+    "step": 38,
+    "action": "monitor",
+    "element_description": "Monitored for new exceptions",
+    "element_type": "system"
+  },
+  {
+    "step": 39,
+    "action": "trigger",
+    "element_description": "Triggered live investigation",
+    "element_type": "system"
+  },
+  {
+    "step": 40,
+    "action": "compile",
+    "element_description": "Pre-compiled audit data",
+    "element_type": "system"
+  }
+]
