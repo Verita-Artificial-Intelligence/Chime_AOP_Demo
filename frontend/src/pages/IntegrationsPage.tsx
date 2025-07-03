@@ -189,13 +189,13 @@ export const IntegrationsPage: React.FC = () => {
                       cx="12"
                       cy="12"
                       r="10"
-                      stroke="black"
+                      stroke="#22C55E"
                       strokeWidth="2"
-                      fill="black"
+                      fill="#22C55E"
                     />
                     <path
                       d="M8 12l3 3 5-6"
-                      stroke="#ADFF02"
+                      stroke="black"
                       strokeWidth="2.5"
                       strokeLinecap="round"
                       strokeLinejoin="round"
