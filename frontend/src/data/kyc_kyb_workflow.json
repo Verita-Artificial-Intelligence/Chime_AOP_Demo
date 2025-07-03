@@ -1,0 +1,326 @@
+[
+  {
+    "step": 1,
+    "action": "click",
+    "element_description": "Opened application form",
+    "element_type": "tab"
+  },
+  {
+    "step": 2,
+    "action": "type",
+    "element_description": "Entered KYC/KYB personal details",
+    "element_type": "textfield"
+  },
+  {
+    "step": 3,
+    "action": "upload",
+    "element_description": "Uploaded ID image",
+    "element_type": "file"
+  },
+  {
+    "step": 4,
+    "action": "submit",
+    "element_description": "Submitted application form",
+    "element_type": "button"
+  },
+  {
+    "step": 5,
+    "action": "generate",
+    "element_description": "Created ApplicationID",
+    "element_type": "system"
+  },
+  {
+    "step": 6,
+    "action": "detect",
+    "element_description": "Detected new application",
+    "element_type": "system"
+  },
+  {
+    "step": 7,
+    "action": "parse",
+    "element_description": "Parsed application data",
+    "element_type": "system"
+  },
+  {
+    "step": 8,
+    "action": "call",
+    "element_description": "Sent KYB data to Midesk",
+    "element_type": "api"
+  },
+  {
+    "step": 9,
+    "action": "call",
+    "element_description": "Sent KYC data to Sokir",
+    "element_type": "api"
+  },
+  {
+    "step": 10,
+    "action": "receive",
+    "element_description": "Received Midesk response",
+    "element_type": "api"
+  },
+  {
+    "step": 11,
+    "action": "receive",
+    "element_description": "Received Sokir response",
+    "element_type": "api"
+  },
+  {
+    "step": 12,
+    "action": "extract",
+    "element_description": "Extracted risk flags",
+    "element_type": "system"
+  },
+  {
+    "step": 13,
+    "action": "store",
+    "element_description": "Stored vendor data",
+    "element_type": "system"
+  },
+  {
+    "step": 14,
+    "action": "compile",
+    "element_description": "Compiled data packet",
+    "element_type": "system"
+  },
+  {
+    "step": 15,
+    "action": "call",
+    "element_description": "Sent packet to Tactile",
+    "element_type": "api"
+  },
+  {
+    "step": 16,
+    "action": "process",
+    "element_description": "Processed decision rules",
+    "element_type": "system"
+  },
+  {
+    "step": 17,
+    "action": "receive",
+    "element_description": "Received Tactile decision",
+    "element_type": "api"
+  },
+  {
+    "step": 18,
+    "action": "log",
+    "element_description": "Logged auto decision",
+    "element_type": "system"
+  },
+  {
+    "step": 19,
+    "action": "trigger",
+    "element_description": "Triggered manual review path",
+    "element_type": "system"
+  },
+  {
+    "step": 20,
+    "action": "check",
+    "element_description": "Checked ADVERSE_MEDIA_FOUND",
+    "element_type": "system"
+  },
+  {
+    "step": 21,
+    "action": "search",
+    "element_description": "Searched news on Google",
+    "element_type": "rpa"
+  },
+  {
+    "step": 22,
+    "action": "screenshot",
+    "element_description": "Captured lawsuit results",
+    "element_type": "rpa"
+  },
+  {
+    "step": 23,
+    "action": "screenshot",
+    "element_description": "Captured settlement results",
+    "element_type": "rpa"
+  },
+  {
+    "step": 24,
+    "action": "screenshot",
+    "element_description": "Captured business news",
+    "element_type": "rpa"
+  },
+  {
+    "step": 25,
+    "action": "check",
+    "element_description": "Checked ADDRESS_MISMATCH",
+    "element_type": "system"
+  },
+  {
+    "step": 26,
+    "action": "search",
+    "element_description": "Searched address in Maps",
+    "element_type": "rpa"
+  },
+  {
+    "step": 27,
+    "action": "screenshot",
+    "element_description": "Captured map view",
+    "element_type": "rpa"
+  },
+  {
+    "step": 28,
+    "action": "screenshot",
+    "element_description": "Captured satellite view",
+    "element_type": "rpa"
+  },
+  {
+    "step": 29,
+    "action": "screenshot",
+    "element_description": "Captured street view",
+    "element_type": "rpa"
+  },
+  {
+    "step": 30,
+    "action": "check",
+    "element_description": "Checked SOS_NO_MATCH",
+    "element_type": "system"
+  },
+  {
+    "step": 31,
+    "action": "navigate",
+    "element_description": "Opened SoS website",
+    "element_type": "rpa"
+  },
+  {
+    "step": 32,
+    "action": "search",
+    "element_description": "Searched business on SoS",
+    "element_type": "rpa"
+  },
+  {
+    "step": 33,
+    "action": "screenshot",
+    "element_description": "Captured SoS result",
+    "element_type": "rpa"
+  },
+  {
+    "step": 34,
+    "action": "create",
+    "element_description": "Created task in Asana",
+    "element_type": "system"
+  },
+  {
+    "step": 35,
+    "action": "populate",
+    "element_description": "Populated task summary",
+    "element_type": "system"
+  },
+  {
+    "step": 36,
+    "action": "attach",
+    "element_description": "Attached evidence folder",
+    "element_type": "system"
+  },
+  {
+    "step": 37,
+    "action": "open",
+    "element_description": "Opened task by reviewer",
+    "element_type": "manual"
+  },
+  {
+    "step": 38,
+    "action": "review",
+    "element_description": "Reviewed screenshots",
+    "element_type": "manual"
+  },
+  {
+    "step": 39,
+    "action": "decide",
+    "element_description": "Made manual decision",
+    "element_type": "manual"
+  },
+  {
+    "step": 40,
+    "action": "record",
+    "element_description": "Recorded reviewer notes",
+    "element_type": "manual"
+  },
+  {
+    "step": 41,
+    "action": "log",
+    "element_description": "Logged all system actions",
+    "element_type": "system"
+  },
+  {
+    "step": 42,
+    "action": "log",
+    "element_description": "Logged raw applicant data",
+    "element_type": "system"
+  },
+  {
+    "step": 43,
+    "action": "log",
+    "element_description": "Logged API transactions",
+    "element_type": "system"
+  },
+  {
+    "step": 44,
+    "action": "log",
+    "element_description": "Logged extracted flags",
+    "element_type": "system"
+  },
+  {
+    "step": 45,
+    "action": "log",
+    "element_description": "Logged RPA screenshots",
+    "element_type": "system"
+  },
+  {
+    "step": 46,
+    "action": "log",
+    "element_description": "Logged manual decisions",
+    "element_type": "system"
+  },
+  {
+    "step": 47,
+    "action": "write",
+    "element_description": "Wrote logs to storage",
+    "element_type": "system"
+  },
+  {
+    "step": 48,
+    "action": "prepare",
+    "element_description": "Prepared audit reports",
+    "element_type": "system"
+  },
+  {
+    "step": 49,
+    "action": "validate",
+    "element_description": "Validated ID expiration",
+    "element_type": "api"
+  },
+  {
+    "step": 50,
+    "action": "score",
+    "element_description": "Scored fraud risk",
+    "element_type": "api"
+  },
+  {
+    "step": 51,
+    "action": "match",
+    "element_description": "Matched SoS business data",
+    "element_type": "api"
+  },
+  {
+    "step": 52,
+    "action": "match",
+    "element_description": "Matched address to record",
+    "element_type": "api"
+  },
+  {
+    "step": 53,
+    "action": "check",
+    "element_description": "Checked liveness result",
+    "element_type": "api"
+  },
+  {
+    "step": 54,
+    "action": "check",
+    "element_description": "Checked SSN validity",
+    "element_type": "api"
+  }
+]

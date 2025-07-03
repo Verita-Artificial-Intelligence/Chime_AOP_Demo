@@ -1,0 +1,326 @@
+[
+  {
+    "step": 1,
+    "action": "stream",
+    "element_description": "Streamed transactions to Alloy",
+    "element_type": "api"
+  },
+  {
+    "step": 2,
+    "action": "apply",
+    "element_description": "Applied AML rules",
+    "element_type": "system"
+  },
+  {
+    "step": 3,
+    "action": "alert",
+    "element_description": "Generated alert in Alloy",
+    "element_type": "system"
+  },
+  {
+    "step": 4,
+    "action": "trigger",
+    "element_description": "Fired webhook to Zapier",
+    "element_type": "api"
+  },
+  {
+    "step": 5,
+    "action": "receive",
+    "element_description": "Received alert in Zapier",
+    "element_type": "api"
+  },
+  {
+    "step": 6,
+    "action": "query",
+    "element_description": "Queried KYC and history",
+    "element_type": "api"
+  },
+  {
+    "step": 7,
+    "action": "create",
+    "element_description": "Created Airtable AML case",
+    "element_type": "api"
+  },
+  {
+    "step": 8,
+    "action": "assign",
+    "element_description": "Assigned analyst in Airtable",
+    "element_type": "system"
+  },
+  {
+    "step": 9,
+    "action": "update",
+    "element_description": "Updated case status",
+    "element_type": "manual"
+  },
+  {
+    "step": 10,
+    "action": "trigger",
+    "element_description": "Triggered SAR workflow",
+    "element_type": "system"
+  },
+  {
+    "step": 11,
+    "action": "format",
+    "element_description": "Formatted SAR doc",
+    "element_type": "system"
+  },
+  {
+    "step": 12,
+    "action": "create",
+    "element_description": "Created Asana SAR task",
+    "element_type": "api"
+  },
+  {
+    "step": 13,
+    "action": "monitor",
+    "element_description": "Monitored SFTP for ACDV",
+    "element_type": "system"
+  },
+  {
+    "step": 14,
+    "action": "ingest",
+    "element_description": "Parsed ACDV batch file",
+    "element_type": "system"
+  },
+  {
+    "step": 15,
+    "action": "create",
+    "element_description": "Created Airtable dispute record",
+    "element_type": "system"
+  },
+  {
+    "step": 16,
+    "action": "enrich",
+    "element_description": "Enriched with account history",
+    "element_type": "system"
+  },
+  {
+    "step": 17,
+    "action": "review",
+    "element_description": "Reviewed dispute details",
+    "element_type": "manual"
+  },
+  {
+    "step": 18,
+    "action": "set",
+    "element_description": "Set Disposition Code",
+    "element_type": "manual"
+  },
+  {
+    "step": 19,
+    "action": "check",
+    "element_description": "Checked resolved disputes",
+    "element_type": "system"
+  },
+  {
+    "step": 20,
+    "action": "assemble",
+    "element_description": "Assembled response file",
+    "element_type": "system"
+  },
+  {
+    "step": 21,
+    "action": "upload",
+    "element_description": "Uploaded file via SFTP",
+    "element_type": "api"
+  },
+  {
+    "step": 22,
+    "action": "schedule",
+    "element_description": "Scheduled furnishing job",
+    "element_type": "system"
+  },
+  {
+    "step": 23,
+    "action": "run",
+    "element_description": "Ran Metro 2 script",
+    "element_type": "system"
+  },
+  {
+    "step": 24,
+    "action": "place",
+    "element_description": "Placed file in Drive",
+    "element_type": "system"
+  },
+  {
+    "step": 25,
+    "action": "validate",
+    "element_description": "Validated file content",
+    "element_type": "system"
+  },
+  {
+    "step": 26,
+    "action": "transmit",
+    "element_description": "Transmitted file via SFTP",
+    "element_type": "api"
+  },
+  {
+    "step": 27,
+    "action": "log",
+    "element_description": "Logged receipts to Airtable",
+    "element_type": "system"
+  },
+  {
+    "step": 28,
+    "action": "submit",
+    "element_description": "Submitted materials in Jira",
+    "element_type": "form"
+  },
+  {
+    "step": 29,
+    "action": "trigger",
+    "element_description": "Triggered Zapier triage",
+    "element_type": "system"
+  },
+  {
+    "step": 30,
+    "action": "scan",
+    "element_description": "Scanned for risky keywords",
+    "element_type": "system"
+  },
+  {
+    "step": 31,
+    "action": "label",
+    "element_description": "Labeled ticket high-risk",
+    "element_type": "api"
+  },
+  {
+    "step": 32,
+    "action": "route",
+    "element_description": "Routed to Legal team",
+    "element_type": "system"
+  },
+  {
+    "step": 33,
+    "action": "tag",
+    "element_description": "Tagged approved copy in Jira",
+    "element_type": "manual"
+  },
+  {
+    "step": 34,
+    "action": "detect",
+    "element_description": "Detected tag via webhook",
+    "element_type": "system"
+  },
+  {
+    "step": 35,
+    "action": "post",
+    "element_description": "Posted content to Confluence",
+    "element_type": "api"
+  },
+  {
+    "step": 36,
+    "action": "store",
+    "element_description": "Stored report configs",
+    "element_type": "system"
+  },
+  {
+    "step": 37,
+    "action": "schedule",
+    "element_description": "Scheduled report checks",
+    "element_type": "system"
+  },
+  {
+    "step": 38,
+    "action": "check",
+    "element_description": "Checked report due dates",
+    "element_type": "system"
+  },
+  {
+    "step": 39,
+    "action": "query",
+    "element_description": "Queried BigQuery data",
+    "element_type": "api"
+  },
+  {
+    "step": 40,
+    "action": "populate",
+    "element_description": "Populated report in Sheets",
+    "element_type": "api"
+  },
+  {
+    "step": 41,
+    "action": "save",
+    "element_description": "Saved final report file",
+    "element_type": "system"
+  },
+  {
+    "step": 42,
+    "action": "create",
+    "element_description": "Created Asana report task",
+    "element_type": "api"
+  },
+  {
+    "step": 43,
+    "action": "trigger",
+    "element_description": "Triggered on new complaint",
+    "element_type": "system"
+  },
+  {
+    "step": 44,
+    "action": "listen",
+    "element_description": "Listened for inbox keyword",
+    "element_type": "api"
+  },
+  {
+    "step": 45,
+    "action": "watch",
+    "element_description": "Watched Zendesk tickets",
+    "element_type": "api"
+  },
+  {
+    "step": 46,
+    "action": "pull",
+    "element_description": "Pulled complaints from portals",
+    "element_type": "api"
+  },
+  {
+    "step": 47,
+    "action": "standardize",
+    "element_description": "Standardized complaint fields",
+    "element_type": "system"
+  },
+  {
+    "step": 48,
+    "action": "create",
+    "element_description": "Created Airtable complaint case",
+    "element_type": "system"
+  },
+  {
+    "step": 49,
+    "action": "enrich",
+    "element_description": "Enriched with full profile",
+    "element_type": "system"
+  },
+  {
+    "step": 50,
+    "action": "calc",
+    "element_description": "Calculated response deadline",
+    "element_type": "system"
+  },
+  {
+    "step": 51,
+    "action": "assign",
+    "element_description": "Assigned analyst to case",
+    "element_type": "system"
+  },
+  {
+    "step": 52,
+    "action": "investigate",
+    "element_description": "Investigated complaint",
+    "element_type": "manual"
+  },
+  {
+    "step": 53,
+    "action": "remind",
+    "element_description": "Sent resolution reminders",
+    "element_type": "system"
+  },
+  {
+    "step": 54,
+    "action": "close",
+    "element_description": "Closed complaint case",
+    "element_type": "manual"
+  }
+]
