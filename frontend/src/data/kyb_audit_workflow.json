@@ -2,241 +2,281 @@
   {
     "step": 1,
     "action": "read",
-    "element_description": "Read input business list",
-    "element_type": "file"
+    "heading": "Read input business list",
+    "element_type": "file",
+    "element_description": "Read the provided list of businesses for audit"
   },
   {
     "step": 2,
     "action": "store",
-    "element_description": "Stored credentials securely",
-    "element_type": "system"
+    "heading": "Stored credentials securely",
+    "element_type": "system",
+    "element_description": "Securely stored system credentials for platform access"
   },
   {
     "step": 3,
     "action": "login",
-    "element_description": "Logged into Midesk",
-    "element_type": "rpa"
+    "heading": "Logged into Midesk",
+    "element_type": "rpa",
+    "element_description": "Automated login to Midesk platform using RPA"
   },
   {
     "step": 4,
     "action": "search",
-    "element_description": "Searched business in Midesk",
-    "element_type": "rpa"
+    "heading": "Searched business in Midesk",
+    "element_type": "rpa",
+    "element_description": "Performed business name search in Midesk system"
   },
   {
     "step": 5,
     "action": "navigate",
-    "element_description": "Opened KYB result pages",
-    "element_type": "rpa"
+    "heading": "Opened KYB result pages",
+    "element_type": "rpa",
+    "element_description": "Navigated to KYB result pages in Midesk interface"
   },
   {
     "step": 6,
     "action": "screenshot",
-    "element_description": "Captured KYB flag pages",
-    "element_type": "rpa"
+    "heading": "Captured KYB flag pages",
+    "element_type": "rpa",
+    "element_description": "Took screenshots of KYB flag notification pages"
   },
   {
     "step": 7,
     "action": "login",
-    "element_description": "Logged into Sokir",
-    "element_type": "rpa"
+    "heading": "Logged into Sokir",
+    "element_type": "rpa",
+    "element_description": "Automated login to Sokir platform using RPA"
   },
   {
     "step": 8,
     "action": "search",
-    "element_description": "Searched business owner",
-    "element_type": "rpa"
+    "heading": "Searched business owner",
+    "element_type": "rpa",
+    "element_description": "Performed search for business owner in Sokir"
   },
   {
     "step": 9,
     "action": "navigate",
-    "element_description": "Viewed KYC and fraud pages",
-    "element_type": "rpa"
+    "heading": "Viewed KYC and fraud pages",
+    "element_type": "rpa",
+    "element_description": "Navigated to KYC and fraud score pages"
   },
   {
     "step": 10,
     "action": "screenshot",
-    "element_description": "Captured Sokir flags",
-    "element_type": "rpa"
+    "heading": "Captured Sokir flags",
+    "element_type": "rpa",
+    "element_description": "Captured screenshots of Sokir compliance flag results"
   },
   {
     "step": 11,
     "action": "search",
-    "element_description": "Searched business on Google",
-    "element_type": "rpa"
+    "heading": "Searched business on Google",
+    "element_type": "rpa",
+    "element_description": "Performed general business search using Google engine"
   },
   {
     "step": 12,
     "action": "screenshot",
-    "element_description": "Captured general results",
-    "element_type": "rpa"
+    "heading": "Captured general results",
+    "element_type": "rpa",
+    "element_description": "Took screenshot of general Google search results"
   },
   {
     "step": 13,
     "action": "search",
-    "element_description": "Searched lawsuits",
-    "element_type": "rpa"
+    "heading": "Searched lawsuits",
+    "element_type": "rpa",
+    "element_description": "Conducted Google search for business lawsuit information"
   },
   {
     "step": 14,
     "action": "screenshot",
-    "element_description": "Captured lawsuit results",
-    "element_type": "rpa"
+    "heading": "Captured lawsuit results",
+    "element_type": "rpa",
+    "element_description": "Captured screenshot of lawsuit search results page"
   },
   {
     "step": 15,
     "action": "search",
-    "element_description": "Searched settlements",
-    "element_type": "rpa"
+    "heading": "Searched settlements",
+    "element_type": "rpa",
+    "element_description": "Performed Google search for settlement information"
   },
   {
     "step": 16,
     "action": "screenshot",
-    "element_description": "Captured settlement results",
-    "element_type": "rpa"
+    "heading": "Captured settlement results",
+    "element_type": "rpa",
+    "element_description": "Captured screenshot of settlement search results page"
   },
   {
     "step": 17,
     "action": "search",
-    "element_description": "Searched news tab",
-    "element_type": "rpa"
+    "heading": "Searched news tab",
+    "element_type": "rpa",
+    "element_description": "Performed search under News tab for relevant articles"
   },
   {
     "step": 18,
     "action": "screenshot",
-    "element_description": "Captured news results",
-    "element_type": "rpa"
+    "heading": "Captured news results",
+    "element_type": "rpa",
+    "element_description": "Captured screenshot of Google News search results"
   },
   {
     "step": 19,
     "action": "check",
-    "element_description": "Checked address flag",
-    "element_type": "system"
+    "heading": "Checked address flag",
+    "element_type": "system",
+    "element_description": "System evaluated address flag from third-party checks"
   },
   {
     "step": 20,
     "action": "search",
-    "element_description": "Viewed address in Maps",
-    "element_type": "rpa"
+    "heading": "Viewed address in Maps",
+    "element_type": "rpa",
+    "element_description": "Opened Google Maps and searched business address"
   },
   {
     "step": 21,
     "action": "screenshot",
-    "element_description": "Captured Maps view",
-    "element_type": "rpa"
+    "heading": "Captured Maps view",
+    "element_type": "rpa",
+    "element_description": "Captured screenshot of Google Maps address view"
   },
   {
     "step": 22,
     "action": "check",
-    "element_description": "Checked name SoS flag",
-    "element_type": "system"
+    "heading": "Checked name SoS flag",
+    "element_type": "system",
+    "element_description": "System evaluated Secretary of State name match flag"
   },
   {
     "step": 23,
     "action": "search",
-    "element_description": "Searched business on SoS",
-    "element_type": "rpa"
+    "heading": "Searched business on SoS",
+    "element_type": "rpa",
+    "element_description": "Searched business registration status on SoS website"
   },
   {
     "step": 24,
     "action": "screenshot",
-    "element_description": "Captured SoS result",
-    "element_type": "rpa"
+    "heading": "Captured SoS result",
+    "element_type": "rpa",
+    "element_description": "Captured screenshot of Secretary of State result page"
   },
   {
     "step": 25,
     "action": "login",
-    "element_description": "Logged into internal dashboard",
-    "element_type": "rpa"
+    "heading": "Logged into internal dashboard",
+    "element_type": "rpa",
+    "element_description": "Automated login to internal dashboard system"
   },
   {
     "step": 26,
     "action": "query",
-    "element_description": "Queried business data",
-    "element_type": "rpa"
+    "heading": "Queried business data",
+    "element_type": "rpa",
+    "element_description": "Queried internal dashboard for business data details"
   },
   {
     "step": 27,
     "action": "extract",
-    "element_description": "Exported internal data",
-    "element_type": "rpa"
+    "heading": "Exported internal data",
+    "element_type": "rpa",
+    "element_description": "Extracted relevant data fields from internal dashboard"
   },
   {
     "step": 28,
     "action": "analyze",
-    "element_description": "Analyzed Midesk exceptions",
-    "element_type": "system"
+    "heading": "Analyzed Midesk exceptions",
+    "element_type": "system",
+    "element_description": "Analyzed exceptions flagged by Midesk vendor checks"
   },
   {
     "step": 29,
     "action": "analyze",
-    "element_description": "Analyzed Sokir exceptions",
-    "element_type": "system"
+    "heading": "Analyzed Sokir exceptions",
+    "element_type": "system",
+    "element_description": "Analyzed exceptions flagged by Sokir identity checks"
   },
   {
     "step": 30,
     "action": "compare",
-    "element_description": "Cross-checked screenshots",
-    "element_type": "system"
+    "heading": "Cross-checked screenshots",
+    "element_type": "system",
+    "element_description": "System compared screenshots against vendor data entries"
   },
   {
     "step": 31,
     "action": "derive",
-    "element_description": "Derived risk and remediation",
-    "element_type": "system"
+    "heading": "Derived risk and remediation",
+    "element_type": "system",
+    "element_description": "Derived risk ratings and remediation recommendations"
   },
   {
     "step": 32,
     "action": "save",
-    "element_description": "Saved screenshots with naming",
-    "element_type": "system"
+    "heading": "Saved screenshots with naming",
+    "element_type": "system",
+    "element_description": "Saved screenshots using standardized naming convention"
   },
   {
     "step": 33,
     "action": "organize",
-    "element_description": "Stored files in Drive folder",
-    "element_type": "system"
+    "heading": "Stored files in Drive folder",
+    "element_type": "system",
+    "element_description": "Organized and stored files in Google Drive folder"
   },
   {
     "step": 34,
     "action": "open",
-    "element_description": "Opened audit report template",
-    "element_type": "system"
+    "heading": "Opened audit report template",
+    "element_type": "system",
+    "element_description": "Opened audit report template in document editor"
   },
   {
     "step": 35,
     "action": "fill",
-    "element_description": "Filled audit data fields",
-    "element_type": "system"
+    "heading": "Filled audit data fields",
+    "element_type": "system",
+    "element_description": "Populated audit report template with audit data"
   },
   {
     "step": 36,
     "action": "embed",
-    "element_description": "Linked screenshot evidence",
-    "element_type": "system"
+    "heading": "Linked screenshot evidence",
+    "element_type": "system",
+    "element_description": "Embedded screenshot evidence into audit report document"
   },
   {
     "step": 37,
     "action": "save",
-    "element_description": "Saved report as final version",
-    "element_type": "system"
+    "heading": "Saved report as final version",
+    "element_type": "system",
+    "element_description": "Saved completed audit report as final version"
   },
   {
     "step": 38,
     "action": "monitor",
-    "element_description": "Monitored for new exceptions",
-    "element_type": "system"
+    "heading": "Monitored for new exceptions",
+    "element_type": "system",
+    "element_description": "Scheduled monitoring for new exceptions in real time"
   },
   {
     "step": 39,
     "action": "trigger",
-    "element_description": "Triggered live investigation",
-    "element_type": "system"
+    "heading": "Triggered live investigation",
+    "element_type": "system",
+    "element_description": "Automatically triggered live investigation for flagged exceptions"
   },
   {
     "step": 40,
     "action": "compile",
-    "element_description": "Pre-compiled audit data",
-    "element_type": "system"
+    "heading": "Pre-compiled audit data",
+    "element_type": "system",
+    "element_description": "Compiled audit data into pre-structured format"
   }
 ]
