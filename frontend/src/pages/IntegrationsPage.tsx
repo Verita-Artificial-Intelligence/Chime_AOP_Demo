@@ -1,12 +1,23 @@
 import React, { useState } from "react";
 import { MagnifyingGlassIcon, XMarkIcon } from "@heroicons/react/24/outline";
+import {
+  SiSalesforce,
+  SiSlack,
+  SiJira,
+  SiGoogle,
+  SiZendesk,
+  SiStripe,
+  SiGithub,
+  SiShopify,
+} from "react-icons/si";
 
 interface Integration {
   id: string;
   name: string;
   description: string;
   category: string;
-  logoUrl: string;
+  icon: React.ElementType;
+  iconColor: string;
   connected?: boolean;
 }
 
@@ -17,8 +28,8 @@ const mockIntegrations: Integration[] = [
     description:
       "Connect your Salesforce CRM to automate sales workflows and data synchronization.",
     category: "CRM",
-    logoUrl:
-      "https://cdn.jsdelivr.net/gh/simple-icons/simple-icons@v9/icons/salesforce.svg",
+    icon: SiSalesforce,
+    iconColor: "#00A1E0",
     connected: false,
   },
   {
@@ -27,8 +38,8 @@ const mockIntegrations: Integration[] = [
     description:
       "Integrate with Slack for real-time notifications and team collaboration.",
     category: "Communication",
-    logoUrl:
-      "https://cdn.jsdelivr.net/gh/simple-icons/simple-icons@v9/icons/slack.svg",
+    icon: SiSlack,
+    iconColor: "#4A154B",
     connected: true,
   },
   {
@@ -37,8 +48,8 @@ const mockIntegrations: Integration[] = [
     description:
       "Sync issues and automate project management workflows with Jira.",
     category: "Project Management",
-    logoUrl:
-      "https://cdn.jsdelivr.net/gh/simple-icons/simple-icons@v9/icons/jira.svg",
+    icon: SiJira,
+    iconColor: "#0052CC",
     connected: false,
   },
   {
@@ -47,19 +58,9 @@ const mockIntegrations: Integration[] = [
     description:
       "Connect Google Workspace apps for document management and collaboration.",
     category: "Productivity",
-    logoUrl:
-      "https://cdn.jsdelivr.net/gh/simple-icons/simple-icons@v9/icons/google.svg",
+    icon: SiGoogle,
+    iconColor: "#4285F4",
     connected: true,
-  },
-  {
-    id: "microsoft-365",
-    name: "Microsoft 365",
-    description:
-      "Integrate with Microsoft 365 for Office apps and Teams collaboration.",
-    category: "Productivity",
-    logoUrl:
-      "https://cdn.jsdelivr.net/gh/simple-icons/simple-icons@v9/icons/microsoft.svg",
-    connected: false,
   },
   {
     id: "zendesk",
@@ -67,8 +68,8 @@ const mockIntegrations: Integration[] = [
     description:
       "Automate customer support workflows with Zendesk integration.",
     category: "Support",
-    logoUrl:
-      "https://cdn.jsdelivr.net/gh/simple-icons/simple-icons@v9/icons/zendesk.svg",
+    icon: SiZendesk,
+    iconColor: "#03363D",
     connected: false,
   },
   {
@@ -77,8 +78,8 @@ const mockIntegrations: Integration[] = [
     description:
       "Process payments and manage subscriptions with Stripe integration.",
     category: "Finance",
-    logoUrl:
-      "https://cdn.jsdelivr.net/gh/simple-icons/simple-icons@v9/icons/stripe.svg",
+    icon: SiStripe,
+    iconColor: "#635BFF",
     connected: false,
   },
   {
@@ -86,8 +87,8 @@ const mockIntegrations: Integration[] = [
     name: "GitHub",
     description: "Automate your development workflows with GitHub integration.",
     category: "Development",
-    logoUrl:
-      "https://cdn.jsdelivr.net/gh/simple-icons/simple-icons@v9/icons/github.svg",
+    icon: SiGithub,
+    iconColor: "#181717",
     connected: false,
   },
   {
@@ -95,8 +96,8 @@ const mockIntegrations: Integration[] = [
     name: "Shopify",
     description: "Connect your Shopify store for e-commerce automation.",
     category: "E-commerce",
-    logoUrl:
-      "https://cdn.jsdelivr.net/gh/simple-icons/simple-icons@v9/icons/shopify.svg",
+    icon: SiShopify,
+    iconColor: "#7AB55C",
     connected: false,
   },
 ];
@@ -206,15 +207,9 @@ export const IntegrationsPage: React.FC = () => {
 
             <div className="flex items-start justify-between mb-4">
               <div className="w-12 h-12 flex items-center justify-center bg-gray-50 rounded-lg group-hover:bg-brand-primaryLight transition-colors">
-                <img
-                  src={integration.logoUrl}
-                  alt={`${integration.name} logo`}
-                  className="w-8 h-8 object-contain"
-                  style={{ filter: "grayscale(100%)" }}
-                  onLoad={(e) => {
-                    const img = e.target as HTMLImageElement;
-                    img.style.filter = "none";
-                  }}
+                <integration.icon
+                  className="w-8 h-8"
+                  style={{ color: integration.iconColor }}
                 />
               </div>
             </div>
@@ -267,10 +262,9 @@ export const IntegrationsPage: React.FC = () => {
 
             <div className="flex items-center mb-4">
               <div className="w-12 h-12 flex items-center justify-center bg-brand-primaryLight rounded-lg mr-4">
-                <img
-                  src={selectedIntegration.logoUrl}
-                  alt={`${selectedIntegration.name} logo`}
-                  className="w-8 h-8 object-contain"
+                <selectedIntegration.icon
+                  className="w-8 h-8"
+                  style={{ color: selectedIntegration.iconColor }}
                 />
               </div>
               <div>
