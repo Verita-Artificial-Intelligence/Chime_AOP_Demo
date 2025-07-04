@@ -7,6 +7,7 @@ import {
   ClockIcon,
   ChevronRightIcon,
 } from "@heroicons/react/24/outline";
+import content from "../config/content";
 import "../index.css";
 
 const cardGradients = [
@@ -63,11 +64,12 @@ export function HomePage() {
   // Optionally, you can filter quickAccessItems based on searchQuery here
 
   return (
-    <div className="dashboard-gradient-bg min-h-screen w-full flex flex-col items-center">
-      <div className="w-full max-w-6xl mx-auto mt-10 px-4 flex flex-col items-center">
+    <div className="dashboard-gradient-bg min-h-screen flex flex-col items-center">
+      <div className="w-full max-w-6xl mx-auto mt-10 flex flex-col items-center">
         <div className="text-center w-full mb-8">
           <div className="text-gray-400 text-lg font-bold tracking-widest mb-2 uppercase">
-            GOOD MORNING
+            {/* Use content.clientName or a dynamic username if available */}
+            GOOD MORNING, {content.clientName.toUpperCase()}
           </div>
           <h1 className="text-5xl font-extrabold text-black mb-4">
             {/* Use content.welcomeMessage or a static string */}
@@ -85,7 +87,7 @@ export function HomePage() {
             </button>
             <button
               className="px-4 py-1.5 rounded-full font-semibold text-base border border-gray-300 bg-white text-gray-700 hover:bg-gray-100 transition"
-              onClick={() => navigate("/workflow/run")}
+              onClick={() => navigate("/workflow/active-runs")}
             >
               Your Workflows
             </button>
@@ -121,7 +123,7 @@ export function HomePage() {
           </div>
         </div>
       </div>
-      <div className="w-full max-w-6xl mx-auto mt-12 px-4">
+      <div className="w-full max-w-6xl mx-auto mt-12">
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8 justify-items-center">
           {quickAccessItems.map((item, idx) => (
             <Link
