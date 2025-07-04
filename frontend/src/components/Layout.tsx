@@ -139,7 +139,7 @@ export const Layout: React.FC<LayoutProps> = ({ children }) => {
           </div>
         </div>
       </aside>
-      <main className="flex-1 overflow-x-hidden overflow-y-auto bg-gray-50 p-8 lg:p-12">
+      <main className="flex-1 overflow-x-hidden overflow-y-auto dashboard-gradient-bg flex items-center justify-center">
         {children}
       </main>
     </div>
