@@ -94,7 +94,7 @@ export const SOPToWorkflowPage: React.FC = () => {
   };
 
   return (
-    <div className="max-w-4xl mx-auto">
+    <div>
       <div className="mb-8">
         <h1 className="text-3xl font-bold text-brand-heading mb-2">
           Upload SOP
@@ -105,7 +105,7 @@ export const SOPToWorkflowPage: React.FC = () => {
         </p>
       </div>
 
-      <div className="bg-white rounded-lg shadow-sm border border-brand-border p-8">
+      <div className="bg-white rounded-lg shadow-sm border border-brand-border p-8 ">
         <div
           className={`border-2 border-dashed rounded-lg p-12 text-center transition-colors ${
             isDragging

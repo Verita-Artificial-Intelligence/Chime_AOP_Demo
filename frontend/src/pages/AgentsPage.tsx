@@ -176,7 +176,7 @@ export default function WorkflowRunHistoryPage() {
   };
 
   return (
-    <div className="max-w-7xl mx-auto p-4 md:p-6">
+    <div className="max-w-7xl mx-auto p-0">
       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-6">
         <div>
           <h1 className="text-3xl font-bold text-brand-heading">
@@ -196,9 +196,10 @@ export default function WorkflowRunHistoryPage() {
       </div>
 
       {runHistory.length === 0 && (
-        <div className="col-span-full text-center text-brand-muted py-10">
+        <div className="col-span-full bg-white rounded-lg shadow-sm border border-brand-border p-12 text-center w-full text-brand-muted min-h-[310px]">
+          {" "}
           <svg
-            className="mx-auto h-12 w-12 text-brand-muted opacity-70"
+            className="mx-auto h-16 w-16 text-brand-muted opacity-70"
             fill="none"
             viewBox="0 0 24 24"
             stroke="currentColor"

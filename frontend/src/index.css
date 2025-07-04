@@ -52,7 +52,7 @@ body {
 
 /* Loader animation styles */
 .loader {
-  border-top-color: #04BAF7;
+  border-top-color: #04baf7;
   animation: spin 1s linear infinite;
 }
 
@@ -76,4 +76,33 @@ body {
 
 .animate-fadeIn {
   animation: fadeIn 0.5s ease-out forwards;
+}
+
+.dashboard-gradient-bg {
+  min-height: 100vh;
+  background: linear-gradient(90deg, #fffbc1 0%, #e0ffe7 67%, #bfe4ff 85%),
+    linear-gradient(180deg,
+      rgba(255, 255, 255, 0) 0%,
+      rgba(255, 255, 255, 0.85) 38%,
+      #f0f0f0 45%,
+      #fff 100%);
+  background-blend-mode: lighten;
+  background-repeat: no-repeat;
+}
+
+.quick-access-card::after {
+  content: "";
+  position: absolute;
+  top: -20px;
+  left: -20px;
+  width: 150%;
+  height: 150%;
+  /* background-image: url('/spray.jpeg');  */
+  background-size: cover;
+  background-repeat: no-repeat;
+  opacity: 0.5;
+  filter: blur(1px);
+  pointer-events: none;
+  z-index: 0;
+  border-radius: inherit;
 }
