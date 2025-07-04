@@ -48,8 +48,8 @@ export const Layout: React.FC<LayoutProps> = ({ children }) => {
 
   return (
     <div className="flex h-screen bg-brand-background">
-      <aside className="w-64 bg-brand-primaryLight border-r border-brand-sidebarBorder flex flex-col">
-        <div className="p-4 border-b border-brand-sidebarBorder">
+      <aside className="w-64 bg-brand-primaryLight border-r border-brand-sidebarBorder flex flex-col p-6">
+        <div className="border-b border-brand-sidebarBorder pb-4">
           <Link to="/">
             <h1 className="text-2xl font-bold text-gradient hover:opacity-80 transition-opacity">
               Verita AI
@@ -58,7 +58,7 @@ export const Layout: React.FC<LayoutProps> = ({ children }) => {
         </div>
         <nav className="mt-4 flex-grow overflow-y-auto">
           {navItems.map((item) => (
-            <div key={item.name} className="px-2 mb-1">
+            <div key={item.name} className="mb-2">
               {item.subItems ? (
                 <details
                   className="group"
@@ -124,7 +124,7 @@ export const Layout: React.FC<LayoutProps> = ({ children }) => {
           ))}
         </nav>
         <div className="mt-auto">
-          <div className="p-4 border-t border-brand-sidebarBorder">
+          <div className="border-t border-brand-sidebarBorder pt-4">
             <button className="w-full flex items-center px-4 py-2.5 text-sm font-medium text-gray-700 rounded-md hover:bg-white hover:text-brand-primary hover:shadow-sm transition-all mb-2">
               <CogIcon className="w-5 h-5 mr-3" />
               Settings
@@ -134,12 +134,13 @@ export const Layout: React.FC<LayoutProps> = ({ children }) => {
               Account
             </button>
           </div>
-          <div className="p-4 border-t border-brand-sidebarBorder">
+          <div className="border-t border-brand-sidebarBorder pt-4">
             <p className="text-xs text-brand-muted">{content.footerText}</p>
           </div>
         </div>
       </aside>
-      <main className="flex-1 overflow-x-hidden overflow-y-auto dashboard-gradient-bg flex items-center justify-center">
+
+      <main className="flex-1 min-h-0 overflow-x-hidden overflow-y-auto dashboard-gradient-bg p-6">
         {children}
       </main>
     </div>
