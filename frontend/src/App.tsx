@@ -9,6 +9,8 @@ import "./App.css";
 import content, { applyThemeColors } from "./config/content";
 
 import { Layout } from "./components/Layout";
+import { ProtectedRoute } from "./components/ProtectedRoute";
+import { LoginPage } from "./pages/LoginPage";
 // Page Components
 import { IntegrationsPage } from "./pages/IntegrationsPage";
 import WorkflowRunHistoryPage from "./pages/AgentsPage";
@@ -29,27 +31,37 @@ export function App() {
   }, []);
 
   return (
-    <Layout>
-      <Routes>
-        <Route path="/" element={<HomePage />} />
-        <Route path="/integrations" element={<IntegrationsPage />} />
-        <Route
-          path="/workflow"
-          element={<Navigate to="/workflow/templates" replace />}
-        />
-        <Route path="/workflow/run" element={<WorkflowRunHistoryPage />} />
-        <Route path="/workflow/templates" element={<WorkflowTemplatesPage />} />
-        <Route path="/workflow/review" element={<WorkflowReviewPage />} />
-        <Route path="/workflow/active-runs" element={<ActiveRunsPage />} />
-        
-        <Route
-          path="/workflow/sop-to-workflow"
-          element={<SOPToWorkflowPage />}
-        />
-        <Route path="/security" element={<SecurityPage />} />
-        <Route path="*" element={<Navigate to="/" replace />} />
-      </Routes>
-    </Layout>
+    <Routes>
+      <Route path="/login" element={<LoginPage />} />
+      <Route
+        path="/*"
+        element={
+          <ProtectedRoute>
+            <Layout>
+              <Routes>
+                <Route path="/" element={<HomePage />} />
+                <Route path="/integrations" element={<IntegrationsPage />} />
+                <Route
+                  path="/workflow"
+                  element={<Navigate to="/workflow/templates" replace />}
+                />
+                <Route path="/workflow/run" element={<WorkflowRunHistoryPage />} />
+                <Route path="/workflow/templates" element={<WorkflowTemplatesPage />} />
+                <Route path="/workflow/review" element={<WorkflowReviewPage />} />
+                <Route path="/workflow/active-runs" element={<ActiveRunsPage />} />
+                
+                <Route
+                  path="/workflow/sop-to-workflow"
+                  element={<SOPToWorkflowPage />}
+                />
+                <Route path="/security" element={<SecurityPage />} />
+                <Route path="*" element={<Navigate to="/" replace />} />
+              </Routes>
+            </Layout>
+          </ProtectedRoute>
+        }
+      />
+    </Routes>
   );
 }
 
