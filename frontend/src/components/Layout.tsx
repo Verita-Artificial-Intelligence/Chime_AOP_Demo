@@ -10,6 +10,7 @@ import {
 } from "@heroicons/react/24/outline";
 import { ChevronDownIcon } from "@heroicons/react/20/solid";
 import content from "../config/content";
+import { SecurityChatWidget } from "./SecurityChatWidget";
 
 interface NavItem {
   name: string;
@@ -162,6 +163,9 @@ export const Layout: React.FC<LayoutProps> = ({ children }) => {
       <main className="flex-1 min-h-0 overflow-x-hidden overflow-y-auto dashboard-gradient-bg p-6">
         {children}
       </main>
+      
+      {/* Security Chat Widget */}
+      <SecurityChatWidget />
     </div>
   );
 };
