@@ -37,7 +37,7 @@ export function SecurityChatWidget() {
       {/* Chat Button */}
       <button
         onClick={() => setIsOpen(!isOpen)}
-        className="fixed bottom-6 left-6 bg-gradient-brand text-white p-4 rounded-full shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-110 z-50 group"
+        className="fixed bottom-6 right-6 bg-gradient-brand text-white p-4 rounded-full shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-110 z-50 group"
         aria-label="Open security chat"
       >
         {isOpen ? (
@@ -55,7 +55,7 @@ export function SecurityChatWidget() {
 
       {/* Chat Widget */}
       {isOpen && (
-        <div className="fixed bottom-24 left-6 w-96 h-[500px] bg-white rounded-2xl shadow-2xl border border-brand-borderLight z-50 flex flex-col animate-fadeIn">
+        <div className="fixed bottom-24 right-6 w-96 h-[500px] bg-white rounded-2xl shadow-2xl border border-brand-borderLight z-50 flex flex-col animate-fadeIn">
           {/* Header */}
           <div className="bg-gradient-brand text-white p-4 rounded-t-2xl">
             <div className="flex items-center justify-between">
