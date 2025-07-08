@@ -10,24 +10,7 @@ import {
 import content from "../config/content";
 import "../index.css";
 
-const cardGradients = [
-  {
-    background:
-      "radial-gradient(circle at 20% 20%, #bfe4ff 0%, #fffbc1 60%, #ffe6f7 100%)",
-  },
-  {
-    background:
-      "radial-gradient(circle at 80% 10%, #e3eaff 0%, #ffe6f7 60%, #fff 100%)",
-  },
-  {
-    background:
-      "radial-gradient(circle at 30% 70%, #fffbc1 0%, #e0ffe7 60%, #bfe4ff 100%)",
-  },
-  {
-    background:
-      "radial-gradient(circle at 80% 80%, #bfe4ff 0%, #e0ffe7 60%, #fff 100%)",
-  },
-];
+// Clean white card style - no gradients needed
 
 const quickAccessItems = [
   {
@@ -76,17 +59,17 @@ export function HomePage() {
             What will you build today?
           </h1>
           <div className="flex justify-center gap-2 mb-6">
-            <button className="px-4 py-1.5 rounded-full font-semibold text-base border transition bg-blue-500 text-white shadow">
+            <button className="px-6 py-2 rounded-md font-medium text-sm bg-gray-900 text-white hover:bg-gray-800 transition">
               Verita AI
             </button>
             <button
-              className="px-4 py-1.5 rounded-full font-semibold text-base border border-gray-300 bg-white text-gray-700 hover:bg-gray-100 transition"
+              className="px-6 py-2 rounded-md font-medium text-sm border border-gray-300 bg-white text-gray-700 hover:bg-gray-50 transition"
               onClick={() => navigate("/workflow/templates")}
             >
               Explore Templates
             </button>
             <button
-              className="px-4 py-1.5 rounded-full font-semibold text-base border border-gray-300 bg-white text-gray-700 hover:bg-gray-100 transition"
+              className="px-6 py-2 rounded-md font-medium text-sm border border-gray-300 bg-white text-gray-700 hover:bg-gray-50 transition"
               onClick={() => navigate("/workflow/active-runs")}
             >
               Your Workflows
@@ -99,10 +82,10 @@ export function HomePage() {
                 placeholder="Search for files, plugins, and creators"
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
-                className="w-full px-5 py-3 border border-gray-300 rounded-full shadow focus:outline-none focus:ring-2 focus:ring-blue-400 text-base"
+                className="w-full px-5 py-3 border border-gray-300 rounded-full bg-white focus:outline-none focus:ring-2 focus:ring-gray-400 text-base"
               />
               <button
-                className="absolute right-2 top-1/2 -translate-y-1/2 bg-blue-500 text-white rounded-full p-2 hover:opacity-90 transition"
+                className="absolute right-2 top-1/2 -translate-y-1/2 bg-gray-900 text-white rounded-full p-2 hover:bg-gray-800 transition"
                 onClick={() => alert(`Search for: ${searchQuery}`)}
               >
                 <svg
@@ -124,26 +107,28 @@ export function HomePage() {
         </div>
       </div>
       <div className="w-full max-w-6xl mx-auto mt-12">
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8 justify-items-center">
-          {quickAccessItems.map((item, idx) => (
+        <h2 className="text-2xl font-semibold text-gray-900 mb-8">Quick Access</h2>
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+          {quickAccessItems.map((item) => (
             <Link
               key={item.name}
               to={item.href}
-              style={cardGradients[idx % cardGradients.length]}
-              className="quick-access-card relative z-10 flex flex-col items-center justify-between w-[260px] h-[340px] rounded-3xl p-8 border border-black/10 shadow-md overflow-hidden transition-all duration-200 group hover:shadow-lg"
+              className="flex flex-col bg-white rounded-lg p-6 shadow-sm hover:shadow-md transition-all duration-200 group"
             >
-              <div className="flex flex-col items-center mb-4">
-                <item.icon className="w-8 h-8 text-brand-primary mb-2" />
-                <h3 className="text-xl font-semibold text-brand-heading text-center group-hover:text-brand-primary transition-colors">
-                  {item.name}
-                </h3>
-              </div>
-              <p className="text-sm text-brand-muted mb-4 text-center flex-grow">
-                {item.description}
-              </p>
-              <div className="inline-flex items-center text-sm text-brand-primary font-medium mt-auto">
-                <span>Get Started</span>
-                <ChevronRightIcon className="h-4 w-4 ml-1" />
+              <div className="flex items-start mb-4">
+                <item.icon className="w-6 h-6 text-brand-iconGreen mr-3 flex-shrink-0" />
+                <div className="flex-grow">
+                  <h3 className="text-lg font-semibold text-gray-900 mb-2">
+                    {item.name}
+                  </h3>
+                  <p className="text-sm text-gray-600 mb-4">
+                    {item.description}
+                  </p>
+                  <div className="inline-flex items-center text-sm text-gray-700 font-medium group-hover:text-gray-900">
+                    <span>Go to {item.name}</span>
+                    <ChevronRightIcon className="h-4 w-4 ml-1" />
+                  </div>
+                </div>
               </div>
             </Link>
           ))}

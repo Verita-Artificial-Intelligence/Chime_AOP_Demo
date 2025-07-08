@@ -4,22 +4,26 @@
 }
 
 .chat-container::-webkit-scrollbar-track {
-  background: #F3F4F6;
+  background: #E5F7FF;
   border-radius: 10px;
 }
 
 .chat-container::-webkit-scrollbar-thumb {
-  background: #9CA3AF;
+  background: #04BAF7;
   border-radius: 10px;
 }
 
 .chat-container::-webkit-scrollbar-thumb:hover {
-  background: #6B7280;
+  background: #0396D1;
 }
 
-/* Solid text styling - no gradient */
+/* Gradient text styling with new color scheme */
 .text-gradient {
-  color: #FFFFFF;
+  background: linear-gradient(90deg, #04BAF7, #8F04FF, #FF006D);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  text-fill-color: transparent;
   display: inline-block;
 }
 
