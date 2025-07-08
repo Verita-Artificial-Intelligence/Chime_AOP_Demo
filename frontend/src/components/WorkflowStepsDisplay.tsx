@@ -17,6 +17,8 @@ import { SiGmail, SiSlack } from "react-icons/si";
 import { FaCircle } from "react-icons/fa";
 import jsPDF from "jspdf";
 import { useNavigate } from "react-router-dom";
+import { useWorkflowContext } from "../contexts/WorkflowContext";
+import { WorkflowStep as WorkflowStepType } from "../services/workflowService";
 
 interface WorkflowStep {
   step: number;

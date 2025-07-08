@@ -11,6 +11,7 @@ import {
 import { ChevronDownIcon } from "@heroicons/react/20/solid";
 import content from "../config/content";
 import { SecurityChatWidget } from "./SecurityChatWidget";
+import { WorkflowStatusIndicator } from "./WorkflowStatusIndicator";
 
 interface NavItem {
   name: string;
@@ -160,9 +161,19 @@ export const Layout: React.FC<LayoutProps> = ({ children }) => {
         </div>
       </aside>
 
-      <main className="flex-1 min-h-0 overflow-x-hidden overflow-y-auto dashboard-gradient-bg p-6">
-        {children}
-      </main>
+      <div className="flex-1 flex flex-col">
+        {/* Header with workflow status */}
+        <header className="bg-white border-b border-gray-200 px-6 py-3 flex items-center justify-between">
+          <h1 className="text-xl font-semibold text-gray-900">
+            {content.platformFullName}
+          </h1>
+          <WorkflowStatusIndicator />
+        </header>
+
+        <main className="flex-1 min-h-0 overflow-x-hidden overflow-y-auto dashboard-gradient-bg p-6">
+          {children}
+        </main>
+      </div>
       
       {/* Security Chat Widget */}
       <SecurityChatWidget />

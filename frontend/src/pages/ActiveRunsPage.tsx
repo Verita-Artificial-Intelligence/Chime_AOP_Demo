@@ -8,6 +8,8 @@ import {
   DocumentArrowDownIcon,
 } from "@heroicons/react/24/outline";
 import { WorkflowStepsDisplay } from "../components/WorkflowStepsDisplay";
+import { ActiveWorkflowDisplay } from "../components/ActiveWorkflowDisplay";
+import { useWorkflowContext } from "../contexts/WorkflowContext";
 import jsPDF from "jspdf";
 
 // Import the JSON files
@@ -36,6 +38,7 @@ export const ActiveRunsPage: React.FC = () => {
     WorkflowStep[] | null
   >(null);
   const [workflowTitle, setWorkflowTitle] = useState<string>("");
+  const { activeWorkflows } = useWorkflowContext();
 
   // Map template IDs to their JSON data
   const templateDataMap: Record<string, WorkflowStep[]> = {
@@ -532,6 +535,11 @@ export const ActiveRunsPage: React.FC = () => {
     );
   }
 
+  // Get active workflows from context
+  const runningWorkflows = Array.from(activeWorkflows.entries()).filter(
+    ([_, workflow]) => workflow.status === 'running' || workflow.status === 'paused'
+  );
+
   // Default view - show active workflows
   return (
     <div className="max-w-7xl mx-auto">
@@ -544,33 +552,41 @@ export const ActiveRunsPage: React.FC = () => {
         </p>
       </div>
 
-      <div className="bg-white rounded-lg shadow-sm border border-brand-border p-8">
-        <div className="text-center">
-          <div className="mb-4">
-            <PlayIcon className="h-12 w-12 text-gray-400 mx-auto" />
-          </div>
-          <h3 className="text-lg font-medium text-gray-900 mb-2">
-            No Active Workflows
-          </h3>
-          <p className="text-gray-500 mb-6">
-            Start a workflow from templates or upload an SOP to begin
-          </p>
-          <div className="flex gap-4 justify-center">
-            <button
-              onClick={() => navigate("/workflow/templates")}
-              className="px-4 py-2 bg-brand-primary text-white rounded-md hover:bg-brand-primaryDark transition-colors"
-            >
-              Browse Templates
-            </button>
-            <button
-              onClick={() => navigate("/workflow/sop-to-workflow")}
-              className="px-4 py-2 border border-brand-primary text-brand-primary rounded-md hover:bg-brand-light transition-colors"
-            >
-              Upload SOP
-            </button>
+      {runningWorkflows.length > 0 ? (
+        <div className="space-y-6">
+          {runningWorkflows.map(([workflowId, _]) => (
+            <ActiveWorkflowDisplay key={workflowId} workflowId={workflowId} />
+          ))}
+        </div>
+      ) : (
+        <div className="bg-white rounded-lg shadow-sm border border-brand-border p-8">
+          <div className="text-center">
+            <div className="mb-4">
+              <PlayIcon className="h-12 w-12 text-gray-400 mx-auto" />
+            </div>
+            <h3 className="text-lg font-medium text-gray-900 mb-2">
+              No Active Workflows
+            </h3>
+            <p className="text-gray-500 mb-6">
+              Start a workflow from templates or upload an SOP to begin
+            </p>
+            <div className="flex gap-4 justify-center">
+              <button
+                onClick={() => navigate("/workflow/templates")}
+                className="px-4 py-2 bg-brand-primary text-white rounded-md hover:bg-brand-primaryDark transition-colors"
+              >
+                Browse Templates
+              </button>
+              <button
+                onClick={() => navigate("/workflow/sop-to-workflow")}
+                className="px-4 py-2 border border-brand-primary text-brand-primary rounded-md hover:bg-brand-light transition-colors"
+              >
+                Upload SOP
+              </button>
+            </div>
           </div>
         </div>
-      </div>
+      )}
     </div>
   );
 };

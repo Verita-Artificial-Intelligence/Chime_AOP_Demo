@@ -10,6 +10,7 @@ import content, { applyThemeColors } from "./config/content";
 
 import { Layout } from "./components/Layout";
 import { ProtectedRoute } from "./components/ProtectedRoute";
+import { WorkflowProvider } from "./contexts/WorkflowContext";
 import { LoginPage } from "./pages/LoginPage";
 // Page Components
 import { IntegrationsPage } from "./pages/IntegrationsPage";
@@ -68,7 +69,9 @@ export function App() {
 export default function AppWrapper() {
   return (
     <Router>
-      <App />
+      <WorkflowProvider>
+        <App />
+      </WorkflowProvider>
     </Router>
   );
 }

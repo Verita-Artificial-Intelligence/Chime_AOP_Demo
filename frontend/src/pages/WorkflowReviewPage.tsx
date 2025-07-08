@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
+import { useWorkflowContext } from "../contexts/WorkflowContext";
 import ReactDOM from "react-dom";
 import {
   PlayIcon,
@@ -308,6 +309,7 @@ export const WorkflowReviewPage: React.FC = () => {
   const navigate = useNavigate();
   const location = useLocation();
   const { templateId, templateTitle, jsonFile } = location.state || {};
+  const { startWorkflow } = useWorkflowContext();
 
   const [workflowData, setWorkflowData] = useState<WorkflowStep[]>([]);
   const [isEditMode, setIsEditMode] = useState(false);
@@ -366,67 +368,29 @@ export const WorkflowReviewPage: React.FC = () => {
 
   const handleRunWorkflow = async () => {
     try {
-      // Transform the workflow data to add the "url" field
-      const transformedWorkflowData = workflowData.map((step) => ({
-        ...step,
-        url: "https://my-json-server.typicode.com/typicode/demo/comments",
+      // Generate a unique workflow ID
+      const workflowId = `workflow_${Date.now()}_${templateId}`;
+      
+      // Convert workflow data to the format expected by the workflow service
+      const workflowSteps = workflowData.map(step => ({
+        step: step.step,
+        action: step.action,
+        description: step.element_description,
+        element: step.element_type,
+        value: step.value,
       }));
-
-      // Make the POST request to the webhook
-      const response = await fetch(
-        "https://verita.dilan.ai/webhook/mock-workflow",
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify(transformedWorkflowData),
-        }
-      );
-
-      if (response.ok) {
-        console.log("Workflow execution request sent successfully");
-        // Navigate to active runs page after successful API call
-        navigate("/workflow/active-runs", {
-          state: {
-            templateId,
-            templateTitle,
-            jsonFile,
-            workflowSteps: workflowData,
-            stepVerifications,
-            isRunning: true,
-          },
-        });
-      } else {
-        console.error(
-          "Failed to send workflow execution request:",
-          response.status
-        );
-        // Still navigate to active runs page for UI continuity
-        navigate("/workflow/active-runs", {
-          state: {
-            templateId,
-            templateTitle,
-            jsonFile,
-            workflowSteps: workflowData,
-            stepVerifications,
-            isRunning: true,
-          },
-        });
-      }
+      
+      // Start the workflow in the background using the global context
+      await startWorkflow(workflowId, workflowSteps, templateTitle);
+      
+      console.log("Workflow started in background:", workflowId);
+      
+      // Navigate to active runs page
+      navigate("/workflow/active-runs");
+      
     } catch (error) {
-      console.error("Error sending workflow execution request:", error);
-      // Still navigate to active runs page for UI continuity
-      navigate("/workflow/active-runs", {
-        state: {
-          templateId,
-          templateTitle,
-          jsonFile,
-          workflowSteps: workflowData,
-          stepVerifications,
-          isRunning: true,
-        },
-      });
+      console.error("Error starting workflow:", error);
+      alert("Failed to start workflow. Please try again.");
     }
   };
 
