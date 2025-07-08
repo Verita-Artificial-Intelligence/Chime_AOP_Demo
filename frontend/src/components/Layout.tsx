@@ -1,14 +1,16 @@
 import React from "react";
-import { Link, useLocation } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import {
   HomeIcon,
   BoltIcon,
   CircleStackIcon,
   CogIcon,
   UserCircleIcon,
+  ArrowRightOnRectangleIcon,
 } from "@heroicons/react/24/outline";
 import { ChevronDownIcon } from "@heroicons/react/20/solid";
 import content from "../config/content";
+import { SecurityChatWidget } from "./SecurityChatWidget";
 
 interface NavItem {
   name: string;
@@ -45,6 +47,14 @@ interface LayoutProps {
 
 export const Layout: React.FC<LayoutProps> = ({ children }) => {
   const location = useLocation();
+  const navigate = useNavigate();
+  const currentUser = localStorage.getItem("currentUser") || "User";
+
+  const handleLogout = () => {
+    localStorage.removeItem("isAuthenticated");
+    localStorage.removeItem("currentUser");
+    navigate("/login");
+  };
 
   return (
     <div className="flex h-screen bg-brand-background">
@@ -125,13 +135,23 @@ export const Layout: React.FC<LayoutProps> = ({ children }) => {
         </nav>
         <div className="mt-auto">
           <div className="border-t border-brand-sidebarBorder pt-4">
+            <div className="flex items-center px-4 py-2 mb-2">
+              <UserCircleIcon className="w-5 h-5 mr-3 text-gray-700" />
+              <div>
+                <p className="text-sm font-medium text-gray-700">Logged in as</p>
+                <p className="text-xs text-gray-500">{currentUser}</p>
+              </div>
+            </div>
             <button className="w-full flex items-center px-4 py-2.5 text-sm font-medium text-gray-700 rounded-md hover:bg-white hover:text-brand-primary hover:shadow-sm transition-all mb-2">
               <CogIcon className="w-5 h-5 mr-3" />
               Settings
             </button>
-            <button className="w-full flex items-center px-4 py-2.5 text-sm font-medium text-gray-700 rounded-md hover:bg-white hover:text-brand-primary hover:shadow-sm transition-all">
-              <UserCircleIcon className="w-5 h-5 mr-3" />
-              Account
+            <button 
+              onClick={handleLogout}
+              className="w-full flex items-center px-4 py-2.5 text-sm font-medium text-red-600 rounded-md hover:bg-red-50 hover:text-red-700 transition-all"
+            >
+              <ArrowRightOnRectangleIcon className="w-5 h-5 mr-3" />
+              Logout
             </button>
           </div>
           <div className="border-t border-brand-sidebarBorder pt-4">
@@ -143,6 +163,9 @@ export const Layout: React.FC<LayoutProps> = ({ children }) => {
       <main className="flex-1 min-h-0 overflow-x-hidden overflow-y-auto dashboard-gradient-bg p-6">
         {children}
       </main>
+      
+      {/* Security Chat Widget */}
+      <SecurityChatWidget />
     </div>
   );
 };
