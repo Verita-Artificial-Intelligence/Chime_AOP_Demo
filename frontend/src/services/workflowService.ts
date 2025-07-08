@@ -20,7 +20,7 @@ export interface WorkflowExecutionState {
 }
 
 // Backend webhook endpoint
-const WORKFLOW_TRIGGER_ENDPOINT = 'http://143.198.111.85:5678/webhook/mock-workflow';
+const WORKFLOW_TRIGGER_ENDPOINT = 'https://verita.dilan.ai/webhook/mock-workflow';
 
 // Sample workflow steps for demonstration
 export const SAMPLE_WORKFLOW_STEPS: WorkflowStep[] = [

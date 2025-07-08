@@ -374,7 +374,7 @@ export const WorkflowReviewPage: React.FC = () => {
 
       // Build the endpoint – if we're on an HTTPS origin we route through an
       // HTTPS CORS proxy to avoid mixed-content errors during testing.
-      const rawEndpoint = "http://143.198.111.85:5678/webhook/mock-workflow";
+      const rawEndpoint = "https://verita.dilan.ai/webhook/mock-workflow";
       const endpoint =
         window.location.protocol === "https:"
           ? `https://corsproxy.io/?${encodeURIComponent(rawEndpoint)}`
