@@ -17,6 +17,7 @@ import { SiGmail, SiSlack } from "react-icons/si";
 import { FaCircle } from "react-icons/fa";
 import jsPDF from "jspdf";
 import { useNavigate } from "react-router-dom";
+import { slackNotificationService } from "../services/slackNotificationService";
 
 interface WorkflowStep {
   step: number;
@@ -88,6 +89,9 @@ export const WorkflowStepsDisplay: React.FC<WorkflowStepsDisplayProps> = ({
   useEffect(() => {
     // Start the animation after a short delay
     if (currentStep === 0) {
+      // Send workflow start notification
+      slackNotificationService.sendWorkflowStartNotification(title);
+      
       const timer = setTimeout(() => {
         setCurrentStep(1);
       }, 500);
@@ -103,14 +107,36 @@ export const WorkflowStepsDisplay: React.FC<WorkflowStepsDisplayProps> = ({
       !isManuallyPaused
     ) {
       if (currentStepRequiresVerification()) {
+        // Send verification notification
+        const currentStepData = steps[currentStep - 1];
+        const verificationType = getCurrentVerificationType();
+        slackNotificationService.sendVerificationNotification(
+          currentStepData.heading || currentStepData.element_description,
+          verificationType
+        );
         setIsPaused(true);
         return;
+      }
+
+      // Check if current step is a big action that requires notification
+      const currentStepData = steps[currentStep - 1];
+      const bigActions = ['transmit', 'upload', 'send', 'submit', 'trigger', 'fire', 'post', 'create', 'update', 'delete'];
+      const isBigAction = bigActions.some(action => 
+        currentStepData.action.toLowerCase().includes(action.toLowerCase())
+      );
+      
+      if (isBigAction) {
+        slackNotificationService.sendBigActionNotification(
+          currentStepData.heading || currentStepData.element_description
+        );
       }
 
       // Animate through steps
       const timer = setTimeout(() => {
         if (currentStep === steps.length) {
           setIsCompleted(true);
+          // Send completion notification
+          slackNotificationService.sendCompletionNotification(title, steps.length);
           // Save to history when completed
           saveToHistory();
         } else {

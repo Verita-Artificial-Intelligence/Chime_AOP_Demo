@@ -9,6 +9,7 @@ import {
 } from "@heroicons/react/24/outline";
 import { WorkflowStepsDisplay } from "../components/WorkflowStepsDisplay";
 import jsPDF from "jspdf";
+import { slackNotificationService } from "../services/slackNotificationService";
 
 // Import the JSON files
 import creditDisputeBureauData from "../data/Credit-Dispute-through-Credit-Bureau.json";
@@ -106,8 +107,13 @@ export const ActiveRunsPage: React.FC = () => {
     if (source === "sop-to-workflow") {
       const data = sessionStorage.getItem("sopToWorkflowData");
       if (data) {
-        setSopToWorkflowData(JSON.parse(data));
+        const workflowData = JSON.parse(data);
+        setSopToWorkflowData(workflowData);
         sessionStorage.removeItem("sopToWorkflowData");
+        
+        // Send workflow start notification
+        slackNotificationService.sendWorkflowStartNotification("SOP Workflow Execution");
+        
         // Start the animation
         setTimeout(() => setCurrentStep(1), 500);
       }
@@ -121,11 +127,27 @@ export const ActiveRunsPage: React.FC = () => {
       currentStep > 0 &&
       currentStep < sopToWorkflowData.length
     ) {
+      // Check if current step is a big action that requires notification
+      const currentStepData = sopToWorkflowData[currentStep - 1];
+      const bigActions = ['transmit', 'upload', 'send', 'submit', 'trigger', 'fire', 'post', 'create', 'update', 'delete'];
+      const isBigAction = bigActions.some(action => 
+        currentStepData.action.toLowerCase().includes(action.toLowerCase())
+      );
+      
+      if (isBigAction) {
+        slackNotificationService.sendBigActionNotification(
+          currentStepData.heading || currentStepData.element_description
+        );
+      }
+
       const timer = setTimeout(() => {
         setCurrentStep(currentStep + 1);
       }, 2000);
       return () => clearTimeout(timer);
     } else if (sopToWorkflowData && currentStep === sopToWorkflowData.length) {
+      // Send completion notification
+      slackNotificationService.sendCompletionNotification("SOP Workflow Execution", sopToWorkflowData.length);
+      
       // Save SOP workflow to history when completed
       const runHistory = JSON.parse(
         localStorage.getItem("workflowRunHistory") || "[]"
