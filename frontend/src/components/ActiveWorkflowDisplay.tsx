@@ -15,7 +15,7 @@ export function ActiveWorkflowDisplay({ workflowId }: ActiveWorkflowDisplayProps
     return null;
   }
 
-  const completedSteps = workflow.steps.filter(s => s.status === 'completed').length;
+  const completedSteps = workflow.completedSteps.size;
   const progress = (completedSteps / workflow.steps.length) * 100;
 
   const getActionColor = (action: string) => {
@@ -35,12 +35,17 @@ export function ActiveWorkflowDisplay({ workflowId }: ActiveWorkflowDisplayProps
   };
 
   const getStepStatus = (stepNumber: number) => {
-    const step = workflow.steps.find(s => s.step === stepNumber);
-    return step?.status || 'pending';
+    if (workflow.completedSteps.has(stepNumber)) {
+      return 'completed';
+    }
+    if (workflow.currentStep === stepNumber && workflow.status === 'running') {
+      return 'in_progress';
+    }
+    return 'pending';
   };
 
-  const currentStep = workflow.steps.find(s => s.status === 'in_progress') || 
-                     workflow.steps.find(s => s.status === 'pending');
+  const currentStep = workflow.steps.find(s => s.step === workflow.currentStep) || 
+                     workflow.steps.find(s => !workflow.completedSteps.has(s.step));
 
   return (
     <div className="bg-white rounded-lg shadow-sm p-6">
@@ -50,7 +55,7 @@ export function ActiveWorkflowDisplay({ workflowId }: ActiveWorkflowDisplayProps
             {workflow.title || 'Workflow Execution'}
           </h2>
           <p className="text-sm text-gray-500 mt-1">
-            Start time: {new Date(workflow.startTime).toLocaleString()}
+            Start time: {workflow.startTime ? new Date(workflow.startTime).toLocaleString() : 'N/A'}
           </p>
         </div>
         <button
@@ -117,7 +122,7 @@ export function ActiveWorkflowDisplay({ workflowId }: ActiveWorkflowDisplayProps
               <h3 className="font-semibold text-gray-900">
                 Step {currentStep.step}: {currentStep.action.toUpperCase()}
               </h3>
-              <p className="text-sm text-gray-600">{currentStep.description}</p>
+              <p className="text-sm text-gray-600">{currentStep.heading || currentStep.element_description}</p>
             </div>
           </div>
         </div>
@@ -164,9 +169,9 @@ export function ActiveWorkflowDisplay({ workflowId }: ActiveWorkflowDisplayProps
                       {step.action.toUpperCase()}
                     </span>
                   </div>
-                  <p className="text-sm text-gray-700">{step.description}</p>
-                  {step.element && (
-                    <p className="text-xs text-gray-500 mt-1">Element: {step.element}</p>
+                  <p className="text-sm text-gray-700">{step.heading || step.element_description}</p>
+                  {step.element_type && (
+                    <p className="text-xs text-gray-500 mt-1">Element: {step.element_type}</p>
                   )}
                 </div>
               </div>

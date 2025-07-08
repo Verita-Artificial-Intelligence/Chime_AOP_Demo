@@ -14,9 +14,11 @@ export interface WorkflowExecutionState {
   steps: WorkflowStep[];
   currentStep: number;
   completedSteps: Set<number>;
-  status: 'idle' | 'running' | 'completed' | 'error';
+  status: 'idle' | 'running' | 'completed' | 'error' | 'paused';
   lastUpdateTime: number;
   isInFallbackMode: boolean;
+  title?: string;
+  startTime?: number;
 }
 
 // Backend webhook endpoint
@@ -119,11 +121,12 @@ export class WorkflowService {
     return {
       workflowId,
       steps,
-      currentStep: 0,
+      currentStep: 1,
       completedSteps: new Set<number>(),
       status: 'idle',
       lastUpdateTime: Date.now(),
       isInFallbackMode: false,
+      startTime: Date.now(),
     };
   }
 
@@ -141,10 +144,14 @@ export class WorkflowService {
       newCompletedSteps.has(step.step)
     );
 
+    // Find the next uncompleted step
+    const nextStep = state.steps.find(step => !newCompletedSteps.has(step.step));
+    const nextStepNumber = nextStep ? nextStep.step : state.steps.length + 1;
+
     return {
       ...state,
       completedSteps: newCompletedSteps,
-      currentStep: Math.max(state.currentStep, stepNumber),
+      currentStep: nextStepNumber,
       status: allStepsCompleted ? 'completed' : 'running',
       lastUpdateTime: Date.now(),
       isInFallbackMode: false,
@@ -159,10 +166,10 @@ export class WorkflowService {
   }
 
   /**
-   * Check if fallback mode should be activated (5+ seconds without update)
+   * Check if fallback mode should be activated (2+ seconds without update)
    */
   static shouldActivateFallback(state: WorkflowExecutionState): boolean {
     const timeSinceLastUpdate = Date.now() - state.lastUpdateTime;
-    return state.status === 'running' && timeSinceLastUpdate > 5000;
+    return state.status === 'running' && timeSinceLastUpdate > 2000;
   }
 }

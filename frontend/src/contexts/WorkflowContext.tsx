@@ -34,11 +34,14 @@ export function WorkflowProvider({ children }: { children: React.ReactNode }) {
 
     const nextStep = queue.shift();
     if (nextStep) {
+      console.log(`Processing step ${nextStep} for workflow ${workflowId}`);
       setActiveWorkflows(prev => {
         const newMap = new Map(prev);
         const workflow = newMap.get(workflowId);
         if (workflow && workflow.status === 'running') {
-          newMap.set(workflowId, WorkflowService.updateStepCompletion(workflow, nextStep));
+          const updated = WorkflowService.updateStepCompletion(workflow, nextStep);
+          console.log(`Workflow ${workflowId} progress: ${updated.completedSteps.size}/${updated.steps.length}`);
+          newMap.set(workflowId, updated);
         }
         return newMap;
       });
@@ -79,7 +82,7 @@ export function WorkflowProvider({ children }: { children: React.ReactNode }) {
 
       // Initialize execution state
       const initialState = WorkflowService.createExecutionState(workflowId, steps);
-      const runningState = { ...initialState, status: 'running' as const, title };
+      const runningState = { ...initialState, status: 'running' as const, title, startTime: Date.now() };
       
       setActiveWorkflows(prev => {
         const newMap = new Map(prev);
@@ -128,6 +131,16 @@ export function WorkflowProvider({ children }: { children: React.ReactNode }) {
         render: renderInterval,
         fallback: fallbackInterval
       });
+
+      // If webhook is not available, start demo mode immediately
+      if (!webhookHealthy) {
+        // Simulate step completion by adding all steps to the queue
+        const queue = [];
+        for (const step of steps) {
+          queue.push(step.step);
+        }
+        stepQueues.current.set(workflowId, queue);
+      }
 
     } catch (err) {
       console.error(`Failed to start workflow ${workflowId}:`, err);

@@ -375,9 +375,10 @@ export const WorkflowReviewPage: React.FC = () => {
       const workflowSteps = workflowData.map(step => ({
         step: step.step,
         action: step.action,
-        description: step.element_description,
-        element: step.element_type,
-        value: step.value,
+        heading: step.heading,
+        element_type: step.element_type,
+        element_description: step.element_description,
+        url: step.url,
       }));
       
       // Start the workflow in the background using the global context
