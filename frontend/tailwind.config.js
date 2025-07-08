@@ -8,50 +8,50 @@ export default {
       },
       colors: {
         brand: {
-          // Primary Colors - All white/gray theme
-          DEFAULT: "#FFFFFF", // White
-          primary: "#000000", // Black for text/borders
-          primaryDark: "#1F2937", // Dark gray for hover states
-          primaryLight: "#F9FAFB", // Very light gray for backgrounds
+          // Primary Colors - Dark theme
+          DEFAULT: "#000000", // Black
+          primary: "#FFFFFF", // White for text/borders on dark
+          primaryDark: "#E5E7EB", // Light gray for hover states
+          primaryLight: "#1F2937", // Dark gray for backgrounds
 
           // Secondary Colors
-          secondary: "#6B7280", // Gray
-          secondaryDark: "#4B5563", // Darker gray for hover
-          secondaryLight: "#F3F4F6", // Light gray for backgrounds
+          secondary: "#9CA3AF", // Light gray
+          secondaryDark: "#E5E7EB", // Lighter gray for hover
+          secondaryLight: "#111827", // Very dark gray for backgrounds
 
           // Status Colors - Keeping minimal contrast
-          success: "#059669", // Green
-          successDark: "#047857", // Darker green for hover
-          warning: "#D97706", // Orange
-          warningDark: "#B45309", // Darker orange for hover
-          danger: "#DC2626", // Red
-          dangerDark: "#B91C1C", // Darker red for hover
+          success: "#10B981", // Green
+          successDark: "#059669", // Darker green for hover
+          warning: "#F59E0B", // Orange
+          warningDark: "#D97706", // Darker orange for hover
+          danger: "#EF4444", // Red
+          dangerDark: "#DC2626", // Darker red for hover
 
           // Special Colors
-          purple: "#7C3AED", // Purple
-          purpleDark: "#6D28D9", // Darker purple for hover
-          purpleLight: "#F5F3FF", // Light purple for backgrounds
+          purple: "#8B5CF6", // Purple
+          purpleDark: "#7C3AED", // Darker purple for hover
+          purpleLight: "#1F2937", // Dark gray for backgrounds
 
           // UI Colors
-          background: "#FFFFFF", // White background
-          card: "#FFFFFF", // White for cards
-          border: "#E5E7EB", // Light gray border
-          borderLight: "#F3F4F6", // Lighter border
+          background: "#000000", // Black background
+          card: "#111827", // Very dark gray for cards
+          border: "#374151", // Dark gray border
+          borderLight: "#1F2937", // Darker border
 
           // Text Colors
-          heading: "#111827", // Near black for headings
-          text: "#374151", // Medium gray for body text
+          heading: "#FFFFFF", // White for headings
+          text: "#E5E7EB", // Light gray for body text
           muted: "#9CA3AF", // Muted gray text
 
           // Sidebar
-          sidebar: "#FFFFFF", // White background for sidebar
-          sidebarBorder: "#E5E7EB", // Light gray for sidebar borders
-          sidebarActive: "#000000", // Black for active states
+          sidebar: "#111827", // Dark gray background for sidebar
+          sidebarBorder: "#374151", // Dark gray for sidebar borders
+          sidebarActive: "#FFFFFF", // White for active states
 
           // Hover states
-          hover: "#F3F4F6", // Light gray hover
-          light: "#F9FAFB", // Very light gray
-          dark: "#111827", // Near black
+          hover: "#1F2937", // Dark gray hover
+          light: "#111827", // Very dark gray
+          dark: "#FFFFFF", // White
         },
         // Verita color palette with neutral shades
         verita: {
@@ -125,9 +125,9 @@ export default {
           "color, background-color, border-color, text-decoration-color, fill, stroke",
       },
       backgroundImage: {
-        "gradient-brand": "linear-gradient(90deg, #F3F4F6, #E5E7EB, #D1D5DB)", // Light gray gradient
-        "gradient-verita": "linear-gradient(135deg, #FFFFFF, #F9FAFB, #F3F4F6)", // White to light gray
-        "gradient-success": "linear-gradient(90deg, #059669, #047857)", // Green gradient
+        "gradient-brand": "none", // No gradient
+        "gradient-verita": "none", // No gradient
+        "gradient-success": "none", // No gradient
       },
     },
   },

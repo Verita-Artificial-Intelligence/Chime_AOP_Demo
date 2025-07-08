@@ -17,13 +17,9 @@
   background: #6B7280;
 }
 
-/* Gradient text styling with neutral color scheme */
+/* Solid text styling - no gradient */
 .text-gradient {
-  background: linear-gradient(90deg, #374151, #6B7280, #9CA3AF);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
-  text-fill-color: transparent;
+  color: #FFFFFF;
   display: inline-block;
 }
 

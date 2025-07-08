@@ -36,12 +36,12 @@ const content: ContentConfig = {
   // Footer
   footerText: "© 2025 Verita AI",
 
-  // Brand colors - Clean white theme
+  // Brand colors - Dark theme
   colors: {
-    primary: "#000000", // Black for text/borders
-    primaryHover: "#1F2937", // Dark gray for hover
-    secondary: "#6B7280", // Gray
-    background: "#FFFFFF", // White background
+    primary: "#FFFFFF", // White for text/borders
+    primaryHover: "#E5E7EB", // Light gray for hover
+    secondary: "#9CA3AF", // Light gray
+    background: "#000000", // Black background
   },
 };
 
