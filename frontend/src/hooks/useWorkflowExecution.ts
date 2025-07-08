@@ -6,6 +6,7 @@ import {
   SAMPLE_WORKFLOW_STEPS 
 } from '../services/workflowService';
 import { WebhookService } from '../services/webhookService';
+import { slackNotificationService } from '../services/slackNotificationService';
 
 interface UseWorkflowExecutionReturn {
   executionState: WorkflowExecutionState | null;
@@ -22,8 +23,8 @@ export function useWorkflowExecution(): UseWorkflowExecutionReturn {
   
   // Queue for incoming step updates
   const stepUpdateQueue = useRef<number[]>([]);
-  const renderIntervalRef = useRef<NodeJS.Timeout | null>(null);
-  const fallbackIntervalRef = useRef<NodeJS.Timeout | null>(null);
+  const renderIntervalRef = useRef<number | null>(null);
+  const fallbackIntervalRef = useRef<number | null>(null);
 
   // Process queued step updates at max 1 step per second
   const processStepQueue = useCallback(() => {
@@ -63,6 +64,9 @@ export function useWorkflowExecution(): UseWorkflowExecutionReturn {
     setError(null);
 
     try {
+      // Send workflow start notification
+      slackNotificationService.sendWorkflowStartNotification("Workflow Execution Demo");
+
       // Check webhook server health first
       const webhookHealthy = await WebhookService.checkWebhookServerHealth();
       if (!webhookHealthy) {
@@ -113,8 +117,12 @@ export function useWorkflowExecution(): UseWorkflowExecutionReturn {
       }
 
     } catch (err) {
-      setError(err instanceof Error ? err.message : 'Failed to start workflow');
+      const errorMessage = err instanceof Error ? err.message : 'Failed to start workflow';
+      setError(errorMessage);
       setExecutionState(prev => prev ? { ...prev, status: 'error' } : prev);
+      
+      // Send error notification
+      slackNotificationService.sendErrorNotification(errorMessage, "Workflow Execution Demo");
     } finally {
       setIsLoading(false);
     }
@@ -153,6 +161,14 @@ export function useWorkflowExecution(): UseWorkflowExecutionReturn {
       }
       if (fallbackIntervalRef.current) {
         clearInterval(fallbackIntervalRef.current);
+      }
+      
+      // Send completion notification
+      if (executionState?.status === 'completed') {
+        slackNotificationService.sendCompletionNotification(
+          "Workflow Execution Demo", 
+          executionState.steps.length
+        );
       }
     }
   }, [executionState?.status]);
