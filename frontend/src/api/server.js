@@ -1,6 +1,6 @@
-const express = require('express');
-const cors = require('cors');
-const bodyParser = require('body-parser');
+import express from 'express';
+import cors from 'cors';
+import bodyParser from 'body-parser';
 
 const app = express();
 const PORT = process.env.WEBHOOK_PORT || 3001;
@@ -15,6 +15,24 @@ app.use(bodyParser.json());
 // Health check endpoint
 app.get('/health', (req, res) => {
   res.json({ status: 'ok', timestamp: new Date().toISOString() });
+});
+
+// GET handler for status-update endpoint (for browser access)
+app.get('/api/status-update', (req, res) => {
+  res.json({
+    message: 'This endpoint accepts POST requests only',
+    usage: {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: {
+        workflowId: 'workflow_123',
+        step: 1,
+        status: 'completed',
+        timestamp: new Date().toISOString()
+      }
+    },
+    example: `curl -X POST http://localhost:3001/api/status-update -H "Content-Type: application/json" -d '{"workflowId":"workflow_123","step":1,"status":"completed"}'`
+  });
 });
 
 // Webhook endpoint to receive status updates from n8n backend
