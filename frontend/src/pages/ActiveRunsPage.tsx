@@ -13,7 +13,6 @@ import jsPDF from "jspdf";
 // Import the JSON files
 import creditDisputeBureauData from "../data/Credit-Dispute-through-Credit-Bureau.json";
 import directDisputeMemberData from "../data/Direct-Dispute-from-Member.json";
-import complexDisputeEquifaxData from "../data/Complex-Dispute-via-Equifax.json";
 import kycKybWorkflowData from "../data/kyc_kyb_workflow.json";
 import vendorWorkflowData from "../data/vendor_workflow.json";
 import vendorMaintenanceOffboardingData from "../data/vendor_maintenance_offboarding.json";
@@ -42,7 +41,6 @@ export const ActiveRunsPage: React.FC = () => {
   const templateDataMap: Record<string, WorkflowStep[]> = {
     "credit-dispute-credit-bureau": creditDisputeBureauData,
     "direct-dispute-member": directDisputeMemberData,
-    "complex-dispute-equifax": complexDisputeEquifaxData,
     "kyc-kyb-workflow": kycKybWorkflowData,
     "vendor-workflow": vendorWorkflowData,
     "vendor-maintenance-offboarding": vendorMaintenanceOffboardingData,

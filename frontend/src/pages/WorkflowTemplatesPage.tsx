@@ -11,7 +11,6 @@ import { templateConfigs } from "../data/templateConfigs";
 const iconMap: Record<string, React.ElementType> = {
   "credit-dispute-credit-bureau": CreditCardIcon,
   "direct-dispute-member": UserIcon,
-  "complex-dispute-equifax": MagnifyingGlassIcon,
   "kyc-kyb-workflow": UserIcon,
   "vendor-workflow": CreditCardIcon,
   "vendor-maintenance-offboarding": UserIcon,

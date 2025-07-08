@@ -22,17 +22,6 @@ export const templateConfigs = [
     jsonFile: "Direct Dispute from Member.json",
   },
   {
-    id: "complex-dispute-equifax",
-    title: "Complex Dispute via Equifax",
-    description:
-      "Investigate complex Equifax disputes via e-OSCAR with support from Penny, Looker, and Zendesk",
-    steps: 64,
-    estimatedTime: "35-45 mins",
-    category: "COMPLIANCE",
-    icon: "🔍",
-    jsonFile: "Complex Dispute via Equifax.json",
-  },
-  {
     id: "kyc-kyb-application-processing",
     title: "Real-Time KYC / KYB Application Processing",
     description:
