@@ -8,7 +8,7 @@ export interface StatusUpdate {
 
 export class WebhookService {
   private static eventSource: EventSource | null = null;
-  private static webhookServerUrl = 'http://localhost:3001';
+  private static webhookServerUrl = import.meta.env.VITE_WEBHOOK_SERVER_URL || 'http://localhost:3001';
 
   /**
    * Get the webhook URL for the backend to send updates to
