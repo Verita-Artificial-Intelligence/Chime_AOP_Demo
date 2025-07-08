@@ -8,7 +8,7 @@ This document describes the implementation of the workflow execution system that
 
 ### 1. Workflow Trigger (Frontend → Backend)
 
-**Endpoint**: `http://143.198.111.85:5678/webhook/mock-workflow`  
+**Endpoint**: `https://verita.dilan.ai/webhook/mock-workflow`  
 **Method**: POST  
 **Headers**: `Content-Type: application/json`  
 **Body**: Array of workflow steps
