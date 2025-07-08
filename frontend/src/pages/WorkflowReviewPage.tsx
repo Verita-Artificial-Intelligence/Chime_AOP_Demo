@@ -364,17 +364,70 @@ export const WorkflowReviewPage: React.FC = () => {
     loadWorkflowData();
   }, [templateId, jsonFile, navigate]);
 
-  const handleRunWorkflow = () => {
-    navigate("/workflow/active-runs", {
-      state: {
-        templateId,
-        templateTitle,
-        jsonFile,
-        workflowSteps: workflowData,
-        stepVerifications,
-        isRunning: true,
-      },
-    });
+  const handleRunWorkflow = async () => {
+    try {
+      // Transform the workflow data to add the "url" field
+      const transformedWorkflowData = workflowData.map((step) => ({
+        ...step,
+        url: "https://my-json-server.typicode.com/typicode/demo/comments",
+      }));
+
+      // Make the POST request to the webhook
+      const response = await fetch(
+        "http://143.198.111.85:5678/webhook/mock-workflow",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(transformedWorkflowData),
+        }
+      );
+
+      if (response.ok) {
+        console.log("Workflow execution request sent successfully");
+        // Navigate to active runs page after successful API call
+        navigate("/workflow/active-runs", {
+          state: {
+            templateId,
+            templateTitle,
+            jsonFile,
+            workflowSteps: workflowData,
+            stepVerifications,
+            isRunning: true,
+          },
+        });
+      } else {
+        console.error(
+          "Failed to send workflow execution request:",
+          response.status
+        );
+        // Still navigate to active runs page for UI continuity
+        navigate("/workflow/active-runs", {
+          state: {
+            templateId,
+            templateTitle,
+            jsonFile,
+            workflowSteps: workflowData,
+            stepVerifications,
+            isRunning: true,
+          },
+        });
+      }
+    } catch (error) {
+      console.error("Error sending workflow execution request:", error);
+      // Still navigate to active runs page for UI continuity
+      navigate("/workflow/active-runs", {
+        state: {
+          templateId,
+          templateTitle,
+          jsonFile,
+          workflowSteps: workflowData,
+          stepVerifications,
+          isRunning: true,
+        },
+      });
+    }
   };
 
   const handleCustomize = () => {
