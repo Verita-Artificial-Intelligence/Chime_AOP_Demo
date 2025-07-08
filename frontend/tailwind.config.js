@@ -8,29 +8,29 @@ export default {
       },
       colors: {
         brand: {
-          // Primary Colors
-          DEFAULT: "#04BAF7", // Bright Sky Blue
-          primary: "#04BAF7", // Bright Sky Blue
-          primaryDark: "#0396D1", // Darker blue for hover states
-          primaryLight: "#E5F7FF", // Light blue for backgrounds
+          // Primary Colors - All white/gray theme
+          DEFAULT: "#FFFFFF", // White
+          primary: "#000000", // Black for text/borders
+          primaryDark: "#1F2937", // Dark gray for hover states
+          primaryLight: "#F9FAFB", // Very light gray for backgrounds
 
           // Secondary Colors
-          secondary: "#FFDD04", // Vivid Yellow
-          secondaryDark: "#E5C600", // Darker yellow for hover
-          secondaryLight: "#FFFADB", // Light yellow for backgrounds
+          secondary: "#6B7280", // Gray
+          secondaryDark: "#4B5563", // Darker gray for hover
+          secondaryLight: "#F3F4F6", // Light gray for backgrounds
 
-          // Status Colors
-          success: "#ADFF02", // Lime Green
-          successDark: "#94E000", // Darker lime for hover
-          warning: "#FE7D00", // Vivid Orange
-          warningDark: "#E56F00", // Darker orange for hover
-          danger: "#FF006D", // Bright Magenta Pink
-          dangerDark: "#E5005F", // Darker pink for hover
+          // Status Colors - Keeping minimal contrast
+          success: "#059669", // Green
+          successDark: "#047857", // Darker green for hover
+          warning: "#D97706", // Orange
+          warningDark: "#B45309", // Darker orange for hover
+          danger: "#DC2626", // Red
+          dangerDark: "#B91C1C", // Darker red for hover
 
           // Special Colors
-          purple: "#8F04FF", // Vivid Purple
-          purpleDark: "#7A00E5", // Darker purple for hover
-          purpleLight: "#F4E5FF", // Light purple for backgrounds
+          purple: "#7C3AED", // Purple
+          purpleDark: "#6D28D9", // Darker purple for hover
+          purpleLight: "#F5F3FF", // Light purple for backgrounds
 
           // UI Colors
           background: "#FFFFFF", // White background
@@ -39,93 +39,57 @@ export default {
           borderLight: "#F3F4F6", // Lighter border
 
           // Text Colors
-          heading: "#1F2937", // Dark gray for headings
+          heading: "#111827", // Near black for headings
           text: "#374151", // Medium gray for body text
-          muted: "#6B7280", // Muted gray text
+          muted: "#9CA3AF", // Muted gray text
 
           // Sidebar
           sidebar: "#FFFFFF", // White background for sidebar
           sidebarBorder: "#E5E7EB", // Light gray for sidebar borders
-          sidebarActive: "#04BAF7", // Primary blue for active states
+          sidebarActive: "#000000", // Black for active states
 
           // Hover states
-          hover: "#0396D1", // Primary hover
-          light: "#E5F7FF", // Light blue tint
-          dark: "#1F2937", // Dark text
+          hover: "#F3F4F6", // Light gray hover
+          light: "#F9FAFB", // Very light gray
+          dark: "#111827", // Near black
         },
-        // Verita color palette with shades
+        // Verita color palette with neutral shades
         verita: {
-          blue: {
-            50: "#E5F7FF",
-            100: "#B8E8FF",
-            200: "#8AD9FF",
-            300: "#5CCAFF",
-            400: "#30BBFD",
-            500: "#04BAF7", // Primary
-            600: "#0396D1",
-            700: "#0272AB",
-            800: "#014E85",
-            900: "#002A5F",
+          gray: {
+            50: "#F9FAFB",
+            100: "#F3F4F6",
+            200: "#E5E7EB",
+            300: "#D1D5DB",
+            400: "#9CA3AF",
+            500: "#6B7280",
+            600: "#4B5563",
+            700: "#374151",
+            800: "#1F2937",
+            900: "#111827",
           },
-          yellow: {
-            50: "#FFFADB",
-            100: "#FFF4A3",
-            200: "#FFEE6B",
-            300: "#FFE833",
-            400: "#FFE11C",
-            500: "#FFDD04", // Secondary
-            600: "#E5C600",
-            700: "#CCAF00",
-            800: "#B39800",
-            900: "#998200",
+          neutral: {
+            50: "#FAFAFA",
+            100: "#F5F5F5",
+            200: "#E5E5E5",
+            300: "#D4D4D4",
+            400: "#A3A3A3",
+            500: "#737373",
+            600: "#525252",
+            700: "#404040",
+            800: "#262626",
+            900: "#171717",
           },
-          orange: {
-            50: "#FFF0E5",
-            100: "#FFD9B8",
-            200: "#FFC28A",
-            300: "#FFAB5C",
-            400: "#FF942E",
-            500: "#FE7D00", // Warning
-            600: "#E56F00",
-            700: "#CC6200",
-            800: "#B35500",
-            900: "#994700",
-          },
-          pink: {
-            50: "#FFE5F0",
-            100: "#FFB8D9",
-            200: "#FF8AC2",
-            300: "#FF5CAB",
-            400: "#FF2E94",
-            500: "#FF006D", // Danger
-            600: "#E5005F",
-            700: "#CC0054",
-            800: "#B30049",
-            900: "#99003E",
-          },
-          lime: {
-            50: "#F5FFE5",
-            100: "#E6FFB8",
-            200: "#D6FF8A",
-            300: "#C7FF5C",
-            400: "#B7FF2E",
-            500: "#ADFF02", // Success
-            600: "#94E000",
-            700: "#7BC200",
-            800: "#62A300",
-            900: "#498500",
-          },
-          purple: {
-            50: "#F4E5FF",
-            100: "#E2B8FF",
-            200: "#D08AFF",
-            300: "#BE5CFF",
-            400: "#AC2EFF",
-            500: "#8F04FF", // Special
-            600: "#7A00E5",
-            700: "#6600CC",
-            800: "#5200B3",
-            900: "#3D0099",
+          slate: {
+            50: "#F8FAFC",
+            100: "#F1F5F9",
+            200: "#E2E8F0",
+            300: "#CBD5E1",
+            400: "#94A3B8",
+            500: "#64748B",
+            600: "#475569",
+            700: "#334155",
+            800: "#1E293B",
+            900: "#0F172A",
           },
         },
       },
@@ -161,9 +125,9 @@ export default {
           "color, background-color, border-color, text-decoration-color, fill, stroke",
       },
       backgroundImage: {
-        "gradient-brand": "linear-gradient(90deg, #04BAF7, #8F04FF, #FF006D)", // Blue to Purple to Pink
-        "gradient-verita": "linear-gradient(135deg, #04BAF7, #FFDD04, #FE7D00)", // Blue to Yellow to Orange
-        "gradient-success": "linear-gradient(90deg, #ADFF02, #94E000)",
+        "gradient-brand": "linear-gradient(90deg, #F3F4F6, #E5E7EB, #D1D5DB)", // Light gray gradient
+        "gradient-verita": "linear-gradient(135deg, #FFFFFF, #F9FAFB, #F3F4F6)", // White to light gray
+        "gradient-success": "linear-gradient(90deg, #059669, #047857)", // Green gradient
       },
     },
   },
