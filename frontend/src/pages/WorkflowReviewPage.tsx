@@ -372,22 +372,17 @@ export const WorkflowReviewPage: React.FC = () => {
         url: "https://my-json-server.typicode.com/typicode/demo/comments",
       }));
 
-      // Build the endpoint – if we're on an HTTPS origin we route through an
-      // HTTPS CORS proxy to avoid mixed-content errors during testing.
-      const rawEndpoint = "https://verita.dilan.ai/webhook/mock-workflow";
-      const endpoint =
-        window.location.protocol === "https:"
-          ? `https://corsproxy.io/?${encodeURIComponent(rawEndpoint)}`
-          : rawEndpoint;
-
-      // Make the POST request to the webhook (optionally via proxy)
-      const response = await fetch(endpoint, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(transformedWorkflowData),
-      });
+      // Make the POST request to the webhook
+      const response = await fetch(
+        "https://verita.dilan.ai/webhook/mock-workflow",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(transformedWorkflowData),
+        }
+      );
 
       if (response.ok) {
         console.log("Workflow execution request sent successfully");
