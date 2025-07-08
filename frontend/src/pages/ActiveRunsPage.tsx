@@ -8,6 +8,7 @@ import {
   DocumentArrowDownIcon,
 } from "@heroicons/react/24/outline";
 import { WorkflowStepsDisplay } from "../components/WorkflowStepsDisplay";
+import { WorkflowExecutor } from "../components/WorkflowExecutor";
 import jsPDF from "jspdf";
 
 // Import the JSON files
@@ -534,7 +535,7 @@ export const ActiveRunsPage: React.FC = () => {
     );
   }
 
-  // Default view when no active workflows
+  // Default view - show the workflow executor demo
   return (
     <div className="max-w-7xl mx-auto">
       <div className="mb-8">
@@ -546,25 +547,27 @@ export const ActiveRunsPage: React.FC = () => {
         </p>
       </div>
 
-      <div className="bg-white rounded-lg shadow-sm p-12 text-center">
-        <div className="mx-auto w-16 h-16 bg-brand-primaryLight rounded-full flex items-center justify-center mb-4">
-          <PlayIcon className="h-8 w-8 text-brand-primary" />
-        </div>
-        <h2 className="text-xl font-semibold text-brand-heading mb-2">
-          No workflows are currently running
-        </h2>
-        <p className="text-brand-muted mb-6">
-          Start a new automation workflow from templates
-        </p>
-        <div className="flex gap-4 justify-center">
-          <button
-            onClick={() => navigate("/workflow/templates")}
-            className="px-4 py-2 bg-brand-primary text-white rounded-md hover:bg-brand-primaryDark transition-colors font-semibold"
-          >
-            Browse Templates
-          </button>
+      {/* Tabs for different views */}
+      <div className="mb-6">
+        <div className="border-b border-gray-200">
+          <nav className="-mb-px flex space-x-8">
+            <button
+              className="py-2 px-1 border-b-2 border-brand-primary font-medium text-sm text-brand-primary"
+            >
+              Workflow Executor Demo
+            </button>
+            <button
+              onClick={() => navigate("/workflow/templates")}
+              className="py-2 px-1 border-b-2 border-transparent font-medium text-sm text-gray-500 hover:text-gray-700 hover:border-gray-300"
+            >
+              Browse Templates
+            </button>
+          </nav>
         </div>
       </div>
+
+      {/* Workflow Executor Component */}
+      <WorkflowExecutor />
     </div>
   );
 };

@@ -1,0 +1,21 @@
+{
+  "name": "verita-webhook-server",
+  "version": "1.0.0",
+  "description": "Webhook server for Verita AI workflow execution",
+  "main": "server.js",
+  "type": "module",
+  "scripts": {
+    "start": "node server.js",
+    "dev": "node server.js"
+  },
+  "engines": {
+    "node": ">=18.0.0"
+  },
+  "dependencies": {
+    "express": "^4.18.2",
+    "cors": "^2.8.5",
+    "body-parser": "^1.20.2"
+  },
+  "author": "Verita AI",
+  "license": "MIT"
+}

@@ -1,0 +1,36 @@
+name: verita-webhook-server
+region: nyc
+services:
+- name: webhook-server
+  github:
+    repo: Verita-Artificial-Intelligence/Chime_AOP_Demo
+    branch: feature/add-login-authentication
+    deploy_on_push: true
+  source_dir: frontend/webhook-server
+  build_command: npm install
+  run_command: npm start
+  environment_slug: node-js
+  instance_size_slug: basic-xxs
+  instance_count: 1
+  http_port: 3001
+  routes:
+  - path: /
+  envs:
+  - key: NODE_ENV
+    value: production
+  - key: PORT
+    value: "3001"
+  - key: WEBHOOK_PORT
+    value: "3001"
+  cors:
+    allow_origins:
+    - prefix: "https://verita-"
+    - prefix: "http://localhost:3000"
+    - prefix: "http://localhost:3001"
+    allow_methods:
+    - GET
+    - POST
+    - OPTIONS
+    allow_headers:
+    - Content-Type
+    - Authorization
