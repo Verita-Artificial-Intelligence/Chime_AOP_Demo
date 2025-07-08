@@ -8,7 +8,6 @@ import {
   DocumentArrowDownIcon,
 } from "@heroicons/react/24/outline";
 import { WorkflowStepsDisplay } from "../components/WorkflowStepsDisplay";
-import { WorkflowExecutor } from "../components/WorkflowExecutor";
 import jsPDF from "jspdf";
 
 // Import the JSON files
@@ -535,7 +534,7 @@ export const ActiveRunsPage: React.FC = () => {
     );
   }
 
-  // Default view - show the workflow executor demo
+  // Default view - show active workflows
   return (
     <div className="max-w-7xl mx-auto">
       <div className="mb-8">
@@ -547,27 +546,33 @@ export const ActiveRunsPage: React.FC = () => {
         </p>
       </div>
 
-      {/* Tabs for different views */}
-      <div className="mb-6">
-        <div className="border-b border-gray-200">
-          <nav className="-mb-px flex space-x-8">
-            <button
-              className="py-2 px-1 border-b-2 border-brand-primary font-medium text-sm text-brand-primary"
-            >
-              Workflow Executor Demo
-            </button>
+      <div className="bg-white rounded-lg shadow-sm border border-brand-border p-8">
+        <div className="text-center">
+          <div className="mb-4">
+            <PlayIcon className="h-12 w-12 text-gray-400 mx-auto" />
+          </div>
+          <h3 className="text-lg font-medium text-gray-900 mb-2">
+            No Active Workflows
+          </h3>
+          <p className="text-gray-500 mb-6">
+            Start a workflow from templates or upload an SOP to begin
+          </p>
+          <div className="flex gap-4 justify-center">
             <button
               onClick={() => navigate("/workflow/templates")}
-              className="py-2 px-1 border-b-2 border-transparent font-medium text-sm text-gray-500 hover:text-gray-700 hover:border-gray-300"
+              className="px-4 py-2 bg-brand-primary text-white rounded-md hover:bg-brand-primaryDark transition-colors"
             >
               Browse Templates
             </button>
-          </nav>
+            <button
+              onClick={() => navigate("/workflow/sop-to-workflow")}
+              className="px-4 py-2 border border-brand-primary text-brand-primary rounded-md hover:bg-brand-light transition-colors"
+            >
+              Upload SOP
+            </button>
+          </div>
         </div>
       </div>
-
-      {/* Workflow Executor Component */}
-      <WorkflowExecutor />
     </div>
   );
 };
