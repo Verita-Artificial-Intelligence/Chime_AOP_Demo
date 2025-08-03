@@ -7,10 +7,12 @@ import {
   CogIcon,
   UserCircleIcon,
   ArrowRightOnRectangleIcon,
+  ExclamationTriangleIcon,
 } from "@heroicons/react/24/outline";
 import { ChevronDownIcon } from "@heroicons/react/20/solid";
 import content from "../config/content";
 import { SecurityChatWidget } from "./SecurityChatWidget";
+import { NotificationDisplay } from "./NotificationDisplay";
 
 interface NavItem {
   name: string;
@@ -37,6 +39,7 @@ const navItems: NavItem[] = [
       { name: "Workflow History", href: "/workflow/run" },
     ],
   },
+  { name: "Disputes", href: "/disputes", icon: ExclamationTriangleIcon },
   { name: "Integrations", href: "/integrations", icon: CircleStackIcon },
   { name: "Security", href: "/security", icon: CogIcon },
 ];
@@ -166,6 +169,9 @@ export const Layout: React.FC<LayoutProps> = ({ children }) => {
       
       {/* Security Chat Widget */}
       <SecurityChatWidget />
+      
+      {/* Notification Display */}
+      <NotificationDisplay />
     </div>
   );
 };

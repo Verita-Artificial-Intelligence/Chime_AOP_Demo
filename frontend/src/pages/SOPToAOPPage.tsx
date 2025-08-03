@@ -2,6 +2,17 @@ import React, { useState, useCallback } from "react";
 import { useNavigate } from "react-router-dom";
 import { ArrowUpTrayIcon, DocumentIcon } from "@heroicons/react/24/outline";
 import { templateConfigs } from "../data/templateConfigs";
+import { DisputeApiService, UploadSOPResponse } from "../services/disputeApiService";
+
+interface UploadResult {
+  success: boolean;
+  fileName: string;
+  message?: string; 
+  error?: string;
+  disputeCode?: string;
+  workflowRunId?: string;
+  workflowRunDto?: object;
+}
 
 export const SOPToWorkflowPage: React.FC = () => {
   const navigate = useNavigate();
@@ -62,32 +73,59 @@ export const SOPToWorkflowPage: React.FC = () => {
 
     setIsUploading(true);
 
-    // Create FormData for file upload
-    const formData = new FormData();
-    files.forEach((file) => {
-      formData.append("files", file);
-    });
-
     try {
-      // Simulate API call - replace with actual endpoint
-      await new Promise((resolve) => setTimeout(resolve, 2000));
+      // Upload each file to the backend API using the new service
+      const uploadResults: UploadResult[] = [];
+      
+      for (const file of files) {
+        const result = await DisputeApiService.safeApiCall(
+          () => DisputeApiService.uploadSOP(file),
+          `Upload ${file.name}`
+        );
 
-      // Select a random template from the available templates
-      const randomTemplate =
-        templateConfigs[Math.floor(Math.random() * templateConfigs.length)];
+        if (result.success) {
+          uploadResults.push({
+            success: true,
+            fileName: file.name,
+            disputeCode: result.data.disputeCode,
+            workflowRunId: result.data.workflowRunId,
+            workflowRunDto: result.data.workflowRunDto,
+            message: result.data.message,
+          });
+        } else {
+          uploadResults.push({
+            success: false,
+            message: `Failed to upload ${file.name}`,
+            error: result.error,
+            fileName: file.name,
+          });
+        }
+      }
 
-      // Navigate to the workflow review page with the random template
-      navigate("/workflow/review", {
-        state: {
-          templateId: randomTemplate.id,
-          templateTitle: randomTemplate.title,
-          jsonFile: randomTemplate.jsonFile,
-          fromSOP: true,
-        },
-      });
+      // Check if any uploads were successful
+      const successfulUploads = uploadResults.filter(result => result.success);
+      
+      if (successfulUploads.length > 0) {
+        // Use the first successful upload's result
+        const firstSuccess = successfulUploads[0];
+        
+        // Navigate to the active runs page with the workflow run ID
+        navigate("/workflow/active-runs", {
+          state: {
+            workflowRunId: firstSuccess.workflowRunId,
+            disputeCode: firstSuccess.disputeCode,
+            fromSOP: true,
+            uploadResults: uploadResults,
+          },
+        });
+      } else {
+        // All uploads failed
+        throw new Error("All file uploads failed. Please check your files and try again.");
+      }
     } catch (error) {
       console.error("Upload failed:", error);
-      // Handle error appropriately
+      // You might want to show an error message to the user here
+      alert(`Upload failed: ${error instanceof Error ? error.message : 'Unknown error'}`);
     } finally {
       setIsUploading(false);
     }

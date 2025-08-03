@@ -366,56 +366,25 @@ export const WorkflowReviewPage: React.FC = () => {
 
   const handleRunWorkflow = async () => {
     try {
-      // Transform the workflow data to add the "url" field
-      const transformedWorkflowData = workflowData.map((step) => ({
-        ...step,
-        url: "https://my-json-server.typicode.com/typicode/demo/comments",
-      }));
-
-      // Make the POST request to the webhook
-      const response = await fetch(
-        "https://verita.dilan.ai/webhook/mock-workflow",
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify(transformedWorkflowData),
-        }
-      );
-
-      if (response.ok) {
-        console.log("Workflow execution request sent successfully");
-        // Navigate to active runs page after successful API call
-        navigate("/workflow/active-runs", {
-          state: {
-            templateId,
-            templateTitle,
-            jsonFile,
-            workflowSteps: workflowData,
-            stepVerifications,
-            isRunning: true,
-          },
-        });
-      } else {
-        console.error(
-          "Failed to send workflow execution request:",
-          response.status
-        );
-        // Still navigate to active runs page for UI continuity
-        navigate("/workflow/active-runs", {
-          state: {
-            templateId,
-            templateTitle,
-            jsonFile,
-            workflowSteps: workflowData,
-            stepVerifications,
-            isRunning: true,
-          },
-        });
-      }
+      // Note: This page is for reviewing workflow templates, not executing actual disputes
+      // For actual dispute execution, users should use the Upload SOP functionality
+      // This navigation simulates starting a workflow review/execution
+      console.log("Navigating to workflow execution with template data");
+      
+      // Navigate to active runs page with template data
+      navigate("/workflow/active-runs", {
+        state: {
+          templateId,
+          templateTitle,
+          jsonFile,
+          workflowSteps: workflowData,
+          stepVerifications,
+          isRunning: true,
+          isTemplate: true, // Flag to indicate this is template execution, not actual dispute
+        },
+      });
     } catch (error) {
-      console.error("Error sending workflow execution request:", error);
+      console.error("Error navigating to workflow execution:", error);
       // Still navigate to active runs page for UI continuity
       navigate("/workflow/active-runs", {
         state: {
@@ -425,6 +394,7 @@ export const WorkflowReviewPage: React.FC = () => {
           workflowSteps: workflowData,
           stepVerifications,
           isRunning: true,
+          isTemplate: true,
         },
       });
     }

@@ -19,7 +19,9 @@ export interface WorkflowExecutionState {
   isInFallbackMode: boolean;
 }
 
-// Backend webhook endpoint
+// DEPRECATED: This service is now replaced by DisputeApiService
+// which implements the official API contract for workflow execution control
+// Backend webhook endpoint (legacy)
 const WORKFLOW_TRIGGER_ENDPOINT = 'https://verita.dilan.ai/webhook/mock-workflow';
 
 // Sample workflow steps for demonstration
