@@ -9,10 +9,10 @@ export default {
       colors: {
         brand: {
           // Primary Colors
-          DEFAULT: "#04BAF7", // Bright Sky Blue
-          primary: "#04BAF7", // Bright Sky Blue
-          primaryDark: "#0396D1", // Darker blue for hover states
-          primaryLight: "#E5F7FF", // Light blue for backgrounds
+          DEFAULT: "#000000", // Black
+          primary: "#000000", // Black
+          primaryDark: "#1f2937", // Dark gray for hover states
+          primaryLight: "#f3f4f6", // Light gray for backgrounds
 
           // Secondary Colors
           secondary: "#FFDD04", // Vivid Yellow
@@ -46,11 +46,11 @@ export default {
           // Sidebar
           sidebar: "#FFFFFF", // White background for sidebar
           sidebarBorder: "#E5E7EB", // Light gray for sidebar borders
-          sidebarActive: "#04BAF7", // Primary blue for active states
+          sidebarActive: "#000000", // Primary black for active states
 
           // Hover states
-          hover: "#0396D1", // Primary hover
-          light: "#E5F7FF", // Light blue tint
+          hover: "#1f2937", // Primary hover
+          light: "#f3f4f6", // Light gray tint
           dark: "#1F2937", // Dark text
         },
         // Verita color palette with shades
@@ -161,9 +161,7 @@ export default {
           "color, background-color, border-color, text-decoration-color, fill, stroke",
       },
       backgroundImage: {
-        "gradient-brand": "linear-gradient(90deg, #04BAF7, #8F04FF, #FF006D)", // Blue to Purple to Pink
-        "gradient-verita": "linear-gradient(135deg, #04BAF7, #FFDD04, #FE7D00)", // Blue to Yellow to Orange
-        "gradient-success": "linear-gradient(90deg, #ADFF02, #94E000)",
+        // Removed gradients for cleaner, flatter design
       },
     },
   },

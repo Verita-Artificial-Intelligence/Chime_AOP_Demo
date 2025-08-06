@@ -13,7 +13,7 @@ export function WorkflowExecutor() {
     }
     
     if (executionState.currentStep === stepNumber && executionState.status === 'running') {
-      return <HiClock className="h-5 w-5 text-blue-500 animate-pulse" />;
+      return <HiClock className="h-5 w-5 text-brand-primary animate-pulse" />;
     }
     
     return <HiClock className="h-5 w-5 text-gray-400" />;
@@ -32,7 +32,7 @@ export function WorkflowExecutor() {
           <button
             onClick={() => startWorkflow()}
             disabled={isLoading || executionState?.status === 'running'}
-            className="flex items-center space-x-2 px-4 py-2 bg-gradient-brand text-white rounded-lg hover:shadow-lg disabled:opacity-50 disabled:cursor-not-allowed transition-all"
+            className="flex items-center space-x-2 px-4 py-2 bg-brand-primary text-white rounded-lg hover:bg-brand-hover disabled:opacity-50 disabled:cursor-not-allowed transition-all"
           >
             <HiPlay className="h-5 w-5" />
             <span>{executionState?.status === 'running' ? 'Running...' : 'Start Workflow'}</span>
@@ -56,7 +56,7 @@ export function WorkflowExecutor() {
               </div>
               <div className="w-full bg-gray-200 rounded-full h-2.5">
                 <div 
-                  className="bg-gradient-brand h-2.5 rounded-full transition-all duration-500"
+                  className="bg-brand-primary h-2.5 rounded-full transition-all duration-500"
                   style={{ width: `${getProgressPercentage()}%` }}
                 />
               </div>
@@ -72,7 +72,7 @@ export function WorkflowExecutor() {
                 <div>
                   <span className="text-gray-600">Status:</span>
                   <span className={`ml-2 font-semibold ${
-                    executionState.status === 'running' ? 'text-blue-600' :
+                    executionState.status === 'running' ? 'text-brand-primary' :
                     executionState.status === 'completed' ? 'text-green-600' :
                     executionState.status === 'error' ? 'text-red-600' :
                     'text-gray-600'
@@ -98,7 +98,7 @@ export function WorkflowExecutor() {
                     executionState.completedSteps.has(step.step)
                       ? 'bg-green-50 border-green-200'
                       : executionState.currentStep === step.step && executionState.status === 'running'
-                      ? 'bg-blue-50 border-blue-200'
+                      ? 'bg-brand-light border-brand-primary'
                       : 'bg-gray-50 border-gray-200'
                   }`}
                 >
@@ -126,12 +126,12 @@ export function WorkflowExecutor() {
             </div>
 
             {/* Webhook Info */}
-            <div className="mt-6 p-4 bg-blue-50 rounded-lg">
-              <h4 className="font-semibold text-blue-800 mb-2">Backend Integration</h4>
-              <p className="text-sm text-blue-700">
-                Webhook URL for backend: <code className="bg-blue-100 px-2 py-1 rounded">http://localhost:3001/api/status-update</code>
+            <div className="mt-6 p-4 bg-gray-50 rounded-lg">
+              <h4 className="font-semibold text-brand-heading mb-2">Backend Integration</h4>
+              <p className="text-sm text-brand-text">
+                Webhook URL for backend: <code className="bg-gray-100 px-2 py-1 rounded">http://localhost:3001/api/status-update</code>
               </p>
-              <p className="text-xs text-blue-600 mt-2">
+              <p className="text-xs text-brand-muted mt-2">
                 The backend should POST step updates to this endpoint with format: {`{ workflowId, step, status, timestamp }`}
               </p>
             </div>

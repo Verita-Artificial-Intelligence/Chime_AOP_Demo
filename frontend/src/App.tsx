@@ -21,6 +21,7 @@ import { SecurityPage } from "./pages/SecurityPage";
 import { WorkflowReviewPage } from "./pages/WorkflowReviewPage";
 
 import { SOPToWorkflowPage } from "./pages/SOPToAOPPage";
+import { DisputesPage } from "./pages/DisputesPage";
 
 export function App() {
   // Update document title based on configuration
@@ -54,6 +55,7 @@ export function App() {
                   path="/workflow/sop-to-workflow"
                   element={<SOPToWorkflowPage />}
                 />
+                <Route path="/disputes" element={<DisputesPage />} />
                 <Route path="/security" element={<SecurityPage />} />
                 <Route path="*" element={<Navigate to="/" replace />} />
               </Routes>

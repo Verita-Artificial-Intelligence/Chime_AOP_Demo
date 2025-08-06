@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { useNavigate, useLocation, useSearchParams } from "react-router-dom";
 import {
   PlayIcon,
@@ -6,6 +6,7 @@ import {
   CursorArrowRaysIcon,
   CheckCircleIcon,
   DocumentArrowDownIcon,
+  TrashIcon,
 } from "@heroicons/react/24/outline";
 import { WorkflowStepsDisplay } from "../components/WorkflowStepsDisplay";
 import jsPDF from "jspdf";
@@ -38,6 +39,49 @@ export const ActiveRunsPage: React.FC = () => {
     WorkflowStep[] | null
   >(null);
   const [workflowTitle, setWorkflowTitle] = useState<string>("");
+  
+  // Active workflows state (moved to top to fix hooks order)
+  const getActiveWorkflows = () => {
+    try {
+      const stored = localStorage.getItem('activeWorkflows');
+      return stored ? JSON.parse(stored) : [];
+    } catch (e) {
+      return [];
+    }
+  };
+
+  const [activeWorkflows, setActiveWorkflows] = useState(getActiveWorkflows());
+  const [selectedWorkflowId, setSelectedWorkflowId] = useState(searchParams.get('id'));
+  
+  // Track processed location states to prevent duplicates
+  const processedLocationRef = useRef<string | null>(null);
+
+  // Cancel workflow function
+  const handleCancelWorkflow = (workflowId: string, workflowName: string) => {
+    if (!confirm(`Are you sure you want to cancel "${workflowName}"?`)) return;
+    
+    const currentWorkflows = getActiveWorkflows();
+    const updatedWorkflows = currentWorkflows.filter(w => w.id !== workflowId);
+    
+    setActiveWorkflows(updatedWorkflows);
+    localStorage.setItem('activeWorkflows', JSON.stringify(updatedWorkflows));
+    
+    console.log(`🚫 Cancelled workflow: ${workflowName}`);
+    
+    // If we're currently viewing the cancelled workflow, go back to list
+    if (selectedWorkflowId === workflowId) {
+      setSelectedWorkflowId(null);
+      navigate('/workflow/active-runs', { replace: true });
+    }
+  };
+  
+  // SOP workflow state
+  const [sopToWorkflowData, setSopToWorkflowData] = useState<
+    WorkflowStep[] | null
+  >(null);
+  const [currentStep, setCurrentStep] = useState(0);
+  const [sopStartTime] = useState(new Date());
+  const [isDownloading, setIsDownloading] = useState(false);
 
   // Map template IDs to their JSON data
   const templateDataMap: Record<string, WorkflowStep[]> = {
@@ -94,12 +138,137 @@ export const ActiveRunsPage: React.FC = () => {
     }
   }, [location.state]);
 
-  const [sopToWorkflowData, setSopToWorkflowData] = useState<
-    WorkflowStep[] | null
-  >(null);
-  const [currentStep, setCurrentStep] = useState(0);
-  const [sopStartTime] = useState(new Date());
-  const [isDownloading, setIsDownloading] = useState(false);
+  // Listen for new workflows from review page (moved after other useEffects)
+  useEffect(() => {
+    if (location.state && location.state.isRunning && location.state.templateId) {
+      // Check for duplicates first
+      const currentWorkflows = getActiveWorkflows();
+      const duplicate = currentWorkflows.find(w => 
+        w.templateId === location.state.templateId && 
+        w.name === location.state.templateTitle
+      );
+      
+      if (duplicate) {
+        console.log('⚠️ Duplicate workflow detected, navigating to existing:', duplicate.id);
+        navigate(`/workflow/active-runs?id=${duplicate.id}`, { replace: true });
+        return;
+      }
+      
+      const newWorkflow = {
+        id: `workflow-${Date.now()}`,
+        name: location.state.templateTitle,
+        templateId: location.state.templateId,
+        status: 'Running',
+        startTime: new Date().toISOString(),
+        steps: location.state.workflowSteps,
+        stepVerifications: location.state.stepVerifications || {},
+        currentStep: 1, // Start at step 1, not 0
+        lastUpdated: new Date().toISOString(),
+        isRunning: true,
+      };
+      
+      const updated = [...currentWorkflows, newWorkflow];
+      setActiveWorkflows(updated);
+      localStorage.setItem('activeWorkflows', JSON.stringify(updated));
+      
+      // Navigate to this workflow
+      navigate(`/workflow/active-runs?id=${newWorkflow.id}`, { replace: true });
+      
+      console.log('✅ Created active workflow:', newWorkflow);
+      
+      // Clear location state to prevent re-running
+      window.history.replaceState({}, '', window.location.pathname + window.location.search);
+    }
+  }, [location.state, navigate]);
+
+  // Background workflow progression
+  useEffect(() => {
+    const progressWorkflows = () => {
+      const currentWorkflows = getActiveWorkflows();
+      let hasUpdates = false;
+      
+      const updatedWorkflows = currentWorkflows.map(workflow => {
+        if (!workflow.isRunning || workflow.status !== 'Running') return workflow;
+        
+        const now = new Date();
+        const lastUpdated = new Date(workflow.lastUpdated);
+        const timeDiff = now.getTime() - lastUpdated.getTime();
+        
+        // Advance step every 2 seconds
+        if (timeDiff >= 2000) {
+          const nextStep = workflow.currentStep + 1;
+          
+          // Check if workflow is complete
+          if (nextStep >= workflow.steps.length) {
+            // Move to history
+            const runHistory = JSON.parse(localStorage.getItem("workflowRunHistory") || "[]");
+            const completedWorkflow = {
+              id: workflow.id,
+              name: workflow.name,
+              description: `Template-based workflow: ${workflow.name}`,
+              category: "TEMPLATE EXECUTION",
+              status: "Completed",
+              lastRun: now.toISOString(),
+              runHistory: [{
+                timestamp: now.toISOString(),
+                status: "Success",
+                details: `Workflow completed with ${workflow.steps.length} steps`,
+              }],
+              metrics: {
+                totalSteps: workflow.steps.length.toString(),
+                completionTime: Math.floor((now.getTime() - new Date(workflow.startTime).getTime()) / 1000) + ' seconds',
+              },
+              steps: workflow.steps,
+            };
+            
+            runHistory.unshift(completedWorkflow);
+            localStorage.setItem("workflowRunHistory", JSON.stringify(runHistory));
+            
+            console.log('✅ Workflow completed and moved to history:', workflow.name);
+            hasUpdates = true;
+            return null; // Remove from active workflows
+          }
+          
+          // Continue workflow
+          hasUpdates = true;
+          return {
+            ...workflow,
+            currentStep: nextStep,
+            lastUpdated: now.toISOString(),
+            status: 'Running'
+          };
+        }
+        
+        return workflow;
+      }).filter(Boolean); // Remove nulls (completed workflows)
+      
+      if (hasUpdates) {
+        localStorage.setItem('activeWorkflows', JSON.stringify(updatedWorkflows));
+        setActiveWorkflows(updatedWorkflows);
+      }
+    };
+    
+    // Run every second
+    const interval = setInterval(progressWorkflows, 1000);
+    
+    // Run once on mount
+    progressWorkflows();
+    
+    return () => clearInterval(interval);
+  }, []);
+
+  // Real-time updates for active workflows table
+  useEffect(() => {
+    const refreshActiveWorkflows = () => {
+      const currentWorkflows = getActiveWorkflows();
+      setActiveWorkflows(currentWorkflows);
+    };
+    
+    // Refresh every 2 seconds to show real-time progress
+    const interval = setInterval(refreshActiveWorkflows, 2000);
+    
+    return () => clearInterval(interval);
+  }, []);
 
   // Check if we're coming from SOP to Workflow
   useEffect(() => {
@@ -178,6 +347,49 @@ export const ActiveRunsPage: React.FC = () => {
       localStorage.setItem("workflowRunHistory", JSON.stringify(runHistory));
     }
   }, [currentStep, sopToWorkflowData]);
+
+  // Show individual workflow if ID is selected
+  if (selectedWorkflowId) {
+    const workflow = activeWorkflows.find(w => w.id === selectedWorkflowId);
+    if (workflow) {
+      return (
+        <div className="h-full flex flex-col">
+          <div className="flex items-center gap-4 p-6 border-b border-gray-200 bg-white">
+            <button
+              onClick={() => {
+                setSelectedWorkflowId(null);
+                navigate('/workflow/active-runs', { replace: true });
+              }}
+              className="flex items-center gap-2 px-3 py-2 text-brand-primary hover:bg-brand-light rounded transition-colors"
+            >
+              ← Back to Active Workflows
+            </button>
+            <div className="flex-1">
+              <h1 className="text-2xl font-bold text-brand-heading">{workflow.name}</h1>
+              <p className="text-brand-muted">Started: {new Date(workflow.startTime).toLocaleString()}</p>
+            </div>
+            <button
+              onClick={() => handleCancelWorkflow(workflow.id, workflow.name)}
+              className="p-2 text-red-600 hover:text-red-700 hover:bg-red-50 rounded-lg border border-red-200 transition-colors"
+              title={`Cancel ${workflow.name}`}
+            >
+              <TrashIcon className="h-5 w-5" />
+            </button>
+          </div>
+          
+          <div className="flex-1 overflow-hidden">
+            <WorkflowStepsDisplay
+              steps={workflow.steps}
+              title={workflow.name}
+              templateId={workflow.templateId}
+              initialStep={workflow.currentStep || 1}
+              backgroundMode={true}
+            />
+          </div>
+        </div>
+      );
+    }
+  }
 
   const handleDownloadReport = async () => {
     if (!sopToWorkflowData) return;
@@ -556,9 +768,11 @@ export const ActiveRunsPage: React.FC = () => {
     );
   }
 
-  // Default view - show active workflows
+
+
+  // Default view - show active workflows table
   return (
-    <div className="max-w-7xl mx-auto">
+    <div className="max-w-7xl mx-auto p-6">
       <div className="mb-8">
         <h1 className="text-3xl font-bold text-brand-heading">
           Active Workflows
@@ -568,33 +782,116 @@ export const ActiveRunsPage: React.FC = () => {
         </p>
       </div>
 
-      <div className="bg-white rounded-lg shadow-sm border border-brand-border p-8">
-        <div className="text-center">
-          <div className="mb-4">
-            <PlayIcon className="h-12 w-12 text-gray-400 mx-auto" />
-          </div>
-          <h3 className="text-lg font-medium text-gray-900 mb-2">
-            No Active Workflows
-          </h3>
-          <p className="text-gray-500 mb-6">
-            Start a workflow from templates or upload an SOP to begin
-          </p>
-          <div className="flex gap-4 justify-center">
-            <button
-              onClick={() => navigate("/workflow/templates")}
-              className="px-4 py-2 bg-brand-primary text-white rounded-md hover:bg-brand-primaryDark transition-colors"
-            >
-              Browse Templates
-            </button>
-            <button
-              onClick={() => navigate("/workflow/sop-to-workflow")}
-              className="px-4 py-2 border border-brand-primary text-brand-primary rounded-md hover:bg-brand-light transition-colors"
-            >
-              Upload SOP
-            </button>
+      {activeWorkflows.length === 0 ? (
+        <div className="bg-white rounded-lg shadow-sm border border-brand-border p-8">
+          <div className="text-center">
+            <div className="mb-4">
+              <PlayIcon className="h-12 w-12 text-gray-400 mx-auto" />
+            </div>
+            <h3 className="text-lg font-medium text-gray-900 mb-2">
+              No Active Workflows
+            </h3>
+            <p className="text-gray-500 mb-6">
+              Start a workflow from templates or upload an SOP to begin
+            </p>
+            <div className="flex gap-4 justify-center">
+              <button
+                onClick={() => navigate("/workflow/templates")}
+                className="px-4 py-2 bg-brand-primary text-white rounded-md hover:bg-brand-primaryDark transition-colors"
+              >
+                Browse Templates
+              </button>
+              <button
+                onClick={() => navigate("/workflow/sop-to-workflow")}
+                className="px-4 py-2 border border-brand-primary text-brand-primary rounded-md hover:bg-brand-light transition-colors"
+              >
+                Upload SOP
+              </button>
+            </div>
           </div>
         </div>
-      </div>
+      ) : (
+        <div className="bg-white rounded-lg shadow-sm border border-brand-border overflow-hidden">
+          <div className="px-6 py-4 border-b border-gray-200">
+            <h2 className="text-lg font-semibold text-gray-900">Active Workflows ({activeWorkflows.length})</h2>
+          </div>
+          
+          <div className="overflow-x-auto">
+            <table className="min-w-full divide-y divide-gray-200">
+              <thead className="bg-gray-50">
+                <tr>
+                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    Workflow
+                  </th>
+                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    Status
+                  </th>
+                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    Started
+                  </th>
+                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    Steps
+                  </th>
+                  <th className="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    Actions
+                  </th>
+                </tr>
+              </thead>
+              <tbody className="bg-white divide-y divide-gray-200">
+                {activeWorkflows.map((workflow) => (
+                  <tr key={workflow.id} className="hover:bg-gray-50">
+                    <td className="px-6 py-4 whitespace-nowrap">
+                      <div className="flex items-center">
+                        <div className="h-10 w-10 flex-shrink-0">
+                          <div className="h-10 w-10 rounded-full bg-brand-light flex items-center justify-center">
+                            <PlayIcon className="h-5 w-5 text-brand-primary" />
+                          </div>
+                        </div>
+                        <div className="ml-4">
+                          <div className="text-sm font-medium text-gray-900">{workflow.name}</div>
+                          <div className="text-sm text-gray-500">Template: {workflow.templateId}</div>
+                        </div>
+                      </div>
+                    </td>
+                    <td className="px-6 py-4 whitespace-nowrap">
+                      <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800">
+                        <div className="w-1.5 h-1.5 bg-green-400 rounded-full mr-1.5 animate-pulse"></div>
+                        {workflow.status}
+                      </span>
+                    </td>
+                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                      {new Date(workflow.startTime).toLocaleString()}
+                    </td>
+                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                      Step {workflow.currentStep || 1} of {workflow.steps.length}
+                    </td>
+                    <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
+                      <div className="flex items-center justify-end gap-3">
+                        <button
+                          onClick={() => {
+                            setSelectedWorkflowId(workflow.id);
+                            navigate(`/workflow/active-runs?id=${workflow.id}`);
+                          }}
+                          className="text-brand-primary hover:text-brand-primaryDark font-medium"
+                        >
+                          View Details
+                        </button>
+                        <button
+                          onClick={() => handleCancelWorkflow(workflow.id, workflow.name)}
+                          className="p-1 text-red-600 hover:text-red-700 hover:bg-red-50 rounded transition-colors"
+                          title={`Cancel ${workflow.name}`}
+                        >
+                          <TrashIcon className="h-4 w-4" />
+                        </button>
+                      </div>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        </div>
+      )}
     </div>
   );
 };
