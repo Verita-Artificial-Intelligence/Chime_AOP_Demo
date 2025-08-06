@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import {
   CheckCircleIcon,
   DocumentTextIcon,
@@ -18,6 +18,7 @@ import { FaCircle } from "react-icons/fa";
 import jsPDF from "jspdf";
 import { useNavigate } from "react-router-dom";
 import { slackNotificationService } from "../services/slackNotificationService";
+import { WorkflowTimeline } from "./WorkflowTimeline";
 
 interface WorkflowStep {
   step: number;
@@ -51,6 +52,20 @@ export const WorkflowStepsDisplay: React.FC<WorkflowStepsDisplayProps> = ({
   >({});
   const [startTime] = useState(new Date());
   const [isDownloading, setIsDownloading] = useState(false);
+  
+  // Timeline events state
+  const [timelineEvents, setTimelineEvents] = useState<Array<{
+    id: string;
+    timestamp: Date;
+    type: "started" | "step_completed" | "paused" | "resumed" | "completed" | "error";
+    description: string;
+    stepNumber?: number;
+    metadata?: any;
+  }>>([]);
+  
+  // Auto-scroll refs
+  const workflowScrollRef = useRef<HTMLDivElement>(null);
+  const currentStepRef = useRef<HTMLDivElement>(null);
 
   // Load verification settings from localStorage
   useEffect(() => {
@@ -91,6 +106,14 @@ export const WorkflowStepsDisplay: React.FC<WorkflowStepsDisplayProps> = ({
     if (currentStep === 0) {
       // Send workflow start notification
       slackNotificationService.sendWorkflowStartNotification(title);
+      
+      // Add workflow started event to timeline
+      setTimelineEvents([{
+        id: `started-${Date.now()}`,
+        timestamp: new Date(),
+        type: "started",
+        description: `Workflow "${title}" started`,
+      }]);
       
       const timer = setTimeout(() => {
         setCurrentStep(1);
@@ -137,15 +160,58 @@ export const WorkflowStepsDisplay: React.FC<WorkflowStepsDisplayProps> = ({
           setIsCompleted(true);
           // Send completion notification
           slackNotificationService.sendCompletionNotification(title, steps.length);
+          
+          // Add completion event to timeline
+          setTimelineEvents(prev => [...prev, {
+            id: `completed-${Date.now()}`,
+            timestamp: new Date(),
+            type: "completed",
+            description: `Workflow completed successfully`,
+            metadata: { 
+              duration: `${Math.floor((new Date().getTime() - startTime.getTime()) / 1000)} seconds`
+            }
+          }]);
+          
           // Save to history when completed
           saveToHistory();
         } else {
+          // Add step completion event to timeline
+          const completedStep = steps[currentStep - 1];
+          setTimelineEvents(prev => [...prev, {
+            id: `step-${currentStep}-${Date.now()}`,
+            timestamp: new Date(),
+            type: "step_completed",
+            description: completedStep.heading || completedStep.element_description,
+            stepNumber: currentStep,
+          }]);
+          
           setCurrentStep(currentStep + 1);
         }
       }, 1500);
       return () => clearTimeout(timer);
     }
   }, [currentStep, steps.length, isCompleted, isPaused, isManuallyPaused]);
+
+  // Auto-scroll to current step
+  useEffect(() => {
+    if (currentStepRef.current && workflowScrollRef.current && !isPaused) {
+      const container = workflowScrollRef.current;
+      const currentElement = currentStepRef.current;
+      
+      // Calculate the position to center the current step in the container
+      const containerHeight = container.clientHeight;
+      const elementTop = currentElement.offsetTop;
+      const elementHeight = currentElement.clientHeight;
+      
+      // Scroll to center the current step
+      const scrollTo = elementTop - (containerHeight / 2) + (elementHeight / 2);
+      
+      container.scrollTo({
+        top: Math.max(0, scrollTo),
+        behavior: 'smooth'
+      });
+    }
+  }, [currentStep, isPaused]);
 
   const saveToHistory = () => {
     const runHistory = JSON.parse(
@@ -178,7 +244,16 @@ export const WorkflowStepsDisplay: React.FC<WorkflowStepsDisplayProps> = ({
   };
 
   const handlePauseResume = () => {
-    setIsManuallyPaused(!isManuallyPaused);
+    const newPausedState = !isManuallyPaused;
+    setIsManuallyPaused(newPausedState);
+    
+    // Add pause/resume event to timeline
+    setTimelineEvents(prev => [...prev, {
+      id: `${newPausedState ? 'paused' : 'resumed'}-${Date.now()}`,
+      timestamp: new Date(),
+      type: newPausedState ? "paused" : "resumed",
+      description: `Workflow ${newPausedState ? 'paused' : 'resumed'} manually`,
+    }]);
   };
 
   const handleVerificationComplete = () => {
@@ -408,7 +483,7 @@ export const WorkflowStepsDisplay: React.FC<WorkflowStepsDisplayProps> = ({
     const actionLower = action.toLowerCase();
 
     if (actionLower === "type") {
-      return "bg-blue-100 text-blue-600";
+      return "bg-gray-100 text-brand-primary";
     } else if (actionLower === "click") {
       return "bg-green-100 text-green-600";
     } else if (actionLower === "check") {
@@ -428,10 +503,10 @@ export const WorkflowStepsDisplay: React.FC<WorkflowStepsDisplayProps> = ({
     const verificationConfigs = {
       simple: {
         icon: FaCircle,
-        color: "text-blue-600",
-        bgColor: "bg-blue-50",
-        borderColor: "border-blue-200",
-        buttonColor: "bg-blue-600 hover:bg-blue-700",
+        color: "text-brand-primary",
+        bgColor: "bg-brand-light",
+        borderColor: "border-brand-border",
+        buttonColor: "bg-brand-primary hover:bg-brand-hover",
         title: "Simple Verification Required",
       },
       gmail: {
@@ -459,78 +534,79 @@ export const WorkflowStepsDisplay: React.FC<WorkflowStepsDisplayProps> = ({
     const Icon = config.icon;
 
     return (
-      <div
-        className={`mt-4 border rounded-lg p-4 ${config.bgColor} ${config.borderColor}`}
-      >
-        <div className="flex items-center mb-3">
-          <Icon className={`h-5 w-5 ${config.color} mr-2`} />
-          <span className={`text-sm font-semibold ${config.color}`}>
-            {config.title}
-          </span>
-        </div>
-        <p className="text-sm text-gray-700 mb-3">
-          {verificationType === "gmail"
-            ? "Please check your Gmail for the verification request and confirm this action."
-            : verificationType === "slack"
-            ? "Please check your Slack for the verification request and confirm this action."
-            : `Please verify this action: ${
-                step.heading || step.element_description
-              }`}
-        </p>
-        <div className="flex flex-col sm:flex-row gap-2">
-          {verificationType === "gmail" && (
-            <a
-              href="https://mail.google.com"
-              target="_blank"
-              rel="noopener noreferrer"
-              className={`flex-1 px-4 py-2 text-white rounded-md text-center text-sm font-medium transition-colors ${config.buttonColor}`}
-            >
-              Open Gmail →
-            </a>
-          )}
-          {verificationType === "slack" && (
-            <a
-              href="https://slack.com"
-              target="_blank"
-              rel="noopener noreferrer"
-              className={`flex-1 px-4 py-2 text-white rounded-md text-center text-sm font-medium transition-colors ${config.buttonColor}`}
-            >
-              Open Slack →
-            </a>
-          )}
-          {verificationType === "simple" && (
-            <a
-              href="https://chimetools.vercel.app/"
-              target="_blank"
-              rel="noopener noreferrer"
-              className={`flex-1 px-4 py-2 text-white rounded-md text-center text-sm font-medium transition-colors ${config.buttonColor}`}
-            >
-              Open Chime Platform →
-            </a>
-          )}
+      <div className={`w-full border rounded px-2 py-1 text-xs ${config.bgColor} ${config.borderColor}`}>
+        <div className="flex items-center justify-between gap-2">
+          <div className="flex items-center gap-1 flex-1">
+            <Icon className={`h-3 w-3 ${config.color} flex-shrink-0`} />
+            <span className={`font-medium ${config.color} text-xs`}>
+              {config.title}
+            </span>
+            <div className="flex gap-1 ml-2">
+              {verificationType === "gmail" && (
+                <a
+                  href="https://mail.google.com"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className={`px-1.5 py-0.5 text-white rounded text-xs transition-colors ${config.buttonColor}`}
+                >
+                  Gmail
+                </a>
+              )}
+              {verificationType === "slack" && (
+                <a
+                  href="https://slack.com"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className={`px-1.5 py-0.5 text-white rounded text-xs transition-colors ${config.buttonColor}`}
+                >
+                  Slack
+                </a>
+              )}
+              {verificationType === "simple" && (
+                <a
+                  href="https://chimetools.vercel.app/"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className={`px-1.5 py-0.5 text-white rounded text-xs transition-colors ${config.buttonColor}`}
+                >
+                  Platform
+                </a>
+              )}
+            </div>
+          </div>
           <button
             onClick={handleVerificationComplete}
-            className="flex-1 px-4 py-2 bg-green-600 text-white rounded-md hover:bg-green-700 text-sm font-medium transition-colors"
+            className="px-2 py-0.5 bg-green-600 text-white rounded text-xs hover:bg-green-700 transition-colors flex-shrink-0"
           >
-            ✓ Verification Complete
+            ✓ Complete
           </button>
         </div>
       </div>
     );
   };
 
+  // Get workflow status for timeline
+  const getWorkflowStatus = () => {
+    if (isCompleted) return "completed";
+    if (isPaused || isManuallyPaused) return "paused";
+    if (currentStep > 0 && currentStep <= steps.length) return "running";
+    return "pending";
+  };
+
   return (
-    <div className="max-w-6xl mx-auto">
-      <div className="mb-10">
-        <div className="flex justify-between items-center">
-          <div>
-            <h1 className="text-2xl font-bold text-brand-heading mb-1">
-              {title}
-            </h1>
-            <p className="text-brand-muted">
-              Start time: {startTime.toLocaleString()}
-            </p>
-          </div>
+    <div className="flex h-full">
+      {/* Main content area */}
+      <div className="flex-1 max-w-4xl mx-auto pr-6">
+        <div className="mb-10">
+          <div className="flex justify-between items-center">
+            <div>
+              <h1 className="text-2xl font-bold text-brand-heading mb-1">
+                {title}
+              </h1>
+              <p className="text-brand-muted">
+                Start time: {startTime.toLocaleString()}
+              </p>
+            </div>
           {!isCompleted && currentStep > 0 && (
             <button
               onClick={handlePauseResume}
@@ -582,7 +658,7 @@ export const WorkflowStepsDisplay: React.FC<WorkflowStepsDisplayProps> = ({
           </div>
         </div>
 
-        <div className="space-y-3 max-h-[600px] overflow-y-auto">
+        <div ref={workflowScrollRef} className="space-y-1 h-[80vh] overflow-y-auto font-mono text-xs">
           {steps.map((step, index) => {
             const stepNumber = index + 1;
             const isActive = stepNumber <= currentStep;
@@ -592,85 +668,67 @@ export const WorkflowStepsDisplay: React.FC<WorkflowStepsDisplayProps> = ({
               stepVerifications[step.step] !== "none";
 
             return (
-              <div
-                key={step.step}
-                className={`p-4 rounded-lg border transition-all duration-500 ${
-                  isCurrent
-                    ? "border-brand-primary bg-brand-light shadow-sm"
-                    : isActive
-                    ? "border-green-200 bg-green-50"
-                    : "border-gray-200 bg-gray-50 opacity-50"
-                }`}
-              >
-                <div className="flex items-start gap-4">
-                  <div
-                    className={`flex-shrink-0 w-10 h-10 rounded-full flex items-center justify-center transition-colors ${
-                      isActive
-                        ? getActionColor(step.action)
-                        : "bg-gray-200 text-gray-400"
-                    }`}
-                  >
+              <div key={step.step}>
+                <div
+                  ref={isCurrent ? currentStepRef : null}
+                  className={`px-2 py-1 flex items-center gap-2 text-xs transition-all duration-300 ${
+                    isCurrent
+                      ? "bg-brand-primary text-white font-medium"
+                      : isActive
+                      ? "bg-green-100 text-green-800"
+                      : "bg-gray-100 text-gray-500"
+                  }`}
+                >
+                  {/* Step indicator */}
+                  <span className="flex-shrink-0 w-6 text-right">
                     {isActive && stepNumber < currentStep ? (
-                      <CheckIcon className="h-5 w-5" />
+                      "✓"
+                    ) : isCurrent ? (
+                      "▶"
                     ) : (
-                      getActionIcon(step.action)
+                      stepNumber
                     )}
-                  </div>
-                  <div className="flex-1 min-w-0">
-                    <div className="flex items-center gap-2 mb-1 flex-wrap">
-                      <span className="text-sm font-semibold text-gray-900">
-                        Step {step.step}
-                      </span>
-                      <span
-                        className={`inline-flex items-center px-2 py-0.5 rounded text-xs font-medium transition-colors ${
-                          isActive
-                            ? "bg-brand-primary text-white"
-                            : "bg-gray-200 text-gray-600"
-                        }`}
-                      >
-                        {step.action.toUpperCase()}
-                      </span>
-                      {requiresVerification && (
-                        <span className="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-yellow-100 text-yellow-700">
-                          Verification Required
-                        </span>
-                      )}
-                    </div>
-                    <p className="text-sm text-gray-700 mb-1 break-words">
-                      {step.heading || step.element_description}
-                    </p>
-                    {step.value && (
-                      <div className="flex items-center gap-2 mt-2">
-                        <span className="text-xs text-gray-500">Value:</span>
-                        <code className="text-xs bg-gray-100 px-2 py-1 rounded font-mono break-all">
-                          {step.value}
-                        </code>
-                      </div>
-                    )}
-                    <div className="flex items-center gap-2 mt-2">
-                      <span className="text-xs text-gray-500">Element:</span>
-                      <span className="text-xs text-gray-600">
-                        {step.element_type}
-                      </span>
-                    </div>
+                  </span>
 
-                    {/* Show verification UI if this is the current step and verification is required */}
-                    {isCurrent &&
-                      isPaused &&
-                      requiresVerification &&
-                      getVerificationUI(stepVerifications[step.step], step)}
-                  </div>
-                  {isActive && stepNumber < currentStep && (
-                    <CheckCircleIcon className="h-5 w-5 text-green-500 flex-shrink-0" />
+                  {/* Action type */}
+                  <span className="flex-shrink-0 w-12 uppercase font-medium">
+                    {step.action}
+                  </span>
+
+                  {/* Description */}
+                  <span className="flex-1 truncate">
+                    {step.heading || step.element_description}
+                    {step.value && (
+                      <span className="ml-2 opacity-75">
+                        = "{step.value.length > 30 ? step.value.substring(0, 30) + "..." : step.value}"
+                      </span>
+                    )}
+                  </span>
+
+                  {/* Element type */}
+                  <span className="flex-shrink-0 text-xs opacity-60">
+                    [{step.element_type}]
+                  </span>
+
+                  {/* Verification indicator */}
+                  {requiresVerification && (
+                    <span className="flex-shrink-0 text-yellow-600">⚠</span>
                   )}
+
+                  {/* Status indicator */}
                   {isCurrent && !isPaused && (
-                    <div className="flex-shrink-0">
-                      <div className="animate-pulse">
-                        <ClockIcon className="h-5 w-5 text-brand-primary" />
-                      </div>
-                    </div>
+                    <span className="flex-shrink-0 animate-pulse">●</span>
                   )}
                 </div>
+
+                {/* Compact verification UI */}
+                {isCurrent &&
+                  isPaused &&
+                  requiresVerification && (
+                    <div className="mt-1 mb-1 mx-2">
+                      {getVerificationUI(stepVerifications[step.step], step)}
+                    </div>
+                  )}
               </div>
             );
           })}
@@ -721,6 +779,15 @@ export const WorkflowStepsDisplay: React.FC<WorkflowStepsDisplayProps> = ({
           </div>
         )}
       </div>
+    </div>
+
+      {/* Timeline sidebar */}
+      <WorkflowTimeline
+        events={timelineEvents}
+        currentStep={currentStep}
+        totalSteps={steps.length}
+        workflowStatus={getWorkflowStatus()}
+      />
     </div>
   );
 };

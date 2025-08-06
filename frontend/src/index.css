@@ -47,12 +47,12 @@ body {
 }
 
 .text-gradient {
-  @apply bg-gradient-brand bg-clip-text text-transparent;
+  @apply text-brand-primary font-semibold;
 }
 
 /* Loader animation styles */
 .loader {
-  border-top-color: #04baf7;
+  border-top-color: #000000;
   animation: spin 1s linear infinite;
 }
 
@@ -78,70 +78,11 @@ body {
   animation: fadeIn 0.5s ease-out forwards;
 }
 
-/* Gradient animations for login page */
-@keyframes gradient-shift {
-  0% {
-    transform: translateX(0%) translateY(0%);
-  }
-  33% {
-    transform: translateX(-10%) translateY(10%);
-  }
-  66% {
-    transform: translateX(10%) translateY(-10%);
-  }
-  100% {
-    transform: translateX(0%) translateY(0%);
-  }
-}
-
-@keyframes gradient-shift-reverse {
-  0% {
-    transform: translateX(0%) translateY(0%) scale(1.2);
-  }
-  33% {
-    transform: translateX(10%) translateY(-10%) scale(1.3);
-  }
-  66% {
-    transform: translateX(-10%) translateY(10%) scale(1.2);
-  }
-  100% {
-    transform: translateX(0%) translateY(0%) scale(1.2);
-  }
-}
-
-.animate-gradient-shift {
-  animation: gradient-shift 15s ease-in-out infinite;
-}
-
-.animate-gradient-shift-reverse {
-  animation: gradient-shift-reverse 20s ease-in-out infinite;
-}
+/* Removed complex gradient animations for cleaner design */
 
 .dashboard-gradient-bg {
   min-height: 100vh;
-  background: linear-gradient(90deg, #fffbc1 0%, #e0ffe7 67%, #bfe4ff 85%),
-    linear-gradient(180deg,
-      rgba(255, 255, 255, 0) 0%,
-      rgba(255, 255, 255, 0.85) 38%,
-      #f0f0f0 45%,
-      #fff 100%);
-  background-blend-mode: lighten;
-  background-repeat: no-repeat;
+  background: #f9fafb;
 }
 
-.quick-access-card::after {
-  content: "";
-  position: absolute;
-  top: -20px;
-  left: -20px;
-  width: 150%;
-  height: 150%;
-  /* background-image: url('/spray.jpeg');  */
-  background-size: cover;
-  background-repeat: no-repeat;
-  opacity: 0.5;
-  filter: blur(1px);
-  pointer-events: none;
-  z-index: 0;
-  border-radius: inherit;
-}
+/* Removed complex card decorations for cleaner design */

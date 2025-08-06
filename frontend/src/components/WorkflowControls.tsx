@@ -92,7 +92,7 @@ export const WorkflowControls: React.FC<WorkflowControlsProps> = ({
         return "text-green-600";
       case "running":
       case "in_progress":
-        return "text-blue-600";
+        return "text-brand-primary";
       case "paused":
         return "text-yellow-600";
       case "failed":
@@ -108,7 +108,7 @@ export const WorkflowControls: React.FC<WorkflowControlsProps> = ({
         return <CheckCircleIcon className="h-5 w-5 text-green-500" />;
       case "running":
       case "in_progress":
-        return <PlayIcon className="h-5 w-5 text-blue-500" />;
+        return <PlayIcon className="h-5 w-5 text-brand-primary" />;
       case "paused":
         return <PauseIcon className="h-5 w-5 text-yellow-500" />;
       case "failed":
@@ -223,7 +223,7 @@ export const WorkflowControls: React.FC<WorkflowControlsProps> = ({
           disabled={!canResume || actionLoading !== null}
           className={`flex items-center px-4 py-2 rounded-lg font-medium transition-colors ${
             canResume && actionLoading === null
-              ? "bg-blue-600 text-white hover:bg-blue-700"
+              ? "bg-brand-primary text-white hover:bg-brand-hover"
               : "bg-gray-200 text-gray-500 cursor-not-allowed"
           }`}
         >

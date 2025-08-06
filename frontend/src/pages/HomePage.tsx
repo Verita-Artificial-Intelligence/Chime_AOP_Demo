@@ -10,23 +10,12 @@ import {
 import content from "../config/content";
 import "../index.css";
 
-const cardGradients = [
-  {
-    background:
-      "radial-gradient(circle at 20% 20%, #bfe4ff 0%, #fffbc1 60%, #ffe6f7 100%)",
-  },
-  {
-    background:
-      "radial-gradient(circle at 80% 10%, #e3eaff 0%, #ffe6f7 60%, #fff 100%)",
-  },
-  {
-    background:
-      "radial-gradient(circle at 30% 70%, #fffbc1 0%, #e0ffe7 60%, #bfe4ff 100%)",
-  },
-  {
-    background:
-      "radial-gradient(circle at 80% 80%, #bfe4ff 0%, #e0ffe7 60%, #fff 100%)",
-  },
+// Simplified card styling - removed gradients for cleaner design
+const cardStyles = [
+  { backgroundColor: "#ffffff", borderColor: "#e5e7eb" },
+  { backgroundColor: "#f9fafb", borderColor: "#d1d5db" },
+  { backgroundColor: "#ffffff", borderColor: "#e5e7eb" },
+  { backgroundColor: "#f9fafb", borderColor: "#d1d5db" },
 ];
 
 const quickAccessItems = [
@@ -76,7 +65,7 @@ export function HomePage() {
             What will you build today?
           </h1>
           <div className="flex justify-center gap-2 mb-6">
-            <button className="px-4 py-1.5 rounded-full font-semibold text-base border transition bg-blue-500 text-white shadow">
+            <button className="px-4 py-1.5 rounded-full font-semibold text-base border transition bg-black text-white shadow">
               Verita AI
             </button>
             <button
@@ -99,10 +88,10 @@ export function HomePage() {
                 placeholder="Search for files, plugins, and creators"
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
-                className="w-full px-5 py-3 border border-gray-300 rounded-full shadow focus:outline-none focus:ring-2 focus:ring-blue-400 text-base"
+                className="w-full px-5 py-3 border border-gray-300 rounded-full shadow focus:outline-none focus:ring-2 focus:ring-black text-base"
               />
               <button
-                className="absolute right-2 top-1/2 -translate-y-1/2 bg-blue-500 text-white rounded-full p-2 hover:opacity-90 transition"
+                className="absolute right-2 top-1/2 -translate-y-1/2 bg-black text-white rounded-full p-2 hover:bg-gray-800 transition"
                 onClick={() => alert(`Search for: ${searchQuery}`)}
               >
                 <svg
@@ -129,8 +118,8 @@ export function HomePage() {
             <Link
               key={item.name}
               to={item.href}
-              style={cardGradients[idx % cardGradients.length]}
-              className="quick-access-card relative z-10 flex flex-col items-center justify-between w-[260px] h-[340px] rounded-3xl p-8 border border-black/10 shadow-md overflow-hidden transition-all duration-200 group hover:shadow-lg"
+              style={cardStyles[idx % cardStyles.length]}
+              className="quick-access-card relative z-10 flex flex-col items-center justify-between w-[260px] h-[340px] rounded-xl p-8 border shadow-sm overflow-hidden transition-all duration-200 group hover:shadow-md hover:border-brand-primary"
             >
               <div className="flex flex-col items-center mb-4">
                 <item.icon className="w-8 h-8 text-brand-primary mb-2" />

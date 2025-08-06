@@ -74,7 +74,7 @@ export const WorkflowTemplatesPage: React.FC = () => {
             onClick={() => setSelectedFilter(option.value)}
             className={`px-4 py-2 rounded-lg font-medium text-sm transition-all ${
               selectedFilter === option.value
-                ? "bg-brand-primary text-white shadow-md"
+                ? "bg-brand-primary text-white shadow-sm ring-2 ring-brand-primary ring-opacity-20"
                 : "bg-white text-gray-700 border border-gray-300 hover:border-brand-primary hover:bg-brand-light"
             }`}
           >
@@ -91,7 +91,7 @@ export const WorkflowTemplatesPage: React.FC = () => {
             <div
               key={template.id}
               onClick={() => handleTemplateClick(template.id)}
-              className="bg-white rounded-xl p-6 shadow-sm border border-brand-border hover:border-brand-primary hover:shadow-lg transition-all duration-200 group cursor-pointer"
+              className="bg-white rounded-xl p-6 shadow-sm border border-brand-border hover:border-2 hover:border-brand-primary hover:shadow-md hover:ring-2 hover:ring-brand-primary hover:ring-opacity-10 transition-all duration-200 group cursor-pointer"
             >
               <div className="flex items-start gap-4">
                 <div

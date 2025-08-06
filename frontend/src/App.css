@@ -4,27 +4,23 @@
 }
 
 .chat-container::-webkit-scrollbar-track {
-  background: #E5F7FF;
+  background: #f3f4f6;
   border-radius: 10px;
 }
 
 .chat-container::-webkit-scrollbar-thumb {
-  background: #04BAF7;
+  background: #000000;
   border-radius: 10px;
 }
 
 .chat-container::-webkit-scrollbar-thumb:hover {
-  background: #0396D1;
+  background: #1f2937;
 }
 
-/* Gradient text styling with new color scheme */
+/* Simplified text styling */
 .text-gradient {
-  background: linear-gradient(90deg, #04BAF7, #8F04FF, #FF006D);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
-  text-fill-color: transparent;
-  display: inline-block;
+  color: #000000;
+  font-weight: 600;
 }
 
 /* Progress Tracker Animations */

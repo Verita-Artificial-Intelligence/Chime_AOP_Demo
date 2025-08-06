@@ -39,10 +39,10 @@ interface VerificationOption {
 }
 
 const verificationOptions: VerificationOption[] = [
-  { value: "none", label: "No Verification", icon: FaSquare },
-  { value: "simple", label: "Simple Verification", icon: FaCircle },
-  { value: "gmail", label: "Gmail Verification", icon: SiGmail },
-  { value: "slack", label: "Slack Verification", icon: SiSlack },
+  { value: "unverified", label: "unverified", icon: FaSquare },
+  { value: "simple", label: "simple", icon: FaCircle },
+  { value: "gmail", label: "gmail", icon: SiGmail },
+  { value: "slack", label: "slack", icon: SiSlack, },
 ];
 
 const VerificationDropdown: React.FC<{
@@ -145,16 +145,16 @@ const VerificationDropdown: React.FC<{
         type="button"
         onClick={() => !disabled && setIsOpen(!isOpen)}
         disabled={disabled}
-        className={`flex items-center gap-2 px-3 py-1.5 text-sm border rounded-md transition-colors min-w-[180px] ${
+        className={`flex items-center gap-1 px-2 py-0.5 text-xs border rounded transition-colors min-w-[120px] ${
           disabled
             ? "border-gray-200 bg-gray-50 text-gray-400 cursor-not-allowed"
-            : "border-gray-300 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-brand-primary"
+            : "border-gray-300 bg-white hover:bg-gray-50 focus:outline-none focus:ring-1 focus:ring-brand-primary"
         }`}
       >
-        {currentOption.icon && <currentOption.icon className="h-4 w-4" />}
-        <span className="flex-1 text-left">{currentOption.label}</span>
+        {currentOption.icon && <currentOption.icon className="h-3 w-3" />}
+        <span className="flex-1 text-left truncate">{currentOption.label.replace(" Verification", "")}</span>
         <ChevronDownIcon
-          className={`h-4 w-4 transition-transform ${
+          className={`h-3 w-3 transition-transform ${
             isOpen ? "rotate-180" : ""
           }`}
         />
@@ -180,7 +180,7 @@ const getActionIcon = (action: string) => {
 const getActionColor = (action: string) => {
   switch (action.toLowerCase()) {
     case "click":
-      return "bg-blue-100 text-blue-700 border-blue-200";
+      return "bg-green-100 text-green-700 border-green-200";
     case "type":
       return "bg-green-100 text-green-700 border-green-200";
     case "select":
@@ -558,127 +558,77 @@ export const WorkflowReviewPage: React.FC = () => {
             Workflow Steps
           </h3>
 
-          <div className="space-y-3">
+          <div className="space-y-1 h-[70vh] overflow-y-auto font-mono text-xs bg-gray-50 rounded border">
             {workflowData.map((step) => {
-              const ActionIcon = getActionIcon(step.action);
-              const isExpanded = expandedSteps.has(step.step);
               const isEditing = editingSteps[step.step];
+              const requiresVerification = stepVerifications[step.step] && stepVerifications[step.step] !== "none";
 
               return (
-                <div
-                  key={step.step}
-                  className="border border-gray-200 rounded-lg"
-                >
+                <div key={step.step}>
                   {isEditing ? (
-                    <StepEditor
-                      step={step}
-                      onUpdate={(updatedStep) =>
-                        handleStepUpdate(step.step, updatedStep)
-                      }
-                      onCancel={() => toggleStepEdit(step.step)}
-                    />
-                  ) : (
-                    <>
-                      <div
-                        className={`p-4 ${
-                          isEditMode ? "cursor-pointer hover:bg-gray-50" : ""
-                        } transition-colors`}
-                        onClick={() =>
-                          isEditMode && toggleStepExpanded(step.step)
+                    <div className="p-4 bg-white border-l-4 border-brand-primary">
+                      <StepEditor
+                        step={step}
+                        onUpdate={(updatedStep) =>
+                          handleStepUpdate(step.step, updatedStep)
                         }
-                      >
-                        <div className="flex items-start gap-4">
-                          <div className="flex items-center justify-center w-10 h-10 rounded-full bg-brand-primary text-white text-sm font-semibold flex-shrink-0">
-                            {step.step}
-                          </div>
-                          <div className="flex-1 min-w-0">
-                            <div className="flex items-center gap-3 mb-2">
-                              <ActionIcon className="h-5 w-5 text-gray-600" />
-                              <h4 className="font-semibold text-gray-900">
-                                {step.heading}
-                              </h4>
-                            </div>
-                            <p className="text-sm text-gray-600">
-                              {step.element_description}
-                            </p>
-                            {step.value && (
-                              <p className="text-sm text-gray-500 mt-1">
-                                <span className="font-medium">Value:</span>{" "}
-                                {step.value}
-                              </p>
-                            )}
-                            <div className="mt-3 flex items-center gap-3">
-                              <span className="text-sm text-gray-700">
-                                Verification:
-                              </span>
-                              <VerificationDropdown
-                                value={stepVerifications[step.step] || "none"}
-                                onChange={(value) =>
-                                  handleVerificationChange(step.step, value)
-                                }
-                                disabled={!isEditMode}
-                                stepNumber={step.step}
-                              />
-                            </div>
-                          </div>
-                          {isEditMode && (
-                            <div className="flex items-center gap-2">
-                              <button
-                                onClick={(e) => {
-                                  e.stopPropagation();
-                                  toggleStepEdit(step.step);
-                                }}
-                                className="p-2 text-brand-primary hover:bg-brand-primaryLight rounded-md transition-colors"
-                              >
-                                <PencilIcon className="h-4 w-4" />
-                              </button>
-                              <ChevronDownIcon
-                                className={`h-5 w-5 text-gray-400 transition-transform ${
-                                  isExpanded ? "rotate-180" : ""
-                                }`}
-                              />
-                            </div>
-                          )}
-                        </div>
+                        onCancel={() => toggleStepEdit(step.step)}
+                      />
+                    </div>
+                  ) : (
+                    <div className="px-2 py-1 flex items-center gap-2 text-xs bg-white hover:bg-gray-50 transition-colors">
+                      {/* Step indicator */}
+                      <span className="flex-shrink-0 w-6 text-right font-medium">
+                        {step.step}
+                      </span>
+
+                      {/* Action type */}
+                      <span className="flex-shrink-0 w-12 uppercase font-medium text-gray-700">
+                        {step.action}
+                      </span>
+
+                      {/* Description */}
+                      <span className="flex-1 truncate">
+                        {step.heading || step.element_description}
+                        {step.value && (
+                          <span className="ml-2 opacity-75 text-brand-primary">
+                            = "{step.value.length > 30 ? step.value.substring(0, 30) + "..." : step.value}"
+                          </span>
+                        )}
+                      </span>
+
+                      {/* Element type */}
+                      <span className="flex-shrink-0 text-xs opacity-60">
+                        [{step.element_type}]
+                      </span>
+
+                      {/* Verification dropdown - compact */}
+                      <div className="flex-shrink-0">
+                        <VerificationDropdown
+                          value={stepVerifications[step.step] || "none"}
+                          onChange={(value) =>
+                            handleVerificationChange(step.step, value)
+                          }
+                          disabled={!isEditMode}
+                          stepNumber={step.step}
+                        />
                       </div>
 
-                      {isEditMode && isExpanded && (
-                        <div className="px-4 pb-4 pt-0 bg-gray-50 border-t border-gray-200">
-                          <div className="grid grid-cols-2 gap-3 text-sm">
-                            <div>
-                              <span className="text-gray-500">Action:</span>
-                              <span className="ml-2 font-medium text-gray-900">
-                                {step.action}
-                              </span>
-                            </div>
-                            <div>
-                              <span className="text-gray-500">
-                                Element Type:
-                              </span>
-                              <span className="ml-2 font-medium text-gray-900">
-                                {step.element_type}
-                              </span>
-                            </div>
-                            <div className="col-span-2">
-                              <span className="text-gray-500">
-                                Description:
-                              </span>
-                              <span className="ml-2 font-medium text-gray-900">
-                                {step.element_description}
-                              </span>
-                            </div>
-                            {step.value && (
-                              <div className="col-span-2">
-                                <span className="text-gray-500">Value:</span>
-                                <span className="ml-2 font-medium text-gray-900">
-                                  {step.value}
-                                </span>
-                              </div>
-                            )}
-                          </div>
-                        </div>
+                      {/* Verification indicator */}
+                      {requiresVerification && (
+                        <span className="flex-shrink-0 text-yellow-600">⚠</span>
                       )}
-                    </>
+
+                      {/* Edit button */}
+                      {isEditMode && (
+                        <button
+                          onClick={() => toggleStepEdit(step.step)}
+                          className="flex-shrink-0 p-1 text-brand-primary hover:bg-brand-primaryLight rounded transition-colors"
+                        >
+                          <PencilIcon className="h-3 w-3" />
+                        </button>
+                      )}
+                    </div>
                   )}
                 </div>
               );
