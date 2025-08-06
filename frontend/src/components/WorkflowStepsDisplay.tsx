@@ -34,6 +34,8 @@ interface WorkflowStepsDisplayProps {
   title: string;
   templateId?: string;
   onComplete?: () => void;
+  initialStep?: number;
+  backgroundMode?: boolean;
 }
 
 export const WorkflowStepsDisplay: React.FC<WorkflowStepsDisplayProps> = ({
@@ -41,10 +43,12 @@ export const WorkflowStepsDisplay: React.FC<WorkflowStepsDisplayProps> = ({
   title,
   templateId,
   onComplete,
+  initialStep = 0,
+  backgroundMode = false,
 }) => {
   const navigate = useNavigate();
-  const [currentStep, setCurrentStep] = useState(0);
-  const [isCompleted, setIsCompleted] = useState(false);
+  const [currentStep, setCurrentStep] = useState(initialStep);
+  const [isCompleted, setIsCompleted] = useState(initialStep >= steps.length);
   const [isPaused, setIsPaused] = useState(false);
   const [isManuallyPaused, setIsManuallyPaused] = useState(false);
   const [stepVerifications, setStepVerifications] = useState<
@@ -101,7 +105,27 @@ export const WorkflowStepsDisplay: React.FC<WorkflowStepsDisplayProps> = ({
     return stepVerifications[step.step] || "none";
   };
 
+  // Sync with background progression if in background mode
   useEffect(() => {
+    if (backgroundMode && templateId) {
+      const checkProgress = () => {
+        const activeWorkflows = JSON.parse(localStorage.getItem('activeWorkflows') || '[]');
+        const workflow = activeWorkflows.find((w: any) => w.templateId === templateId);
+        if (workflow && workflow.currentStep !== currentStep) {
+          setCurrentStep(workflow.currentStep);
+          setIsCompleted(workflow.currentStep >= steps.length);
+        }
+      };
+      
+      const interval = setInterval(checkProgress, 500);
+      return () => clearInterval(interval);
+    }
+  }, [backgroundMode, templateId, currentStep, steps.length]);
+
+  useEffect(() => {
+    // Skip auto-start and manual progression in background mode
+    if (backgroundMode) return;
+    
     // Start the animation after a short delay
     if (currentStep === 0) {
       // Send workflow start notification
@@ -190,7 +214,7 @@ export const WorkflowStepsDisplay: React.FC<WorkflowStepsDisplayProps> = ({
       }, 1500);
       return () => clearTimeout(timer);
     }
-  }, [currentStep, steps.length, isCompleted, isPaused, isManuallyPaused]);
+  }, [currentStep, steps.length, isCompleted, isPaused, isManuallyPaused, backgroundMode]);
 
   // Auto-scroll to current step
   useEffect(() => {
