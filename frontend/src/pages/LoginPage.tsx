@@ -2,6 +2,8 @@ import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { HiLockClosed, HiUser } from "react-icons/hi2";
 
+
+
 export function LoginPage() {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
@@ -32,11 +34,15 @@ export function LoginPage() {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-brand-primaryLight via-brand-secondaryLight to-white">
+    <div className="min-h-screen flex items-center justify-center bg-white">
       <div className="max-w-md w-full space-y-8 p-10 bg-white rounded-2xl shadow-xl border border-brand-borderLight">
         <div className="text-center">
-          <div className="mx-auto h-16 w-16 bg-gradient-brand rounded-full flex items-center justify-center shadow-lg">
-            <HiLockClosed className="h-8 w-8 text-white" />
+          <div className="mx-auto h-20 w-20 bg-gradient-to-br from-gray-800 to-black rounded-full flex items-center justify-center shadow-lg">
+            <img 
+              src="/verita.avif" 
+              alt="Verita AI Logo" 
+              className="h-12 w-12 object-contain"
+            />
           </div>
           <h2 className="mt-6 text-3xl font-extrabold text-brand-heading">
             Welcome to Verita AI
@@ -123,7 +129,7 @@ export function LoginPage() {
             <button
               type="submit"
               disabled={isLoading}
-              className="group relative w-full flex justify-center py-3 px-4 border border-transparent text-sm font-medium rounded-lg text-white bg-gradient-brand hover:shadow-lg focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-brand-primary disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-200 transform hover:scale-[1.02]"
+              className="group relative w-full flex justify-center py-3 px-4 border border-transparent text-sm font-medium rounded-lg text-white bg-brand-primary hover:bg-brand-primaryDark hover:shadow-lg focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-brand-primary disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-200 transform hover:scale-[1.02]"
             >
               {isLoading ? (
                 <span className="flex items-center">

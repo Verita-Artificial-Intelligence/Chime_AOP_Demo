@@ -39,9 +39,8 @@ const navItems: NavItem[] = [
       { name: "Workflow History", href: "/workflow/run" },
     ],
   },
-  { name: "Disputes", href: "/disputes", icon: ExclamationTriangleIcon },
   { name: "Integrations", href: "/integrations", icon: CircleStackIcon },
-  { name: "Security", href: "/security", icon: CogIcon },
+  // { name: "Security", href: "/security", icon: CogIcon },
 ];
 
 interface LayoutProps {
@@ -145,10 +144,10 @@ export const Layout: React.FC<LayoutProps> = ({ children }) => {
                 <p className="text-xs text-gray-500">{currentUser}</p>
               </div>
             </div>
-            <button className="w-full flex items-center px-4 py-2.5 text-sm font-medium text-gray-700 rounded-md hover:bg-white hover:text-brand-primary hover:shadow-sm transition-all mb-2">
+            {/* <button className="w-full flex items-center px-4 py-2.5 text-sm font-medium text-gray-700 rounded-md hover:bg-white hover:text-brand-primary hover:shadow-sm transition-all mb-2">
               <CogIcon className="w-5 h-5 mr-3" />
               Settings
-            </button>
+            </button> */}
             <button 
               onClick={handleLogout}
               className="w-full flex items-center px-4 py-2.5 text-sm font-medium text-red-600 rounded-md hover:bg-red-50 hover:text-red-700 transition-all"
@@ -167,7 +166,6 @@ export const Layout: React.FC<LayoutProps> = ({ children }) => {
         {children}
       </main>
       
-      {/* Security Chat Widget */}
       <SecurityChatWidget />
       
       {/* Notification Display */}
