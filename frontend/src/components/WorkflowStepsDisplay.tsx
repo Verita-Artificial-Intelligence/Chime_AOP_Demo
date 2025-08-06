@@ -112,15 +112,54 @@ export const WorkflowStepsDisplay: React.FC<WorkflowStepsDisplayProps> = ({
         const activeWorkflows = JSON.parse(localStorage.getItem('activeWorkflows') || '[]');
         const workflow = activeWorkflows.find((w: any) => w.templateId === templateId);
         if (workflow && workflow.currentStep !== currentStep) {
-          setCurrentStep(workflow.currentStep);
-          setIsCompleted(workflow.currentStep >= steps.length);
+          const oldStep = currentStep;
+          const newStep = workflow.currentStep;
+          
+          setCurrentStep(newStep);
+          setIsCompleted(newStep >= steps.length);
+          
+          // Generate timeline events for missed steps
+          if (timelineEvents.length === 0) {
+            // Initialize timeline with start event if empty
+            setTimelineEvents([{
+              id: `started-${Date.now()}`,
+              timestamp: new Date(workflow.startTime),
+              type: "started",
+              description: `Workflow "${title}" started`,
+            }]);
+          }
+          
+          // Add events for completed steps
+          for (let i = Math.max(1, oldStep + 1); i <= newStep && i <= steps.length; i++) {
+            const step = steps[i - 1];
+            setTimelineEvents(prev => [...prev, {
+              id: `step-${i}-${Date.now()}-${Math.random()}`,
+              timestamp: new Date(),
+              type: "step_completed",
+              description: step.heading || step.element_description,
+              stepNumber: i,
+            }]);
+          }
+          
+          // Add completion event if workflow is done
+          if (newStep >= steps.length) {
+            setTimelineEvents(prev => [...prev, {
+              id: `completed-${Date.now()}`,
+              timestamp: new Date(),
+              type: "completed",
+              description: "Workflow completed successfully",
+              metadata: {
+                totalSteps: steps.length,
+              }
+            }]);
+          }
         }
       };
       
       const interval = setInterval(checkProgress, 500);
       return () => clearInterval(interval);
     }
-  }, [backgroundMode, templateId, currentStep, steps.length]);
+  }, [backgroundMode, templateId, currentStep, steps.length, timelineEvents.length, steps, title]);
 
   useEffect(() => {
     // Skip auto-start and manual progression in background mode
