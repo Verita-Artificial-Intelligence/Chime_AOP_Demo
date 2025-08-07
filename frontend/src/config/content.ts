@@ -20,7 +20,7 @@ export interface ContentConfig {
 
 const content: ContentConfig = {
   // Client branding
-  clientName: "Verita",
+  clientName: "Jason",
   platformName: "Workflows",
   platformFullName: "Verita AI Platform",
 

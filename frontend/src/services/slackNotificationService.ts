@@ -1,5 +1,7 @@
+import { DisputeApiService } from './disputeApiService';
+
 export interface SlackNotificationService {
-  sendNotification(message: string): Promise<void>;
+  sendNotification(message: string, channel?: string): Promise<void>;
   sendWorkflowStartNotification(workflowTitle: string): Promise<void>;
   sendVerificationNotification(stepDescription: string, verificationType: string): Promise<void>;
   sendBigActionNotification(actionDescription: string): Promise<void>;
@@ -8,46 +10,27 @@ export interface SlackNotificationService {
 }
 
 class SlackNotificationServiceImpl implements SlackNotificationService {
-  private readonly webhookUrl = 'https://verita.dilan.ai/webhook/post-slack-message';
-  private readonly slackKey: string;
-
-  constructor() {
-    // Load the Slack key from environment variable
-    this.slackKey = import.meta.env.VITE_SLACK_KEY || '';
-    if (!this.slackKey) {
-      console.warn('VITE_SLACK_KEY environment variable not set - Slack notifications will be disabled');
-    }
-  }
-
-  private async sendMessage(text: string): Promise<void> {
-    if (!this.slackKey) {
-      console.warn('Slack key not configured - skipping notification:', text);
-      return;
-    }
-
+  private async sendMessage(text: string, channel?: string): Promise<void> {
     try {
-      const response = await fetch(this.webhookUrl, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${this.slackKey}`,
-        },
-        body: JSON.stringify({ text }),
-      });
+      const result = await DisputeApiService.safeApiCall(
+        () => DisputeApiService.sendSlackMessage(text, channel),
+        'Send Slack Notification'
+      );
 
-      if (!response.ok) {
-        throw new Error(`HTTP error! status: ${response.status}`);
+      if (result.success) {
+        console.log('Slack notification sent successfully:', text);
+      } else {
+        console.error('Failed to send Slack notification:', result.error);
+        console.error('Message was:', text);
       }
-
-      console.log('Slack notification sent successfully:', text);
     } catch (error) {
       console.error('Failed to send Slack notification:', error);
       console.error('Message was:', text);
     }
   }
 
-  async sendNotification(message: string): Promise<void> {
-    await this.sendMessage(message);
+  async sendNotification(message: string, channel?: string): Promise<void> {
+    await this.sendMessage(message, channel);
   }
 
   async sendWorkflowStartNotification(workflowTitle: string): Promise<void> {

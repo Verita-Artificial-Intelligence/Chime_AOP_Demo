@@ -1,8 +1,9 @@
 import React, { useState, useCallback } from "react";
 import { useNavigate } from "react-router-dom";
 import { ArrowUpTrayIcon, DocumentIcon } from "@heroicons/react/24/outline";
-import { templateConfigs } from "../data/templateConfigs";
+import { templatesApiService } from "../services/templatesApiService";
 import { DisputeApiService, UploadSOPResponse } from "../services/disputeApiService";
+import { createActiveWorkflow } from "../components/ApiActiveWorkflows";
 
 interface UploadResult {
   success: boolean;
@@ -109,12 +110,32 @@ export const SOPToWorkflowPage: React.FC = () => {
         // Use the first successful upload's result
         const firstSuccess = successfulUploads[0];
         
-        // Navigate to the active runs page with the workflow run ID
-        navigate("/workflow/active-runs", {
+        // Create and save the active workflow
+        const activeWorkflow = createActiveWorkflow(
+          firstSuccess.workflowRunId || `workflow-${Date.now()}`,
+          `SOP Upload: ${firstSuccess.fileName}`,
+          firstSuccess.disputeCode || 'unknown'
+        );
+        
+        // Add to localStorage (temporary until backend endpoint)
+        try {
+          const stored = localStorage.getItem('apiActiveWorkflows');
+          const existing = stored ? JSON.parse(stored) : [];
+          existing.push(activeWorkflow);
+          localStorage.setItem('apiActiveWorkflows', JSON.stringify(existing));
+        } catch (e) {
+          console.error('Failed to save active workflow:', e);
+        }
+        
+        // Navigate to the workflow review page to review the generated workflow
+        navigate("/workflow/review", {
           state: {
+            templateId: `generated-${firstSuccess.workflowRunId}`,
+            templateTitle: `Generated from ${firstSuccess.fileName}`,
+            jsonFile: `generated-${firstSuccess.workflowRunId}.json`, // Virtual file reference
+            fromSOP: true,
             workflowRunId: firstSuccess.workflowRunId,
             disputeCode: firstSuccess.disputeCode,
-            fromSOP: true,
             uploadResults: uploadResults,
           },
         });

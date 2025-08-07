@@ -1,4 +1,5 @@
 import axios, { AxiosResponse } from 'axios';
+import { getApiUrl } from '../config/api';
 
 // API Contract Interfaces - exactly matching the specification
 export interface UploadSOPRequest {
@@ -63,7 +64,6 @@ export interface SlackResponse {
 
 // API Service Class
 export class DisputeApiService {
-  private static baseURL = '/api/workflow';
 
   /**
    * Upload SOP - Ingests PDF and runs agents to verify dispute details and maps to dispute code
@@ -73,7 +73,7 @@ export class DisputeApiService {
     formData.append('file', file);
 
     const response: AxiosResponse<UploadSOPResponse> = await axios.post(
-      `${this.baseURL}/upload_sop`,
+      getApiUrl('uploadSop'),
       formData,
       {
         headers: {
@@ -92,14 +92,15 @@ export class DisputeApiService {
     action: 'start' | 'pause' | 'resume',
     workflowRunId: string
   ): Promise<WorkflowActionResponse> {
-    const request: WorkflowActionRequest = {
-      action,
-      workflowRunId,
-    };
-
     const response: AxiosResponse<WorkflowActionResponse> = await axios.post(
-      `${this.baseURL}/action`,
-      request
+      getApiUrl('workflowAction'),
+      null,
+      {
+        params: {
+          action,
+          workflowRunId,
+        },
+      }
     );
 
     return response.data;
@@ -110,7 +111,7 @@ export class DisputeApiService {
    */
   static async getWorkflowStatus(workflowRunId: string): Promise<WorkflowStatusResponse> {
     const response: AxiosResponse<WorkflowStatusResponse> = await axios.get(
-      `${this.baseURL}/status`,
+      getApiUrl('workflowStatus'),
       {
         params: { workflowRunId },
       }
@@ -127,15 +128,16 @@ export class DisputeApiService {
     subject: string,
     body: string
   ): Promise<EmailResponse> {
-    const request: EmailRequest = {
-      email,
-      subject,
-      body,
-    };
-
     const response: AxiosResponse<EmailResponse> = await axios.post(
-      `${this.baseURL}/email`,
-      request
+      getApiUrl('workflowEmail'),
+      null,
+      {
+        params: {
+          email,
+          subject,
+          body,
+        },
+      }
     );
 
     return response.data;
@@ -144,14 +146,16 @@ export class DisputeApiService {
   /**
    * Send Slack Message - Sends message to slack channel #n8n-logs
    */
-  static async sendSlackMessage(message: string): Promise<SlackResponse> {
-    const request: SlackRequest = {
-      message,
-    };
-
+  static async sendSlackMessage(message: string, channel?: string): Promise<SlackResponse> {
     const response: AxiosResponse<SlackResponse> = await axios.post(
-      `${this.baseURL}/slack`,
-      request
+      getApiUrl('workflowSlack'),
+      null,
+      {
+        params: {
+          message,
+          ...(channel && { channel }),
+        },
+      }
     );
 
     return response.data;

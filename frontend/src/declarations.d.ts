@@ -8,6 +8,7 @@ declare module "*.json" {
 interface ImportMetaEnv {
   readonly VITE_OPENAI_API_KEY: string;
   readonly VITE_SLACK_KEY: string;
+  readonly VITE_API_BASE_URL: string;
   // more env variables...
 }
 

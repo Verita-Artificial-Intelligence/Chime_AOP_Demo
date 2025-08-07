@@ -14,6 +14,7 @@ import {
 } from "@heroicons/react/24/outline";
 import { SiGmail, SiSlack } from "react-icons/si";
 import { FaSquare, FaCircle } from "react-icons/fa";
+import { templatesApiService } from "../services/templatesApiService";
 
 interface WorkflowStep {
   step: number;
@@ -324,14 +325,12 @@ export const WorkflowReviewPage: React.FC = () => {
       return;
     }
 
-    // Load workflow data from JSON file
+    // Load workflow data from backend API
     const loadWorkflowData = async () => {
       try {
-        const mockData = await import(
-          `../data/${jsonFile.replace(".json", "").replaceAll(" ", "-")}.json`
-        );
-        const data = mockData.default;
-        setWorkflowData(data);
+        // Use backend API to fetch steps instead of dynamic import
+        const steps = await templatesApiService.getTemplateSteps(templateId);
+        setWorkflowData(steps);
 
         // Load saved customizations including verifications
         const savedCustomizations = localStorage.getItem(
@@ -348,7 +347,7 @@ export const WorkflowReviewPage: React.FC = () => {
         } else {
           // Initialize all steps with "none" verification
           const initialVerifications: VerificationState = {};
-          data.forEach((step: WorkflowStep) => {
+          steps.forEach((step: WorkflowStep) => {
             initialVerifications[step.step] = "none";
           });
           setStepVerifications(initialVerifications);
@@ -576,58 +575,67 @@ export const WorkflowReviewPage: React.FC = () => {
                       />
                     </div>
                   ) : (
-                    <div className="px-2 py-1 flex items-center gap-2 text-xs bg-white hover:bg-gray-50 transition-colors">
+                    <div className="px-2 py-1 flex items-center gap-2 text-xs bg-white hover:bg-gray-50 transition-colors min-h-[28px]">
                       {/* Step indicator */}
                       <span className="flex-shrink-0 w-6 text-right font-medium">
                         {step.step}
                       </span>
 
                       {/* Action type */}
-                      <span className="flex-shrink-0 w-12 uppercase font-medium text-gray-700">
+                      <span className="flex-shrink-0 w-16 uppercase font-medium text-gray-700">
                         {step.action}
                       </span>
 
-                      {/* Description */}
-                      <span className="flex-1 truncate">
-                        {step.heading || step.element_description}
+                      {/* Description - with proper constraints */}
+                      <div className="flex-1 min-w-0 pr-2">
+                        <span className="block truncate">
+                          {step.heading || step.element_description}
+                        </span>
                         {step.value && (
-                          <span className="ml-2 opacity-75 text-brand-primary">
-                            = "{step.value.length > 30 ? step.value.substring(0, 30) + "..." : step.value}"
+                          <span className="block text-brand-primary opacity-75 truncate">
+                            = "{step.value.length > 40 ? step.value.substring(0, 40) + "..." : step.value}"
                           </span>
                         )}
-                      </span>
-
-                      {/* Element type */}
-                      <span className="flex-shrink-0 text-xs opacity-60">
-                        [{step.element_type}]
-                      </span>
-
-                      {/* Verification dropdown - compact */}
-                      <div className="flex-shrink-0">
-                        <VerificationDropdown
-                          value={stepVerifications[step.step] || "none"}
-                          onChange={(value) =>
-                            handleVerificationChange(step.step, value)
-                          }
-                          disabled={!isEditMode}
-                          stepNumber={step.step}
-                        />
                       </div>
 
-                      {/* Verification indicator */}
-                      {requiresVerification && (
-                        <span className="flex-shrink-0 text-yellow-600">⚠</span>
-                      )}
+                      {/* Right side elements - fixed width container */}
+                      <div className="flex-shrink-0 flex items-center gap-2 w-48">
+                        {/* Element type */}
+                        <span className="text-xs opacity-60 w-16 truncate text-center">
+                          [{step.element_type}]
+                        </span>
 
-                      {/* Edit button */}
-                      {isEditMode && (
-                        <button
-                          onClick={() => toggleStepEdit(step.step)}
-                          className="flex-shrink-0 p-1 text-brand-primary hover:bg-brand-primaryLight rounded transition-colors"
-                        >
-                          <PencilIcon className="h-3 w-3" />
-                        </button>
-                      )}
+                        {/* Verification dropdown - compact */}
+                        <div className="w-20">
+                          <VerificationDropdown
+                            value={stepVerifications[step.step] || "none"}
+                            onChange={(value) =>
+                              handleVerificationChange(step.step, value)
+                            }
+                            disabled={!isEditMode}
+                            stepNumber={step.step}
+                          />
+                        </div>
+
+                        {/* Verification indicator */}
+                        <span className="w-4 text-center">
+                          {requiresVerification && (
+                            <span className="text-yellow-600">⚠</span>
+                          )}
+                        </span>
+
+                        {/* Edit button */}
+                        <div className="w-6">
+                          {isEditMode && (
+                            <button
+                              onClick={() => toggleStepEdit(step.step)}
+                              className="p-1 text-brand-primary hover:bg-brand-primaryLight rounded transition-colors"
+                            >
+                              <PencilIcon className="h-3 w-3" />
+                            </button>
+                          )}
+                        </div>
+                      </div>
                     </div>
                   )}
                 </div>

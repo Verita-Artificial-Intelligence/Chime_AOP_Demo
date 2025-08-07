@@ -20,7 +20,7 @@ const cardStyles = [
 
 const quickAccessItems = [
   {
-    name: "Workflow Templates",
+    name: "Workflow Library",
     href: "/workflow/templates",
     description: "Browse pre-built automation templates for common workflows.",
     icon: TableCellsIcon,
