@@ -9,19 +9,14 @@ import {
   TrashIcon,
 } from "@heroicons/react/24/outline";
 import { WorkflowStepsDisplay } from "../components/WorkflowStepsDisplay";
+import { ApiActiveWorkflows } from "../components/ApiActiveWorkflows";
 import jsPDF from "jspdf";
 import { slackNotificationService } from "../services/slackNotificationService";
 
-// Import the JSON files
-import creditDisputeBureauData from "../data/Credit-Dispute-through-Credit-Bureau.json";
-import directDisputeMemberData from "../data/Direct-Dispute-from-Member.json";
-import complexDisputeEquifaxData from "../data/Complex-Dispute-via-Equifax.json";
-import kycKybWorkflowData from "../data/kyc_kyb_workflow.json";
-import vendorWorkflowData from "../data/vendor_workflow.json";
-import vendorMaintenanceOffboardingData from "../data/vendor_maintenance_offboarding.json";
-import complianceOperationsWorkflowData from "../data/compliance_operations_workflow.json";
-import kycAuditWorkflowData from "../data/kyb_audit_workflow.json";
+// Import templates API service
+import { templatesApiService, WorkflowStep as ApiWorkflowStep } from "../services/templatesApiService";
 
+// Use the WorkflowStep type from the API service
 interface WorkflowStep {
   step: number;
   action: string;
@@ -39,6 +34,7 @@ export const ActiveRunsPage: React.FC = () => {
     WorkflowStep[] | null
   >(null);
   const [workflowTitle, setWorkflowTitle] = useState<string>("");
+
   
   // Active workflows state (moved to top to fix hooks order)
   const getActiveWorkflows = () => {
@@ -83,43 +79,52 @@ export const ActiveRunsPage: React.FC = () => {
   const [sopStartTime] = useState(new Date());
   const [isDownloading, setIsDownloading] = useState(false);
 
-  // Map template IDs to their JSON data
-  const templateDataMap: Record<string, WorkflowStep[]> = {
-    "credit-dispute-credit-bureau": creditDisputeBureauData,
-    "direct-dispute-member": directDisputeMemberData,
-    "complex-dispute-equifax": complexDisputeEquifaxData,
-    "kyc-kyb-workflow": kycKybWorkflowData,
-    "vendor-workflow": vendorWorkflowData,
-    "vendor-maintenance-offboarding": vendorMaintenanceOffboardingData,
-    "compliance-operations-workflow": complianceOperationsWorkflowData,
-    "kyb-audit-workflow": kycAuditWorkflowData,
+  // Function to load template data from API
+  const loadTemplateData = async (templateId: string): Promise<WorkflowStep[]> => {
+    try {
+      const steps = await templatesApiService.getTemplateSteps(templateId);
+      // Convert API WorkflowStep to local WorkflowStep format
+      return steps.map(step => ({
+        step: step.step,
+        action: step.action,
+        element_description: step.element_description,
+        element_type: step.element_type,
+        value: step.value,
+        heading: step.heading
+      }));
+    } catch (error) {
+      console.error(`Error loading template data for ${templateId}:`, error);
+      throw new Error(`Failed to load template data: ${error}`);
+    }
   };
 
   // Check if we're coming from templates page with a template selection
   useEffect(() => {
-    if (location.state && location.state.templateId) {
-      const {
-        templateId,
-        templateTitle,
-        jsonFile,
-        workflowSteps,
-        stepVerifications,
-        isRunning,
-      } = location.state;
+    const loadWorkflowData = async () => {
+      if (location.state && location.state.templateId) {
+        const {
+          templateId,
+          templateTitle,
+          jsonFile,
+          workflowSteps,
+          stepVerifications,
+          isRunning,
+        } = location.state;
 
-      // Load the corresponding JSON data
-      const jsonData = templateDataMap[templateId] || workflowSteps;
-      if (jsonData) {
-        setWorkflowJsonData(jsonData);
-        setWorkflowTitle(templateTitle);
+        try {
+          // Load the corresponding JSON data from API or use provided workflowSteps
+          const jsonData = workflowSteps || await loadTemplateData(templateId);
+          if (jsonData) {
+            setWorkflowJsonData(jsonData);
+            setWorkflowTitle(templateTitle);
 
-        // If coming from review page with isRunning flag, we'll use WorkflowStepsDisplay
-        // No need to create ActiveRun or set showSimulation=true
-        if (isRunning && workflowSteps) {
-          // Load saved customizations from localStorage
-          const savedCustomizations = localStorage.getItem(
-            `workflow-custom-${templateId}`
-          );
+            // If coming from review page with isRunning flag, we'll use WorkflowStepsDisplay
+            // No need to create ActiveRun or set showSimulation=true
+            if (isRunning && workflowSteps) {
+              // Load saved customizations from localStorage
+              const savedCustomizations = localStorage.getItem(
+                `workflow-custom-${templateId}`
+              );
           if (savedCustomizations) {
             try {
               const customizations = JSON.parse(savedCustomizations);
@@ -133,9 +138,16 @@ export const ActiveRunsPage: React.FC = () => {
           }
         }
       }
+        } catch (error) {
+          console.error('Error loading workflow data:', error);
+          // Could show an error message to user here
+        }
+      }
 
       // Don't clear location.state here, we need it for templateId
-    }
+    };
+
+    loadWorkflowData();
   }, [location.state]);
 
   // Listen for new workflows from review page (moved after other useEffects)
@@ -770,16 +782,19 @@ export const ActiveRunsPage: React.FC = () => {
 
 
 
-  // Default view - show active workflows table
+  // Use legacy localStorage tracking system for active workflows
+  // But keep API integration for SOP upload and workflow execution
   return (
     <div className="max-w-7xl mx-auto p-6">
-      <div className="mb-8">
-        <h1 className="text-3xl font-bold text-brand-heading">
-          Active Workflows
-        </h1>
-        <p className="text-brand-muted mt-1">
-          Monitor and manage your running workflows
-        </p>
+      <div className="mb-8 flex justify-between items-center">
+        <div>
+          <h1 className="text-3xl font-bold text-brand-heading">
+            Active Workflows
+          </h1>
+          <p className="text-brand-muted mt-1">
+            Monitor and manage your running workflows
+          </p>
+        </div>
       </div>
 
       {activeWorkflows.length === 0 ? (
@@ -889,6 +904,17 @@ export const ActiveRunsPage: React.FC = () => {
                 ))}
               </tbody>
             </table>
+          </div>
+        </div>
+      )}
+
+      {/* Show workflow details if selected */}
+      {selectedWorkflowId && (
+        <div className="mt-8">
+          <h2 className="text-2xl font-bold mb-4">Workflow Details</h2>
+          <div className="bg-white p-6 rounded-lg shadow">
+            <p>Details for workflow: {selectedWorkflowId}</p>
+            {/* Add more details here as needed */}
           </div>
         </div>
       )}
