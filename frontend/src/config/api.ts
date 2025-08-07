@@ -38,7 +38,7 @@ export interface ApiConfig {
 
 // Production API configuration
 const API_CONFIG: ApiConfig = {
-  baseUrl: import.meta.env.VITE_API_BASE_URL || 'http://fastapi-alb-135111181.us-east-1.elb.amazonaws.com',
+  baseUrl: import.meta.env.VITE_API_BASE_URL || 'https://fastapi-alb-135111181.us-east-1.elb.amazonaws.com',
   endpoints: {
     // System
     health: '/health',
@@ -87,7 +87,7 @@ export default API_CONFIG;
 // Environment-specific overrides (for development/testing)
 export const getBaseUrl = (): string => {
   // Check for environment override
-  const envBaseUrl = import.meta.env.VITE_API_BASE_URL || 'http://fastapi-alb-135111181.us-east-1.elb.amazonaws.com';
+  const envBaseUrl = import.meta.env.VITE_API_BASE_URL || 'https://fastapi-alb-135111181.us-east-1.elb.amazonaws.com';
   if (envBaseUrl) {
     return envBaseUrl;
   }
